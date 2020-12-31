@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>计算机网络期末复习 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="1. 概述一、概述 互联网的拓扑结构从组成方式上可以分为：  边缘部分：用户直接使用的，用于进行通讯和资源共享。 核心部分：为边缘部分提供服务的。核心部分起特殊作用的是路由器，路由器是实现分组交换的关键组件，它的任务是转发收到的分组。   internet互联网能向用户提供的服务：连通性和共享。">
+<meta name="keywords" content="计算机网络,复习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机网络期末复习">
+<meta property="og:url" content="http://yoursite.com/2019/04/15/Computer-Network/计算机网络期末复习/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="1. 概述一、概述 互联网的拓扑结构从组成方式上可以分为：  边缘部分：用户直接使用的，用于进行通讯和资源共享。 核心部分：为边缘部分提供服务的。核心部分起特殊作用的是路由器，路由器是实现分组交换的关键组件，它的任务是转发收到的分组。   internet互联网能向用户提供的服务：连通性和共享。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2019/04/15/Computer-Network/计算机网络期末复习/1555578444671.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/15/Computer-Network/计算机网络期末复习/1555577598425.png">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.225Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="计算机网络期末复习">
+<meta name="twitter:description" content="1. 概述一、概述 互联网的拓扑结构从组成方式上可以分为：  边缘部分：用户直接使用的，用于进行通讯和资源共享。 核心部分：为边缘部分提供服务的。核心部分起特殊作用的是路由器，路由器是实现分组交换的关键组件，它的任务是转发收到的分组。   internet互联网能向用户提供的服务：连通性和共享。">
+<meta name="twitter:image" content="http://yoursite.com/2019/04/15/Computer-Network/计算机网络期末复习/1555578444671.png">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="计算机网络期末复习" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2019-04-15T16:00:00.000Z">2019-04-16</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.225Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/复习/">复习</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/计算机网络/">计算机网络</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    1 小时 读完 (大约 7789 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                计算机网络期末复习
+            
+        </h1>
+        <div class="content">  
+            <h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h2><h2 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h2><ol>
+<li><p><strong>互联网的拓扑结构</strong>从组成方式上可以分为：</p>
+<ul>
+<li><strong>边缘部分</strong>：用户直接使用的，用于进行通讯和资源共享。</li>
+<li><strong>核心部分</strong>：为边缘部分提供服务的。核心部分起特殊作用的是<strong>路由器</strong>，路由器是实现<strong>分组交换</strong>的关键组件，它的任务是<strong>转发收到的分组</strong>。</li>
+</ul>
+</li>
+<li><p>internet互联网能向用户提供的服务：<strong>连通性</strong>和<strong>共享</strong>。</p>
+<a id="more"></a>
+</li>
+<li><p><strong>因特网提供的网络服务有哪些</strong></p>
+<p>答：远程登陆服务（Telnet），文件传输服务（FTP），电子邮件服务（E-mail），网络新闻服务（Usenet），名址服务(Finger、Whois、X.500、Netfind)，文档查询索引服务(Archie、WAIS)，信息浏览服务(Gopher、WWW)，其他信息服务(Talk、IRC、MUD)。</p>
+</li>
+<li><p>计算机网络是<strong>计算机技术</strong>和<strong>通信技术</strong>相结合的产物。（✅）</p>
+</li>
+<li><p>网络<strong>边缘的端系统的通讯方式</strong>有以下两种：</p>
+<ul>
+<li><p><strong>客户-服务器方式</strong>（C/S）：特征是<strong>客户是请求方，服务器是提供方，客户和服务器都使用核心部分提供的服务</strong>。客户和服务器指的是计算机进程。</p>
+<blockquote>
+<p><img src="/2019/04/15/Computer-Network/计算机网络期末复习/1555578444671.png" alt="1555578444671"></p>
+</blockquote>
+</li>
+<li><p><strong>对等方式</strong>（P2P）：两台主机在进行通讯时不区分服务提供方和服务请求方。</p>
+</li>
+</ul>
+</li>
+<li><p>计算机网络的类别</p>
+<p>按<strong>作用范围</strong>划分：</p>
+<ul>
+<li><strong>广域网</strong>（WAN，Wide Area Network）：几十到几千km</li>
+<li><strong>城域网</strong>（MAN，Metropolitan Area Network）：5~50km</li>
+<li><strong>局域网</strong>（LAN，Local Area Network）：1km</li>
+<li><strong>个人区域网</strong>（PAN，Personal Area Network）</li>
+</ul>
+<p>按照<strong>使用者</strong>分类：</p>
+<ul>
+<li><strong>公用网</strong>（public network）</li>
+<li><strong>专用网</strong>（private network）</li>
+</ul>
+</li>
+<li><p>OSI、TCP/IP </p>
+<p><strong>开放系统互联基本参考模型</strong>OSI（Open System Interconnect Reference Model）</p>
+<p><img src="/2019/04/15/Computer-Network/计算机网络期末复习/1555577598425.png" alt="1555577598425"></p>
+</li>
+<li><p>TCP/IP模型包含的层次及功能</p>
+<ul>
+<li><p><strong>网络接口层</strong>：这是TCP/IP模型的最低层，负责接收从IP层交来的IP数据报并将IP数据报通过低层物理网络发送出去，或者从低层物理网络上接收物理帧，抽出IP数据报，交给IP层。</p>
+</li>
+<li><p><strong>网络层</strong>：负责为分组交换网上的不同主机提供通讯服务</p>
+</li>
+<li><strong>运输层</strong>：其任务是负责向两台主机中的进程之间的通讯提供通用的数据传输服务。</li>
+<li><strong>应用层</strong>：其任务是通过应用进程之间的交互完成特定的网络应用。</li>
+</ul>
+</li>
+<li><p><strong>网络协议</strong>：<strong>为进行网络中的数据交换而建立的规则、标准或规定</strong>称之为网络协议。</p>
+<p>网络协议的三个要素：</p>
+<ul>
+<li><strong>语法</strong></li>
+<li><strong>语义</strong></li>
+<li><strong>同步</strong></li>
+</ul>
+<p>实体是任何可接受或发送信息的硬件或软件进程。</p>
+<p>协议是控制两个对等实体（或多个实体）进行通讯的规则的集合。</p>
+</li>
+<li><p>协议和服务的区别： </p>
+<p>协议的实现保证了能够向上一层提供服务。本层的服务用户只能看见服务而无法看见下面的协议。即<strong>下面的协议对上面的服务用户是透明的。</strong></p>
+<p><strong>协议是“水平的”</strong>，即协议是控制两个对等实体进行通信的规则。但<strong>服务是“垂直的”</strong>，即服务是由下层通过层间接口向上层提供的。上层使用所提供的服务必须与下层交换一些命令，这些命令在OSI中称为服务原语。</p>
+</li>
+<li><p>ATM网络的“打包”最大特点是“小步快跑”的快速分组交换方式。（✅）</p>
+</li>
+<li><p>Linux和Unix适合作用网络服务器的基本平台么？（✅）</p>
+</li>
+<li><p>TCP/IP 网络中，物理地址与<strong>数据链路层</strong>有关，逻辑地址与<strong>网络层</strong>有关，端口地址和<strong>传输层</strong>有关。</p>
+</li>
+<li><p>CSMA/CD总线网适用的标准（a）。</p>
+<p>A.IEEE802.3</p>
+<p>B.IEEE802.5</p>
+<p>C.IEEE802.6</p>
+<p>D.IEEE802.11</p>
+<p>802.3 :以太网Ethernet (CSMA/CD) </p>
+<p>802.5 :令牌环Token Ring </p>
+<p>802.6 :城域网(DQDB Distributed Queue Dual Bus 分布式队列双总线 ) </p>
+<p>802.11:无线局域网Wireless LAN</p>
+</li>
+<li><p>无线局域网不使用CSMA/CD，而使用CSMA/CA的主要原因是<strong>_C_</strong>。</p>
+<p>A．不需要在发送过程中进行冲突检测<br>B．无线信号的广播特性，使得不会出现冲突<br>C．不能同时收发，无法在发送时接收信号<br>D．覆盖范围较小，不进行冲突检测，不影响正确性  </p>
+<blockquote>
+<p>CSMA/CA是IEEE 802.11无线局域网(WLAN)的MAC子层协议，主要用于解决无线局域网的信道共享访问问题。而在采用IEEE 802.3标准的以太网中，MAC子层采用CSMA/CD协议。这两种协议都针对网络中共享信道如何分配的问题，但它们的工作原理却有所不同。最明显的区别是：CSMA/CA是在冲突发生前进行冲突处理，而CSMA/CD是在冲突发生后进行冲突处理。导致这种不同的根本原因在于，WLAN所采用的传输媒介和传统LAN所采用的传输媒介有着本质的区别。也正是这种区别，导致WLAN存在新的问题：隐藏站问题和暴露站问题。这些问题都属于隐蔽终端问题。对于采用CSMA/CA协议的无线局域网络(WLAN)，使用了预约信道、ACK帧回避机制、RTS/CTS回避机制来实现冲突避免。无论是ACK帧回避机制还是RTS/CTS回避机制，都因为增加了额外的网络流量，所以在网络利用率方面，IEEE802.11无线网络与类似的以太网相比，性能总是差一点。</p>
+<p>从另一个角度分析，在无线局域网中实现冲突检测比较困难，其主要原因在于：①要检查是否存在冲突，需要无线连接设备一边传送数据，一边接收数据，这对于无线设备而言比较难以实现；②无线介质上的信号强度动态的变化范围很广，因此发送方无法使用信号强度的变化来判断是否出现了冲突；③在无线通信中存在“隐藏站”问题等。</p>
+</blockquote>
+</li>
+<li><p>网络上软硬件共享资源包括 服务器 、 打印机 、 文件 、 工具软件与应用软件 和 数据 。</p>
+</li>
+<li><p>结构化布线系统主要包含以下六个方面内容：</p>
+<p>户外系统 、 垂直量竖井系统 、 平面楼层系统 、 用户端子区 、 机房子系统  和 布线配线系统 。</p>
+</li>
+<li><p>最基本的网络拓扑结构：环形，星形，总线。</p>
+</li>
+</ol>
+<h2 id="物理层"><a href="#物理层" class="headerlink" title="物理层"></a>物理层</h2><ol>
+<li><p>串行/并行传输（没有绝对）</p>
+<p><strong>串行传输</strong>：数据在一个信道上按位的次序传输的方式</p>
+<p><strong>并行传输</strong>：数据在多个信道上同时传输的方式。</p>
+<p>数据在<strong>计算机内部</strong>一般采用<strong>并行传输</strong>，但是数据在<strong>通信线路</strong>中一般是<strong>串行传输</strong>，这是出于经济的考虑。</p>
+</li>
+<li><p>从通讯双方的<strong>交互方式</strong>来看，有三种基本方式：</p>
+<ul>
+<li><strong>单向通讯</strong>（单工通讯）：只能有一个方向上的通讯，如无线电广播、有线电广播、电视信号</li>
+<li><strong>双向交替通讯</strong>（半双工通讯）：双方都可以发送/接受信息，但是<strong>不能同时</strong>发送/接受。</li>
+<li><strong>双向同时通讯</strong>（全双工通讯）：双方可以同时发送/接受信息。</li>
+</ul>
+</li>
+<li><p>信道复用技术，即共享信道进行通讯。</p>
+<ul>
+<li><strong>频分复用</strong>FDM：所有用户在同一时间占用不同的带宽资源（频率带宽）。</li>
+<li><strong>时分复用</strong>TDM：所有用户在不同时间占用相同的频带宽度。</li>
+<li>统计时分复用STDM：一种改进的时分复用。</li>
+<li><strong>码分复用</strong>CDM：每一个用户在相同的时间内使用相同的频带进行通讯，各用户使用了特殊挑选的不同码型，所以不会有干扰。</li>
+<li><strong>波分复用</strong>WDM：光的频分复用。</li>
+</ul>
+</li>
+<li><p>外置式调制解调器，一般应该接在计算机的<strong>串行口</strong>上。</p>
+</li>
+<li><p><strong>光纤通信</strong>的优缺点：</p>
+<p>光纤通信的优点： </p>
+<p>   （1）容许频带很宽，传输容量很大</p>
+<p>   （2）损耗低、中继距离长</p>
+<p>   （3）保密性能好</p>
+<p>   （4）抗电磁干扰性能强</p>
+<p>   （5）节省有色金属和原材料</p>
+<p>   （6）体积小、重量轻</p>
+<p>光纤通信的缺点：</p>
+<p>   （1）抗拉强度低</p>
+<p>   （2）光纤连接困难</p>
+<p>   （3）光纤怕水</p>
+</li>
+<li><p>物理层的接口有哪几个方面的特性？各包含些什么内容？</p>
+<p>（1）机械特性:说明接口所用的接线器的形状和尺寸、引线数目和排列、固定和锁定装置等等。</p>
+<p>（2）电气特性:指明在接口电缆的各条线上出现的电压的范围。</p>
+<p>（3）功能特性:指明某条线上出现的某一电平的电压表示何意。</p>
+<p>（4）规程特性:说明对于不同功能的各种可能事件的出现顺序。</p>
+</li>
+</ol>
+<h2 id="数据链路层"><a href="#数据链路层" class="headerlink" title="数据链路层"></a>数据链路层</h2><ol>
+<li><p>要发送的数据为1101011011。采用CRC(循环冗余检验)的生成多项式是P(X)=X^4^+X+1。试求应添加在数据后面的余数。数据在传输过程中最后一个1变成了0，问接收端能否发现？若数据在传输过程中最后两个1都变成了0，问接收端能否发现？采用CRC检验后，数据链路层的传输是否就变成了可靠的传输？</p>
+<p>p=10011,n=4,m=1101011011,k=10</p>
+<p>1101011011000/10011商为110000101，余数为1100，所以添加的检验序列（帧检验序列FCS）是 1110。</p>
+<p>两种错误均可发现。</p>
+<p>因为CRC校验只能保证无比特差错出现，但仍可能出现传输差错（帧丢失、帧重复、帧失序），而且缺少重传机制，数据链路层的传输还不是可靠的传输。</p>
+</li>
+<li><p><strong>网络适配器</strong>的作用是什么? 网络适配器工作在哪一层?</p>
+<p>适配器（即网卡）来实现数据链路层和物理层这两层的协议的硬件和软件网络</p>
+<p>适配器工作在TCP/IP协议中的网络接口层。</p>
+</li>
+<li><p><strong>数据链路层的三个基本问题</strong>(封装成帧、透明传输和差错检测)为什么都必须加以解决？</p>
+<p>答：<strong>封装成帧</strong>是分组交换的必然要求，<strong>透明传输</strong>避免消息符号与帧定界符号相混淆，<strong>差错检测</strong>防止差错的无效数据帧浪费后续路由上的传输和处理资源</p>
+</li>
+<li><p>有固定基础设施的无线局域网中的一个站检测到信道处于忙态，或者是由于物理层的<strong>载波监听</strong>检测到信道忙，或者是由于MAC层的<strong>虚拟载波监听机制</strong>指出了信道忙。</p>
+</li>
+<li><p>试说明 10BASE-T各数字或字母代表的含义：</p>
+<p>10代表10Mbps的数据传输率，BASE表示连接线上的信号是基带信号，T代表双绞线。</p>
+</li>
+<li><p>网桥的工作原理和特点是什么？网桥与转发器以及以太网交换机有何异同？</p>
+<p>网桥工作在数据链路层，它根据MAC帧的目的地址对收到的帧进行转发。网桥具有过滤帧的功能。当网桥收到一个帧时，并不是向所有的接口转发此帧，而是先检查此帧的目的MAC地址，然后再确定将该帧转发到哪一个接口。转发器工作在物理层，它仅简单地转发信号，没有过滤能力。以太网交换机则为数据链路层设备，可视为多端口网桥。</p>
+</li>
+<li><p>试比较网络互连设备网桥、路由器、网络协议变换器在对应协议层功能方面的主要区别。</p>
+<p>A.网桥用于数据链路层以上相同的网络，用于连接多个网段和多个服务器网际过滤。</p>
+<p>B.路由器用于网络层以上相同的网络，对转发路径进行选择。</p>
+<p>C.各层均不相同的网络，对不同类型网络协议进行转换。</p>
+</li>
+<li><p>网桥、交换机、集线器、转发器</p>
+<p><strong>网桥</strong>：网桥属于二层设备，像是一个聪明的中继器（Repeater），除了可以扩展网络的物理连接范围外，还可以对MAC 地址进行分区，隔离不同物理网段之间的碰撞（也就是隔离“冲突域”），网桥一般只有两个端口。</p>
+<p><strong>集线器</strong>是工作在物理层的设备，首先是节点发信号到线路，集线器接收该信号，因信号在电缆传输中有衰减，<strong>集线器接收信号后将衰减的信号整形放大，最后集线器将放大的信号广播转发给其他所有端口。</strong></p>
+<p><strong>交换机</strong>与网桥的工作原理类似，它也是一个二层设备，不过它支持多个端口，并且可以逻辑上将不同端口进行分组，得到所谓的VLAN。此外，交换机的数据传输速率比网桥快。</p>
+<p><strong>路由器</strong>是一个三层设备，用来连接不同IP网段的各子网。</p>
+</li>
+<li><p>局域网将数据链路层分割为哪两个子层？这两个子层分别完成了什么功能？</p>
+<p>局域网将数据链路层划分为两个子层：逻辑链路控制LLC子层和介质访问控制MAC子层，从而使LAN体系结构能适应多种传输介质。因此，对各种类型的局域网来说，其物理和MAC子层需要随着所采用介质和访问方法的不同发生改变，而这些不同对于LLC子层来说都是透明的。</p>
+<p>（1）LLC作为数据链路层的一个子层，使用MAC子层为其提供的服务，通过与对等实体LLC子层的交互为它的上层网络层提供服务。</p>
+<p>（2）MAC子层是用来实现介质访问控制的网络实体。MAC子层主要功能包括数据帧的封装/拆封、帧的寻址与识别、帧的接收与发送、链路的管理、帧的差错控制及MAC协议的维护等。</p>
+</li>
+<li><p>简要说明电路交换和存储器转发交换这两种交换方式，并加以比较。</p>
+<p>电路交换是一种直接的交换方式，它为一对需要进行通信的装置之间提供一条临时的专用通道，即提供一条专用的传输通道，即可是物理通道又可是逻辑通道。这条通道时由节点内部电路对节点间传输路径通过适当选择、连接而完成的，由多个节点和多条节点间传输路径组成的链路，例如，目前公用电话网广泛使用的交换方式是电路交换。</p>
+<p>存储转发交换方式又可以分为报文存储转发方式与报文分组存储转发交换，报文分组存储转发交换方式又可以分为数据包与虚电路方式。分组交换属于“存储转发”交换方式，但它不像报文交换那样以报文为单位进行交换、传输，而是以更短的、标准的“报文分组”为单位进行交换传输。分组经过通信网络到达终点有两种方法：虚电路和数据报。</p>
+<p>与电路交换相比，报文交换方式不要求交换网为通信双方预先简历条专用的数据桐庐，因此不存在简历电路和拆除电路的过程。</p>
+</li>
+</ol>
+<h2 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h2><ol>
+<li><p>某单位分配到一个 B 类 IP 地址，其 net-id 为 129.250.0.0；该单位有 4000 台机器，分布在16个不同的地 点。如选用子网掩码为 255.255.255.0，试给每一个地点分配一个子网掩码号，并算出每个地点主机号码的最小值和最大值 ；</p>
+<p>根据要求，要有16个子网，每个子网有4000/16=250台主机。若子网掩码为 255.255.255.0，则每个子网最多有2^8^-2=256-2=254&gt;250个主机，符合要求，最大子网数量为2^8^-2=254&gt;16，符合要求。</p>
+<p>（这里子网号为1到16）</p>
+<p>| 序号 | 主机ip最小值 | 主机ip最大值 |<br>| – | —- | —– |<br>| 1 | 129.250.16.1 | 129.250.16.249 |<br>| 2 | 129.250.1.1 | 129.250.1.249 |<br>| 3 | 129.250.2.1 | 129.250.2.249 |<br>| 4 | 129.250.3.1 | 129.250.3.249 |<br>| 5 | 129.250.4.1 | 129.250.4.249 |<br>| 6 | 129.250.5.1 | 129.250.5.249 |<br>| 7 | 129.250.6.1 | 129.250.6.249 |<br>| 8 | 129.250.7.1 | 129.250.7.249 |<br>| 9 | 129.250.8.1 | 129.250.8.249 |<br>| 10 | 129.250.9.1 | 129.250.9.249 |<br>| 11 | 129.250.10.1 | 129.250.10.249 |<br>| 12 | 129.250.11.1 | 129.250.11.249 |<br>| 13 | 129.250.12.1 | 129.250.12.249 |<br>| 14 | 129.250.13.1 | 129.250.13.249 |<br>| 15 | 129.250.14.1 | 129.250.14.249 |<br>| 16 | 129.250.15.1 | 129.250.15.249 |</p>
+</li>
+<li><p>某单位分配到一个地址块136.23.12.64/26。现在需要进一步划分为4个一样大的子网，问：（1）每一个子网的网络前缀有多长？（2）每一个子网中有多少个地址？（3）每一个子网的地址是什么？（4）每一个子网可分配给主机使用的最小地址和最大地址是什么？</p>
+<p><strong>现在的子网号是可以全零/全1的。</strong></p>
+<p>（1）每个子网前缀28位。</p>
+<p>（2）每个子网的主机号长度为4位，总共16个地址，但全0和全1不能使用，可用的地址有14个。</p>
+<p>（3）四个子网的地址块是：</p>
+<p>第一个地址块136.23.12.64/28，可分配给主机使用的</p>
+<p>   最小地址：136.23.12.01000001＝136.23.12.65/28</p>
+<p>   最大地址：136.23.12.01001110＝136.23.12.78/28</p>
+<p>第二个地址块136.23.12.80/28，可分配给主机使用的</p>
+<p>   最小地址：136.23.12.01010001＝136.23.12.81/28</p>
+<p>   最大地址：136.23.12.01011110＝136.23.12.94/28</p>
+<p>第三个地址块136.23.12.96/28，可分配给主机使用的</p>
+<p>   最小地址：136.23.12.01100001＝136.23.12.97/28</p>
+<p>   最大地址：136.23.12.01101110＝136.23.12.110/28</p>
+<p>第四个地址块136.23.12.112/28，可分配给主机使用的</p>
+<p>   最小地址：136.23.12.01110001＝136.23.12.113/28</p>
+<p>   最大地址：136.23.12.01111110＝136.23.12.126/28</p>
+</li>
+<li><p>IP二进制到十进制的转换</p>
+</li>
+<li><p>A、B、C型网络总结</p>
+<p>| 网络类别 | 格式                                            | 最大可指派网络数                             | 第一个可指派的网络号     | 最后一个可指派的网络号 | 每个网络中的最大主机数                                       |<br>| ——– | ———————————————– | ——————————————– | ———————— | ———————- | ———————————————————— |<br>| A型地址  | 8位网络号+24位主机号（其中网络号开头为<strong>0</strong>）   | 2^8-1^-2（全0表示本网络，0+全1表示回环网络） | <strong>1</strong>（最小是0）         | <strong>126</strong>（最大是127）   | 2^24^-2=16777216-2（全0表示主机所在的网络地址，全1表示网络上的所有主机） |<br>| B型地址  | 16位网络号+16位主机号（其中网络号开头为<strong>10</strong>） | 2^16-2^-1（全0不行，<strong>全1可以</strong>）            | <strong>128.1</strong>（最小是128.0） | <strong>191.255</strong>            | 2^16^-2=65536-2（全0、全1不行，原因同上）                    |<br>| C型地址  | 24位网络号+8位主机号（其中网络号开头为<strong>110</strong>） | 2^24-3^-1（全0不行，全1可以）                | <strong>192.0.1</strong>              | <strong>192.255.255</strong>        | 2^8^-2=256-2（全0、全1不行，原因同上）                       |<br>| D型地址  | 1110+多播地址                                   |                                              |                          |                        |                                                              |<br>| E型地址  | 1111+保留                                       |                                              |                          |                        |                                                              |</p>
+</li>
+<li><p>网络层向上提供的服务有哪两种？试比较其优缺点。</p>
+<p>网络层向运输层提供 “<strong>面向连接”的虚电路（Virtual Circuit）服务</strong>或“<strong>无连接”的数据报网络服务</strong>。前者预约了双方通信所需的一切网络资源。优点是能提供服务质量的承诺。即所传送的分组不出错、丢失、重复和失序（不按序列到达终点），也保证分组传送的时限，缺点是路由器复杂，网络成本高；后者无网络资源障碍，尽力而为，优缺点与前者互易</p>
+</li>
+<li><p>划分子网</p>
+</li>
+<li><p>以太网帧为什么要规定最小帧长？</p>
+<p>在以前的以太网络中，网络中的主机是以总线形式连接在一起的，为了防止信号域的冲突，采用带有冲突检测的载波监听技术（CSMA/CD）可以达到多用户共享信道的目的，而在采用CSMA/CD技术时，为确保最远的主机可以及时接收到冲突信号，就必须要求主机发送完数据帧前必须可以接送到冲突信号，若帧长太短，就无法达到该效果，从而错误地认为没有发生冲突。在以前的以太网中，争用期为51.2us，带宽为10Mbps，因而最小帧长为512b即64字节。</p>
+</li>
+<li><p>使用TCP对实时话音数据的传输有没有什么问题？使用UDP在传送数据文件时会有什么问题？</p>
+<p>答：如果语音数据不是实时播放（边接受边播放）就可以使用TCP，因为TCP传输可靠。接收端用TCP讲话音数据接受完毕后，可以在以后的任何时间进行播放。但假定是实时传输，则必须使用UDP。  UDP不保证可靠交付，但UCP比TCP的开销要小很多。因此只要应用程序接受这样的服务质量就可以使用UDP。</p>
+</li>
+<li><p>路由器技术属于数据链路层协议？❌</p>
+<p>错误，路由器技术是指根据数据包的目的IP地址转发数据包，属于第三层网络层。c</p>
+</li>
+</ol>
+<h2 id="运输层"><a href="#运输层" class="headerlink" title="运输层"></a>运输层</h2><ol>
+<li><p>信带宽为1Gbps，端到端传播延时10ms，TCP的发送端窗口为65535字节，试问，可能达到的最大带宽是多少？信道的利用率是多少？</p>
+<p>报文的传输时延：TS=65535×8/(1×10^9^b/s)=0.524ms</p>
+<p>往返时延等于两倍的端到端传播时延，传输一个TCP报文段的时间为 20ms+0.524ms=20.524ms （确认信息很小不考虑发送时延）</p>
+<p>最大吞吐量为一个窗口的大小除以一个传输轮次的时间， 65535×8/20.524ms=25.5Mb/s。</p>
+<p>信道利用率= 0.524/20.524=2.55%</p>
+</li>
+<li><p>计算题：一个TCP连接下面采用256kbps的链路，其端到端延时为128ms，经测试，发现吞吐量只有120kbps，试问滑动窗口W是多少？（两种答案，最大和最小）</p>
+<p>设滑动窗口为W（bit），传输W的用时为T（T=W/256）。</p>
+<p>（1）若接受端在受到窗口数据的最后一个数据后，才发送确认，则发送端经过(T+128*2)时间后才能发送下一个窗口，在此条件下：</p>
+<p>W/（W/256+128*2）= 120</p>
+<p>解得：</p>
+<p>W≈57826</p>
+<p>（2）若接受端每收到一个很小的报文段后就发送确认，极端情况下，发送端每经过128*2时间就发送下一个窗口，在此条件下：</p>
+<p>W/（128*2）= 120</p>
+<p>解得：</p>
+<p>W=30720</p>
+</li>
+<li><p>试说明运输层在协议栈中的地位和作用，运输层的通信和网络层的通信有什么重要区别？为什么运输层是必不可少的？</p>
+<p>运输层处于面向通信部分的最高层，同时也是用户功能中的最低层，向它上面的应用层提供服务。运输层为应用进程之间提供端到端的逻辑通信，但网络层是为主机之间提供逻辑通信（面向主机，承担路由功能，即主机寻址及有效的分组交换）。 各种应用进程之间通信需要“可靠或尽力而为”的两类服务质量，必须由运输层以复用和分用的形式加载到网络层。</p>
+</li>
+<li><p>文件传输协议FTP采用的是客户/服务器模式，用于在网络上进行文件传输的一套标准协议。</p>
+<p>两种工作方式：主动模式和被动模式。</p>
+</li>
+<li><p>运输层2个协议TCP/UDP</p>
+</li>
+</ol>
+<h2 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h2><ol>
+<li><p>万维网WWW（World Wide Web）:万维网是一个大规模的、联机式的信息储藏所。</p>
+</li>
+<li><p>超文本和超媒体</p>
+<p>超文本指包含其他文档链接的文本。超文本是万维网的基础。</p>
+<p>超媒体与超文本的区别是<strong>文档内容不同</strong>。超文本文档仅包含文本信息，而超媒体文档还包含其他表示方式的信息，如图形、图像、声音、动画以及视频图像等。</p>
+</li>
+</ol>
+<h2 id="网络安全"><a href="#网络安全" class="headerlink" title="网络安全"></a>网络安全</h2><ol>
+<li><p>公钥密码体制使用不同的加密密钥和解密密钥。</p>
+<p>公开密钥密码体制的产生主要是因为两个方面的原因：</p>
+<ul>
+<li>常规密钥密码体制的密钥分配问题</li>
+<li>对数字签名的需求。</li>
+</ul>
+<p>RSA加密算法：</p>
+<p>每个用户有两个密钥：加密密钥PK ={<em>e</em>, <em>n</em>} 和解密密钥 SK ={<em>d</em>, <em>n</em>}。N 为两个大素数 <em>p</em>和 <em>q</em> 之积（素数 <em>p</em>和 <em>q</em> 一般为 100位以上的十进数），<em>e</em>和 <em>d</em> 满足一定的关系。当敌手已知 <em>e</em>和 <em>n</em> 时并不能求出 <em>d</em>。 </p>
+<blockquote>
+<p>设选择了两个素数，<em>p</em> = 7, <em>q</em> = 17。</p>
+<p>计算出 <strong><em>n</em></strong> = <em>pq</em> = 7<em>17 = 119。 计算出 </em>f<em>(</em>n<em>) = (</em>p<em> - 1)(</em>q* - 1) = 96。</p>
+<p>从[0, 95]中选择一个与 96 互素的数<em>e</em>。 <strong>选 <em>e</em> = 5</strong>。然后根据(9-10)式：5<em>d</em> = 1 mod 96</p>
+<p>解出 <em>d</em>。不难得出，<strong><em>d</em></strong> = 77, 因为 <em>ed</em> = 5 <em>77 = 385     = 4 </em>96 + 1 = 1 mod 96。</p>
+<p>于是，公开密钥 PK = (<em>e</em>, <em>n</em>) = {5, 119},  秘密密钥 SK = {77, 119}。 </p>
+</blockquote>
+</li>
+<li><p>网络防病毒技术主要内容是什么？</p>
+<p>网络防病毒技术包括预防病毒、检测病毒和消除病毒等3种技术： 网络防病毒技术的具体实现方法包括对网络服务器中的文件进行频繁地扫描和监测。工作站上采用防病毒芯片和对网络目录及文件设置访问权限等。防病毒必须从网络整体考虑，从方便管理人员的工作着手，通过网络环境管理网络上的所有机器，例如，利用网络唤醒功能，在夜间对全网的客户机进行扫描，检查病毒情况。利用在线报警功能，网络上每一台机器出现故障、病毒侵入时，网络管理人员都能及时知道，从而从管理中心处予以解决。</p>
+</li>
+<li><p>防火墙</p>
+<p>防火墙（firewall）作为一种<strong>访问控制</strong>技术，通过严格控制进出<strong>网络边界的分组</strong>，禁止任何<strong>不必要的通信</strong>，从而减少潜在入侵的发生，尽可能降低这类安全威胁所带来的安全风险。</p>
+<p>防火墙的两种技术：</p>
+<ul>
+<li>分组过滤路由器</li>
+<li>应用网关</li>
+</ul>
+<p>第二层防线是入侵检测系统IDS，它通过对进入<strong>网络的分组进行深度分析与检测</strong>发现疑似入侵行为的网络活动，并进行报警以便进一步采取相应措施。</p>
+</li>
+<li><p>两种密码体系</p>
+<ul>
+<li>对称密钥密码体制：加密密钥和解码密钥是使用相同的密码体制。</li>
+<li>公钥密码体制：使用不同的加密和解密密钥</li>
+</ul>
+<p>任何加密方法的<strong>安全性取决于密钥的长度</strong>，以及<strong>攻破密文所需的计算量</strong>，而<strong>不是简单地取决于加密的体制</strong>（公钥密码体制或传统加密体制）。我们还要指出，公钥密码体制并没有使传统密码体制被弃用，因为目前公钥加密算法的开销较大，在可见的将来还不会放弃传统加密方法。</p>
+<h2 id="名称翻译-amp-解释"><a href="#名称翻译-amp-解释" class="headerlink" title="名称翻译 &amp; 解释"></a><strong>名称翻译 &amp; 解释</strong></h2><p>OSI: 开放式系统互联（Open System Interconnection Reference Model）简称OSI ，一种开发的互联网模型，包括七层协议栈</p>
+<p>ISO: 国际标准化组织（International Organization for Standardization，ISO）简称ISO，一个专门制定各项标准的国际组织</p>
+<p>URL：统一资源定位符 （Uniform Resource Locator），用来对互联网上的资源进行定位和访问的一串字符串</p>
+<p>MIME: 多用途互联网邮件扩展类型 (Multipurpose Internet Mail Extensions) 是设定某种扩展名的文件用一种应用程序来打开的方式类型，当该扩展名文件被访问的时候，浏览器会自动使用指定应用程序来打开。</p>
+<p> FDDI：光纤分布式数据接口（Fiber Distributed Data Interface）80年代中期发展起来一项局域网技术，它提供的高速数据通信能力要高于当时的以太网（10Mbps）和令牌网（4或16Mbps）的能力</p>
+<p> TCP: 传输控制协议(Transmission Control Protocol )，一种面向连接、可靠的、基于字节序列的传输层协议</p>
+<p> UDP: 用户数据报协议(User Datagram Protocol)，一种无连接的，尽最大努力保证交付的传输层协议</p>
+<p>TCP/IP: TCP/IP协议栈(TCP/IP Protocol Stack)，是一个网络通信模型，可以看做是对OSI七层协议的简化。包括应用层、传输层、网际IP层、网络接口层四大层协议。</p>
+<p>ARP:地址解析协议（Address Resolution Protocol），一种根据IP地址获取到网卡物理地址的协议</p>
+<p>RARP: 反向地址解析协议（Reversed Address Resolution Protocol），和ARP协议作用相反，将网络中的网卡物理地址转化为其对应的主机IP地址。</p>
+<p>IP: 互联网协议（Internet Protocol ），五层网络协议栈中的网络层协议</p>
+<p>FTP: 文件传输协议（File <strong>T</strong>ransfer Protocol），一种基于TCP的协议应用层，是用于在网络上进行文件传输的一套标准协议，使用客户/服务器模式广域网WAN（Wide Area Network）</p>
+<p>城域网MAN（Metropolitan Area Network）</p>
+<p>局域网LAN（Local Area Network）</p>
+<p>个人局域网PAN（Personal Area Network） </p>
+</li>
+</ol>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/复习/">复习</a>, <a class="has-link-grey -link" href="/tags/计算机网络/">计算机网络</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/04/15/Software-Test/7 基于控制流和数据流的测试充分性评价/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">基于控制流和数据流的测试充分性评价</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/04/13/Software-Test/2 测试的数学知识/">
+                <span class="level-item">第二节 测试的数学知识</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="计算机网络期末复习" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>chapter2-Introduction to SQL - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="1. Cae Codd Outdoor Sports2. SQL Background3. The SQL SELECT/FROM/WHERE Framework SELECT/FROM/WHERE语句： SELECT 语句指定了查询结果中列出的列。 FROM 语句指定了查询的表。 WHERE 语句制定了查询结果中列出的行">
+<meta name="keywords" content="数据库原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="chapter2-Introduction to SQL">
+<meta property="og:url" content="http://yoursite.com/2019/01/04/Database-Principles/chapter2-Introduction to SQL/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="1. Cae Codd Outdoor Sports2. SQL Background3. The SQL SELECT/FROM/WHERE Framework SELECT/FROM/WHERE语句： SELECT 语句指定了查询结果中列出的列。 FROM 语句指定了查询的表。 WHERE 语句制定了查询结果中列出的行">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.245Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="chapter2-Introduction to SQL">
+<meta name="twitter:description" content="1. Cae Codd Outdoor Sports2. SQL Background3. The SQL SELECT/FROM/WHERE Framework SELECT/FROM/WHERE语句： SELECT 语句指定了查询结果中列出的列。 FROM 语句指定了查询的表。 WHERE 语句制定了查询结果中列出的行">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="chapter2-Introduction to SQL" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2019-01-04T16:00:00.000Z">2019-01-05</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.245Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/数据库原理/">数据库原理</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    17 分钟 读完 (大约 2583 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                chapter2-Introduction to SQL
+            
+        </h1>
+        <div class="content">  
+            <h2 id="1-Cae-Codd-Outdoor-Sports"><a href="#1-Cae-Codd-Outdoor-Sports" class="headerlink" title="1. Cae Codd Outdoor Sports"></a>1. Cae Codd Outdoor Sports</h2><h2 id="2-SQL-Background"><a href="#2-SQL-Background" class="headerlink" title="2. SQL Background"></a>2. SQL Background</h2><h2 id="3-The-SQL-SELECT-FROM-WHERE-Framework"><a href="#3-The-SQL-SELECT-FROM-WHERE-Framework" class="headerlink" title="3. The SQL SELECT/FROM/WHERE Framework"></a>3. The SQL SELECT/FROM/WHERE Framework</h2><ul>
+<li><p>SELECT/FROM/WHERE语句：</p>
+<p>SELECT 语句指定了查询结果中列出的列。</p>
+<p>FROM 语句指定了查询的表。</p>
+<p>WHERE 语句制定了查询结果中列出的行</p>
+<a id="more"></a>
+<ol>
+<li><p>The SQL SELECT clause specifies which columns are to be listed in the query results. </p>
+</li>
+<li><p>The SQL FROM clause specifies which tables are to be used in the query. </p>
+</li>
+<li><p>The SQL WHERE clause specifies which rows are to be listed in the query results. </p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> Department,Buyer</span><br><span class="line"><span class="hljs-keyword">FROM</span> SKU_DATA </span><br><span class="line"><span class="hljs-keyword">WHERE</span> Department=<span class="hljs-string">'Water Sports'</span>;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>SQL语句以分号；结尾，尽管一些DBMS允许忽略分号。</p>
+<p>Notice that SQL statements terminate with a semicolon (;) character. The semicolon  is required by the SQL standard. Although some DBMS products will allow you to omit the semicolon, some will not, so develop the habit of terminating SQL statements  with a semicolon.</p>
+</li>
+<li><p>SELECT语句中指定的列的顺序决定了结果的表中列的顺序。</p>
+<p>The order of the column names in the SELECT phrase determines the order of the  columns in the results table. </p>
+</li>
+<li><p>通过DISTINCT语句可以消除结果表中重复的行。</p>
+<p>We can eliminate duplicates by using the SQL DISTINCT keyword, as follows:</p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">DISTINCT</span> Buyer,Department</span><br><span class="line"><span class="hljs-keyword">FROM</span> SKU_DATA;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通配符选择表中所有列。</p>
+<p>The shorthand is to use the SQL asterisk (*) wildcard character to indicate that we want all the columns to be displayed:</p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> *</span><br><span class="line"><span class="hljs-keyword">FROM</span> SKU_DATA;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>WHERE 语句中对于字符或日期常量需要用无方向的单引号包围，但数字常量不需要。</p>
+<p>In an SQL WHERE clause, if the column contains text or date data, the comparison values must be enclosed in single quotation marks ( ‘{text or date data}’ ). If the column contains numeric data, however, the comparison values need not be in quotes. </p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> *</span><br><span class="line"><span class="hljs-keyword">FROM</span> SKU_DATA</span><br><span class="line"><span class="hljs-keyword">WHERE</span> SKU &gt; <span class="hljs-number">200000</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>SQL不要求 WHERE 中出现的列必须出现在 SELECT 中。</p>
+<p>SQL does not require that the column used in the WHERE clause also appear in the SELECT clause column list. Thus, we can specify:</p>
+</li>
+<li><p>SQL 允许语句写在多行或一行，但是多行被鼓励因为它便于阅读。</p>
+<p>All DBMS products would process the statement written in this fashion. However, the standard multiline coding convention makes SQL easier to read, and we encourage you to write your SQL according to it. </p>
+</li>
+</ul>
+<h2 id="4-Submitting-SQL-Statements-to-the-DBMS"><a href="#4-Submitting-SQL-Statements-to-the-DBMS" class="headerlink" title="4. Submitting SQL Statements to the DBMS"></a>4. Submitting SQL Statements to the DBMS</h2><h2 id="5-SQL-Enhancements-for-Querying-a-Single-Table"><a href="#5-SQL-Enhancements-for-Querying-a-Single-Table" class="headerlink" title="5. SQL Enhancements for Querying a Single Table"></a>5. SQL Enhancements for Querying a Single Table</h2><ul>
+<li><p>ORDER语句：根据某一列按照默认升序排序。</p>
+<p>If you want the DBMS to display the rows in a<br>particular order, you can use the SQL ORDER BY clause. For example, the SQL<br>statement: </p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> *</span><br><span class="line"><span class="hljs-keyword">FROM</span> ORDER_ITEM</span><br><span class="line"><span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> OrderNumber;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>根据多行排序，在第一个指定列值相同的情况下，根据第二个指定列的中排序。</p>
+<p>We can sort by two columns by adding a second column name. </p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> *</span><br><span class="line"><span class="hljs-keyword">FROM</span> ORDER_ITEM</span><br><span class="line"><span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> OrderNumber, Price;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过 DESC/ASC 语句改变排序方式。</p>
+<p>To sort in descending order, add the SQL DESC keyword after the column name.</p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> *</span><br><span class="line"><span class="hljs-keyword">FROM</span> ORDER_ITEM</span><br><span class="line"><span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> Price <span class="hljs-keyword">DESC</span>, OrderNumber <span class="hljs-keyword">ASC</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>复合WHERE子句：WHERE子句可以包含许多条件，比如 AND, OR, OR, IN, NOT IN.</p>
+<p>SQL WHERE clauses can include multiple conditions by using the SQL AND, OR, IN, and NOT IN operators. </p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> *</span><br><span class="line"><span class="hljs-keyword">FROM</span> SKU_DATA</span><br><span class="line"><span class="hljs-keyword">WHERE</span> Department=<span class="hljs-string">'Water Sports'</span></span><br><span class="line"><span class="hljs-keyword">AND</span> Buyer=<span class="hljs-string">'Nancy Meyers'</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> *</span><br><span class="line"><span class="hljs-keyword">FROM</span> SKU_DATA</span><br><span class="line"><span class="hljs-keyword">WHERE</span> Buyer <span class="hljs-keyword">IN</span> (<span class="hljs-string">'Nancy Meyers'</span>, <span class="hljs-string">'Cindy Lo'</span>, <span class="hljs-string">'Jerry Martin'</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>WHERE子句中的范围：WHERE子句中可以通过 BETWEEN… AND 子句来指定数据的范围。这个范围只包括区间的两端的。</p>
+<p>SQL WHERE clauses can specify ranges of data values by using the SQL BETWEEN<br>keyword. For example, the following SQL statement</p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> *</span><br><span class="line"><span class="hljs-keyword">FROM</span> ORDER_ITEM</span><br><span class="line"><span class="hljs-keyword">WHERE</span> ExtendedPrice <span class="hljs-keyword">BETWEEN</span> <span class="hljs-number">100</span> <span class="hljs-keyword">AND</span> <span class="hljs-number">200</span>;</span><br></pre></td></tr></table></figure>
+<p>等同于</p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> *</span><br><span class="line"><span class="hljs-keyword">FROM</span> ORDER_ITEM</span><br><span class="line"><span class="hljs-keyword">WHERE</span> ExtendedPrice &gt;=  <span class="hljs-number">100</span></span><br><span class="line"><span class="hljs-keyword">AND</span>	ExtendedPrice &lt;=  <span class="hljs-number">200</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>WHERE子句中的通配符：LIKE 语句可以用在 WHERE 语句中来匹配一行中某列下的值。用百分号%来作为通配符，表示字符序列。Microsoft  Access 中使用星号*作为字符序列的通配符。</p>
+<p>下划线_用于表示单独的一个字符，利用它可以匹配某一位上确定的字符。Microsoft  Access 中使用问号？作为单个字符的通配符。</p>
+<p>The SQL LIKE keyword can be used in SQL WHERE clauses to specify matches on<br>portions of column values. . To find such rows, we use the SQL keyword LIKE with the SQL percent sign (%) wildcard character, as shown in the SQL query: </p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> *</span><br><span class="line"><span class="hljs-keyword">FROM</span> SKU_DATA</span><br><span class="line"><span class="hljs-keyword">WHERE</span> Buyer <span class="hljs-keyword">LIKE</span> <span class="hljs-string">'Pete%'</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> *</span><br><span class="line"><span class="hljs-keyword">FROM</span> SKU_DATA</span><br><span class="line"><span class="hljs-keyword">WHERE</span> Buyer <span class="hljs-keyword">LIKE</span> <span class="hljs-string">'%Tent%'</span>;</span><br></pre></td></tr></table></figure>
+<p>Instead, we must use the SQL underscore ( _ ) wildcard character, which represents a single, unspecified character in a specific position.</p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> *</span><br><span class="line"><span class="hljs-keyword">FROM</span> SKU_DATA</span><br><span class="line"><span class="hljs-keyword">WHERE</span> SKU <span class="hljs-keyword">LIKE</span> <span class="hljs-string">'%2__'</span>;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="6、Performing-Calculations-in-SQL-Queries"><a href="#6、Performing-Calculations-in-SQL-Queries" class="headerlink" title="6、Performing Calculations in SQL Queries"></a>6、Performing Calculations in SQL Queries</h2><ul>
+<li><p>SQL中可以进行特定类型的计算，一类计算是使用 SQL 内置的函数；另一种计算在 SELECT语句中进行简单的算术计算 。</p>
+<p>It is possible to perform certain types of calculations in SQL query statements. One group of calculations involves the use of SQL built-in functions. Another group involves simple arithmetic operations on the columns in the SELECT statement. </p>
+</li>
+<li><p>SQL中内置了五种基本的算术函数，有的DBMS可能在这5种标准的函数上新增一些其他的函数。</p>
+<p>SUM 函数用来计算数目；可以使用 AS 关键字来指定结果中的列名。</p>
+<p>COUNT 函数用来计数；它是唯一一个需要星号的内置函数，表示表中所有的行，它也可以用于任何数据类型，而 SUM, AVG, MIN, MAX 只能用于数字类型的列。当将星号换为列名是，它计算了表中含该列的所有行，但是不会去重，可以使用 DISTINCT 关键字来去重。 但是在 Microsoft Access 中，COUNT 函数中使用 DISTINCT 的用法将会出错，可以使用两重查询来避免。</p>
+<p>There are five SQL built-in functions for performing arithmetic on table columns:  SUM,  AVG, MIN, MAX, and COUNT. </p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">SUM</span>(OrderTotal)</span><br><span class="line"><span class="hljs-keyword">FROM</span> RETAIL_ORDER;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">SUM</span>(ExtendedPrice) <span class="hljs-keyword">AS</span> OrderItemSum,</span><br><span class="line"><span class="hljs-keyword">AVG</span>(ExtendedPrice) <span class="hljs-keyword">AS</span> OrderItemAvg,</span><br><span class="line"><span class="hljs-keyword">MIN</span>(ExtendedPrice) <span class="hljs-keyword">AS</span> OrderItemMin,</span><br><span class="line"><span class="hljs-keyword">MAX</span>(ExtendedPrice) <span class="hljs-keyword">AS</span> OrderItemMax </span><br><span class="line"><span class="hljs-keyword">FROM</span> ORDER_ITEM;</span><br></pre></td></tr></table></figure>
+<p>COUNT is the only built-in function that requires an asterisk. The COUNT function is also unique because it can be used on any type of data, but the SUM, AVG, MIN, and MAX functions can only be used with numeric data.</p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">COUNT</span>(*) <span class="hljs-keyword">AS</span> NumberOfRows</span><br><span class="line"><span class="hljs-keyword">FROM</span> ORDER_ITEM;</span><br></pre></td></tr></table></figure>
+<p>If we want to count the unique values<br>of Department, we need to use the SQL DISTINCT keyword, as follows: </p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">COUNT</span>(<span class="hljs-keyword">DISTINCT</span> Department) <span class="hljs-keyword">AS</span> DeptCount</span><br><span class="line"><span class="hljs-keyword">FROM</span> SKU_DATA;</span><br></pre></td></tr></table></figure>
+<p>Microsoft Access does not support the DISTINCT keyword as part of the COUNT expression。</p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">/*  ***  SQL-Query-CH02-32-Access  ***	*/</span></span><br><span class="line"><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">COUNT</span>(*) <span class="hljs-keyword">AS</span> DeptCount</span><br><span class="line"><span class="hljs-keyword">FROM</span> (<span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">DISTINCT</span> Department</span><br><span class="line"><span class="hljs-keyword">FROM</span> SKU_DATA) <span class="hljs-keyword">AS</span> DEPT;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用 SQL 内置函数两点限制：①不能将列名和内置函数组合。②不能在 WHERE 语句中使用内置函数。</p>
+<p>First, except for grouping (defined later), you cannot combine a table column name with an SQL built-in function. </p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> Department,  <span class="hljs-keyword">COUNT</span>(*)</span><br><span class="line"><span class="hljs-keyword">FROM</span> SKU_DATA</span><br></pre></td></tr></table></figure>
+<p>The second problem with the SQL built-in functions that you should understand is that you cannot use them in an SQL WHERE clause.</p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span>	*</span><br><span class="line"><span class="hljs-keyword">FROM</span> RETAIL_ORDER</span><br><span class="line"><span class="hljs-keyword">WHERE</span> OrderTotal &gt; <span class="hljs-keyword">AVG</span>(OrderTotal);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>SELECT 语句中使用基本的算术计算：①数值的计算 ②字符串的操作</p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> Quantity * Price <span class="hljs-keyword">AS</span> EP</span><br><span class="line"><span class="hljs-keyword">FROM</span> ORDER_ITEM;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> Buyer+<span class="hljs-string">' in '</span>+Department <span class="hljs-keyword">AS</span> Sponsor</span><br><span class="line"><span class="hljs-keyword">FROM</span> SKU_DATA;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="7、Grouping-in-SQL-SELECT-Statements"><a href="#7、Grouping-in-SQL-SELECT-Statements" class="headerlink" title="7、Grouping in SQL SELECT Statements"></a>7、Grouping in SQL SELECT Statements</h2><ul>
+<li><p>GROUP 语句可以根据某一列的值对行进行分组。</p>
+<p>In SQL queries, rows can be grouped according to common values using the SQL  GROUP BY clause. </p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>GROUP 中可以指定多个列名来进行分组。</p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>前面说过。只有在语句中有分组操作时，SELECT 语句中列名和内置函数可以同时出现，但列名必须是 GROUP BY 中出现的。</p>
+<p>When using the GROUP BY clause, only the column or columns in the GROUP BY expression and the SQL built-in functions can be used in the expressions in the SELECT clause. The following expressions will result in an error: </p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> SKU, Department, <span class="hljs-keyword">COUNT</span>(*) <span class="hljs-keyword">AS</span> Dept_SKU_Count</span><br><span class="line"><span class="hljs-keyword">FROM</span> SKU_DATA</span><br><span class="line"><span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> Department;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>最好将 WHERE 放在 GROUP BY 的前面，因为先要对数据进行筛选之后后面的操作才能执行。    </p>
+<p>In general, to be safe, always place the WHERE clause before the GROUP BY clause. Some DBMS products do not require that placement, but others do. </p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> Department, <span class="hljs-keyword">COUNT</span>(*) <span class="hljs-keyword">AS</span>  Dept_SKU_Count</span><br><span class="line"><span class="hljs-keyword">FROM</span> SKU_DATA</span><br><span class="line"><span class="hljs-keyword">WHERE</span> SKU &lt;&gt; <span class="hljs-number">302000</span></span><br><span class="line"><span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> Department </span><br><span class="line"><span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> Dept_SKU_Count;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>HAVING 语句可以对结果的分组进行限制，内置函数也可以在 HAVING 语句中使用。</p>
+<p>The SQL HAVING clause restricts the groups that are presented in the<br>result. We can restrict the previous query to display only groups having more<br>than one row by using the SQL query: </p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> Department, <span class="hljs-keyword">COUNT</span>(*) <span class="hljs-keyword">AS</span> Dept_SKU_Count</span><br><span class="line"><span class="hljs-keyword">FROM</span> SKU_DATA</span><br><span class="line"><span class="hljs-keyword">WHERE</span> SKU  &lt;&gt;  <span class="hljs-number">302000</span></span><br><span class="line"><span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> Department </span><br><span class="line"><span class="hljs-keyword">HAVING</span> <span class="hljs-keyword">COUNT</span> (*) &gt; <span class="hljs-number">1</span></span><br><span class="line"><span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> Dept_SKU_Count;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">COUNT</span>(*) <span class="hljs-keyword">AS</span> SKU_Count, <span class="hljs-keyword">SUM</span>(Price) <span class="hljs-keyword">AS</span> TotalRevenue, SKU</span><br><span class="line"><span class="hljs-keyword">FROM</span> ORDER_ITEM</span><br><span class="line"><span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> SKU</span><br><span class="line"><span class="hljs-keyword">HAVING</span> <span class="hljs-keyword">SUM</span>(Price)=<span class="hljs-number">100</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>WHERE 语句可能和 HAVING 语句之间产生歧义，所以要保证 WHERE 语句在 HAVING 语句之前使用。</p>
+<p>Be aware that there is an ambiguity in statements that include both WHERE and HAVING clauses. The results vary depending on whether the WHERE condition is applied before or after the HAVING. To eliminate this ambiguity, the WHERE clause is always applied before the HAVING clause. </p>
+</li>
+</ul>
+<h2 id="8、Looking-for-Patterns-in-NASDAQ-Trading"><a href="#8、Looking-for-Patterns-in-NASDAQ-Trading" class="headerlink" title="8、Looking for Patterns in NASDAQ Trading"></a>8、Looking for Patterns in NASDAQ Trading</h2><h2 id="9、Querying-Two-or-More-Tables-with-SQL"><a href="#9、Querying-Two-or-More-Tables-with-SQL" class="headerlink" title="9、Querying Two or More Tables with SQL"></a>9、Querying Two or More Tables with SQL</h2><ul>
+<li><p>有两种多表查询的方法：子查询和连接。</p>
+<p>SQL provides two different techniques for querying data from multiple tables: subqueries and joins. </p>
+</li>
+<li><p>子查询：</p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">SUM</span>(ExtendedPrice) <span class="hljs-keyword">AS</span> Revenue</span><br><span class="line"><span class="hljs-keyword">FROM</span> ORDER_ITEM</span><br><span class="line"><span class="hljs-keyword">WHERE</span> SKU <span class="hljs-keyword">IN</span></span><br><span class="line">(<span class="hljs-keyword">SELECT</span> SKU</span><br><span class="line"><span class="hljs-keyword">FROM</span> SKU_DATA</span><br><span class="line"><span class="hljs-keyword">WHERE</span> Department=<span class="hljs-string">'Water  Sports'</span>);</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> Buyer</span><br><span class="line"><span class="hljs-keyword">FROM</span> SKU_DATA</span><br><span class="line"><span class="hljs-keyword">WHERE</span> SKU  <span class="hljs-keyword">IN</span></span><br><span class="line">(<span class="hljs-keyword">SELECT</span>	SKU</span><br><span class="line"><span class="hljs-keyword">FROM</span> ORDER_ITEM</span><br><span class="line"><span class="hljs-keyword">WHERE</span> OrderNumber  <span class="hljs-keyword">IN</span></span><br><span class="line">(<span class="hljs-keyword">SELECT</span>	OrderNumber</span><br><span class="line"><span class="hljs-keyword">FROM</span> RETAIL_ORDER</span><br><span class="line"><span class="hljs-keyword">WHERE</span> OrderMonth=<span class="hljs-string">'January'</span></span><br><span class="line"><span class="hljs-keyword">AND</span>	OrderYear=<span class="hljs-number">2011</span>));</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>连接查询：由于子查询查找的数据只能来自于一张表，要想获得多张表的数据只能使用连接查询。连接查询将两张表合并为一张表，合并后的表的总行数为合并前的表的行数的乘积；所以要加上 WHERE 语句来限制查找的范围。</p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> *</span><br><span class="line"><span class="hljs-keyword">FROM</span> RETAIL_ORDER, ORDER_ITEM</span><br><span class="line"><span class="hljs-keyword">WHERE</span> RETAIL_ORDER.OrderNumber=ORDER_ITEM.OrderNumber</span><br><span class="line"><span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> RETAIL_ORDER.OrderNumber, ORDER_ITEM.SKU;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>由两张表连接产生的表叫做连接表；产生这个表的操作叫做连接操作；当使用相等的条件去产生连接表，这种表叫做同等连接；人们说的连接一般都是同等连接；这种类型的连接叫做内连接；</p>
+<p>The table that is formed by concatenating two tables is called a join. The process of creating such a table is called joining the two tables, and the associated operation is called a join operation. When the tables are joined using an equal condition (like the one on OrderNumber), this join is called an equijoin.When people say join, 99.99999 percent of the time they mean an equijoin. This type of join is also referred to as an inner join. </p>
+</li>
+<li><p>三张表的连接：</p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">SELECT</span> Buyer, ExtendedPrice, OrderMonth</span><br><span class="line"><span class="hljs-keyword">FROM</span> SKU_DATA, ORDER_ITEM, RETAIL_ORDER</span><br><span class="line"><span class="hljs-keyword">WHERE</span> SKU_DATA.SKU=ORDER_ITEM.SKU</span><br><span class="line"><span class="hljs-keyword">AND</span>	ORDER_ITEM.OrderNumber=RETAIL_ORDER.OrderNumber;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>子查询和连接查询的比较</p>
+<p>子查询和连接查询都是多表查询，子查询只能从一张表中获取数据，连接查询可以从多张表中得到信息。所以子查询可以做的连接查询也可以做</p>
+<p>Subqueries and joins both process multiple tables, but they differ slightly. As mentioned earlier, a subquery can only be used to retrieve data from the top table. A join can be used to obtain data from any number of  tables. Thus, a join can do everything a subquery can do, and more. </p>
+</li>
+</ul>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/数据库原理/">数据库原理</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/01/06/Database-Principles/chapter3-Database Design/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">chapter3-Database Design</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/01/04/Database-Principles/chapter1-Introduction to database/">
+                <span class="level-item">chapter1-Introduction to database</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="chapter2-Introduction to SQL" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>用例建模 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="系统1.定义：书上给出的系统的定义是待开发的任何事物，包括软件、硬件和过程。准确来说可以如下定义：  封装了自身的数据和行为，能独立对外提供服务的东西才能称为系统。  它说明了当向一个系统添加新的功能是不能算是开发一个新系统。">
+<meta name="keywords" content="软件工程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用例建模">
+<meta property="og:url" content="http://yoursite.com/2018/04/13/Software-Engineering/用例建模/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="系统1.定义：书上给出的系统的定义是待开发的任何事物，包括软件、硬件和过程。准确来说可以如下定义：  封装了自身的数据和行为，能独立对外提供服务的东西才能称为系统。  它说明了当向一个系统添加新的功能是不能算是开发一个新系统。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2018/04/13/Software-Engineering/用例建模/image017.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/04/13/Software-Engineering/用例建模/image018.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/04/13/Software-Engineering/用例建模/image019.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/04/13/Software-Engineering/用例建模/image020.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/04/13/Software-Engineering/用例建模/image022.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/04/13/Software-Engineering/用例建模/image022.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/04/13/Software-Engineering/用例建模/image024.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/04/13/Software-Engineering/用例建模/image026.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/04/13/Software-Engineering/用例建模/982309-20170808135513027-759659214.png">
+<meta property="og:image" content="http://yoursite.com/2018/04/13/Software-Engineering/用例建模/982309-20170808135615480-517279655.png">
+<meta property="og:image" content="http://yoursite.com/2018/04/13/Software-Engineering/用例建模/982309-20170808135723777-1228709276.png">
+<meta property="og:image" content="http://yoursite.com/2018/04/13/Software-Engineering/用例建模/image021.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/04/13/Software-Engineering/用例建模/982309-20170808135749308-1900815513.png">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.309Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="用例建模">
+<meta name="twitter:description" content="系统1.定义：书上给出的系统的定义是待开发的任何事物，包括软件、硬件和过程。准确来说可以如下定义：  封装了自身的数据和行为，能独立对外提供服务的东西才能称为系统。  它说明了当向一个系统添加新的功能是不能算是开发一个新系统。">
+<meta name="twitter:image" content="http://yoursite.com/2018/04/13/Software-Engineering/用例建模/image017.jpg">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="用例建模" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2018-04-13T16:00:00.000Z">2018-04-14</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.309Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/软件工程/">软件工程</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    16 分钟 读完 (大约 2417 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                用例建模
+            
+        </h1>
+        <div class="content">  
+            <h3 id="系统"><a href="#系统" class="headerlink" title="系统"></a>系统</h3><p><strong>1.定义</strong>：<br>书上给出的系统的定义是待开发的任何事物，包括软件、硬件和过程。准确来说可以如下定义：</p>
+<blockquote>
+<p>封装了自身的数据和行为，能独立对外提供服务的东西才能称为系统。</p>
+</blockquote>
+<p>它说明了当向一个系统添加新的功能是不能算是开发一个新系统。</p>
+<a id="more"></a>
+<p><strong>2.系统的边界</strong>：<br>现在软件的运行形态大多是分布式的，这意味着一个系统的组件往往部署在不同的物理位置，往往会被错认为是几个系统。<br>如何确定系统边界：用责任和涉众的角度去看待。</p>
+<blockquote>
+<p>责任：实现它是否属于所研究系统的研发团队的责任。<br>  涉众的：是否与自己要建设的业务系统相关。</p>
+</blockquote>
+<p>系统边界的会选择会影响用例和参与者的定义。</p>
+<h3 id="参与者（执行者）"><a href="#参与者（执行者）" class="headerlink" title="参与者（执行者）"></a>参与者（执行者）</h3><p><strong>1.定义</strong>：<br>表示使用系统的对象，是系统外部的一个实体，以某种方式参与用例的执行过程。</p>
+<p>注意什么叫”使用系统”，以一名旅客来到火车站买票为例，告诉售票员目的地和车次，售票员使用售票系统帮助旅客购买火车票。，和火车票售票系统交互的是售票员，他是售票系统的执行者，旅客不是。<br>这里其实是执行者与涉众的区别，执行者和系统在台上表演，涉众在台下看表演。</p>
+<p><strong>2.分类</strong>：<br>主要参与者：主要发起人，通过用例从系统中获得业务价值。<br>次要参与者：为其他参与人创造业务价值。</p>
+<blockquote>
+<p>举个例子：假设在售票员售票过程中，旅客前面也有一个界面向旅客反馈他关心的信息，比如余票、当前选择的票等，甚至还可以根据旅客的目的地播放当地旅游景点的广告。这种情况下，旅客是售票系统的执行者吗？</p>
+<p>  依然不是，因为系统要完成用例不需要等待旅客的响应。旅客就算睡着了也不影响用例的完成。如果售票过程中需要旅客有意识地按键确认一下，否则票就出不来，那就不一样了，旅客就成了售票系统的”售票员→售票”用例的（辅）执行者。</p>
+</blockquote>
+<h3 id="系统用例"><a href="#系统用例" class="headerlink" title="系统用例"></a>系统用例</h3><p><strong>1.定义</strong>：<br>系统能够为执行者提供的、涉众可以接受的价值。<br>书上的定义把执行者和用户混淆。</p>
+<p>除此之外注意”价值”，买卖平衡点、期望和承诺平衡点是考察是否是一个用例的重点。</p>
+<p><strong>2.怎样才算做用例</strong></p>
+<blockquote>
+<p>以取款机为例，”储户→登录”不是它的用例，因为储户对取款机的期望以及取款机能做的承诺不只是登录。或者这样思考：取款机不能这么叫卖：”来啊来啊！我这里能登录啊”，然后储户就说”哇，真棒，这正是我想要取款机提供的服务，好，我去用一用”。<br>  <img src="/2018/04/13/Software-Engineering/用例建模/image017.jpg" alt></p>
+</blockquote>
+<p>更直观的可以设身处地的这么想：<br><img src="/2018/04/13/Software-Engineering/用例建模/image018.jpg" alt></p>
+<p><strong>3.明确目标用户</strong></p>
+<blockquote>
+<p>一个办公系统，科员有两个用例A和B。科长比科员级别高，所以除了自己的用例，还可以使用科员的用例。处长级别最高，想做什么就做什么，没人敢拦着。所以，建模人员画出了图5-15这样的蜘蛛网用例图，把执行者和用例的关系<img src="/2018/04/13/Software-Engineering/用例建模/image019.jpg" alt>误解成了权限管理。</p>
+</blockquote>
+<p>用例的执行者只是表明这个用例是为这一类执行者而做，但不代表系统一定要有权限控制以防止其他的人或电脑系统使用该用例。<br><img src="/2018/04/13/Software-Engineering/用例建模/image020.jpg" alt></p>
+<p><strong>4.用例就是新增、检索、修改、删除吗？</strong><br>许多用例一眼看去好像都可以看作时数据库的操作，但需求分析的目的是让系统更加好卖。所以用例从涉众视角得到的才是用例，也就是说现实中执行者常说的操作名称才是用例。<br><img src="/2018/04/13/Software-Engineering/用例建模/image022.jpg" alt><br><img src="/2018/04/13/Software-Engineering/用例建模/image022.jpg" alt><br><img src="/2018/04/13/Software-Engineering/用例建模/image024.jpg" alt></p>
+<p><strong>5.不要”复用”用例</strong><br>“复用”用例带来的结果涉众感觉功能性小，不愿购买或者只愿低价购买。<br>需求不考虑”复用”，如果在考虑”复用”，要警惕自己是不是已经转换到了设计视角来思考问题。<br>所以一般不会出现多个执行者指向同一个用例的情况。<br><img src="/2018/04/13/Software-Engineering/用例建模/image026.jpg" alt></p>
+<p><strong>6.用例的命名是动宾结构</strong><br>用例的命名是动宾结构，例如”取款”。动词前面可以加状语，宾语前面可以加定语，把一句话的主语砍掉，剩下的可以作为用例的名字。</p>
+<p>起名时要注意弱动词。用例之前的需求技术，可能是以”名字+动词”的形式命名系统的功能，例如”发票作废”，后来要改成用例的动宾结构了，有的建模人员就在前面加一个弱动词”进行”，就变成了”进行发票作废”，这个也是不合适的。</p>
+<p>如果”名词+动词”已经成为行业中的一个术语，也未必要严格的动宾结构。例如”成果分析”在某行业是一个术语，也就不必硬要倒过来变成”分析成果”了。</p>
+<h3 id="关系"><a href="#关系" class="headerlink" title="关系"></a>关系</h3><p><strong>1.通信关系</strong><br>也叫做关联关系，用来描述执行者与用例之间的关系。如果某个执行者可以对某个用例进行操作，它们之间就具有关联关系。<img src="/2018/04/13/Software-Engineering/用例建模/982309-20170808135513027-759659214.png" alt></p>
+<p><strong>2.泛华关系</strong><br>执行者之间的关系只有一种，即泛化关系。用一个带有空心三角形的实线表示，如下图所示，在该图中，仓库管理员、系统管理员、经理都是员工的一种，因此员工拥有的功能这三者都拥有，如登录、修改个人信息等，为了减少用例的个数并且使系统更加符合面向对象设计规范，可以对执行者进行泛化，<strong>将各类执行者都具有相同的功能移至父执行者，而将每类执行者特有的功能保留在子执行者中</strong>。<br><img src="/2018/04/13/Software-Engineering/用例建模/982309-20170808135615480-517279655.png" alt></p>
+<p>这里也可以指用例的泛化，用例的泛化用箭头的实线表示，箭头的方向由子用例指向父用例。</p>
+<p><strong>3.包含关系</strong></p>
+<p>如果多个用例都具有一部分相同的行为，可以将这<strong>部分相同的行为作为一个单独的用例抽取出来，与原来的用例形成一个包含关系</strong>。如仓库管理员在进行入库、出库等操作之前需要先登录，登录是入库、出库流程的基本组成部分，因此用例”入库”和”出库”包含用例”登录”。为了更加清晰地描述多个用例的相同行为，在用例图中提供了用例与用例之间的包含关系。</p>
+<p>在UML中，包含关系用依赖线（虚线）加一个&laquo;include&raquo;表示，由原始用例指向包含用例，如下图所示：<br><img src="/2018/04/13/Software-Engineering/用例建模/982309-20170808135723777-1228709276.png" alt></p>
+<p>注意：clude的目的是为了复用在多个用例中重复出现的步骤集合，形状往往是多个用例Include一个用例。看到这种一个用例Include许多个用例的形状，基本上可以判断它犯了把步骤当作用例的错误。<br><img src="/2018/04/13/Software-Engineering/用例建模/image021.jpg" alt></p>
+<p><strong>3.扩展关系</strong></p>
+<p>扩展关系又称为延伸关系，如果一个用例在执行时可能会使用到另一个用例，或者使用一个新的用例对原有用例的行为进行扩展时可以使用扩展关系，如仓库管理员在入库时发现某种商品在系统中暂不存在，则可以增加新的商品信息；如果入库商品均已存在，则无需增加商品信息，此时用例”增加商品信息”可以作为用例”入库”的扩展用例。在需要扩展的用例（原始用例）中需指定一个扩展点（即需扩展的位置），在下一节编写用例文档中将学习如何设置扩展点。<br><img src="/2018/04/13/Software-Engineering/用例建模/982309-20170808135749308-1900815513.png" alt></p>
+<p>课程实践降魔：<a href="https://github.com/getianao/UMLModelingProgram-StoreManagementSystem" title="getianao/UMLModelingProgram-StoreManagementSystem" target="_blank" rel="noopener">getianao/UMLModelingProgram-StoreManagementSystem</a></p>
+<p>参考文献：<br><a href="http://www.umlchina.com/book/softmeth_05.htm" title="第5章 需求 之 系统用例图" target="_blank" rel="noopener">第5章 需求 之 系统用例图</a><br><a href="https://www.cnblogs.com/dsh20134584/p/7306503.html" title="UML用例建模解析（二）---------用例执行者之间关系" target="_blank" rel="noopener">UML用例建模解析（二）———用例执行者之间关系</a></p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/软件工程/">软件工程</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/04/14/Git/github入门/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">github入门</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/04/09/Data-Structure/分治法-最近对问题/">
+                <span class="level-item">分治法-最近对问题</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="用例建模" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

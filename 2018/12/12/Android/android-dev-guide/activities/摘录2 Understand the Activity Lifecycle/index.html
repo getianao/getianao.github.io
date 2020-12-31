@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>摘录2 Understand the Activity Lifecycle - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="The Activity class provides a number of callbacks that allow the activity to know that a state has changed: that the system is creating, stopping, or resuming an activity, or destroying the process">
+<meta name="keywords" content="android,Android开发文档,activity lifecycle">
+<meta property="og:type" content="article">
+<meta property="og:title" content="摘录2 Understand the Activity Lifecycle">
+<meta property="og:url" content="http://yoursite.com/2018/12/12/Android/android-dev-guide/activities/摘录2 Understand the Activity Lifecycle/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="The Activity class provides a number of callbacks that allow the activity to know that a state has changed: that the system is creating, stopping, or resuming an activity, or destroying the process">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.177Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="摘录2 Understand the Activity Lifecycle">
+<meta name="twitter:description" content="The Activity class provides a number of callbacks that allow the activity to know that a state has changed: that the system is creating, stopping, or resuming an activity, or destroying the process">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="摘录2 Understand the Activity Lifecycle" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2018-12-12T13:37:16.000Z">2018-12-12</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.177Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/Android开发文档/">Android开发文档</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/activity-lifecycle/">activity lifecycle</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/android/">android</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    19 分钟 读完 (大约 2873 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                摘录2 Understand the Activity Lifecycle
+            
+        </h1>
+        <div class="content">  
+            <blockquote>
+<p> The <code>Activity</code> class provides a number of callbacks that allow the activity to know that a state has changed: that the system is creating, stopping, or resuming an activity, or destroying the process in which the activity resides.</p>
+</blockquote>
+<p>有关activity状态的回调函数可以用来判断activtiy的状态，在合适的时候做出合适的反映。</p>
+<a id="more"></a>
+<h2 id="Lifecycle-callbacks"><a href="#Lifecycle-callbacks" class="headerlink" title="Lifecycle callbacks"></a>Lifecycle callbacks</h2><ul>
+<li><p>onCreate()</p>
+<blockquote>
+<p>In the <code>onCreate()</code> method, you perform basic application startup logic that should happen only once for the entire life of the activity.</p>
+</blockquote>
+<p>在onCreate()方法里我们做一些应用的基础逻辑设置，这只会在这个activity的生命周期中发生一次。</p>
+<p>如果有一个与这个activity关联了的 lifecycle-aware component（生命周期感知组件），它将会收到一个 <a href="https://developer.android.com/reference/android/arch/lifecycle/Lifecycle.Event#on_create" target="_blank" rel="noopener"><code>ON_CREATE</code></a> 事件，@OnLifecycleEvent 所注解的方法将会执行。</p>
+<blockquote>
+<p>As an alternative to defining the XML file and passing it to <code>setContentView()</code>, you can create new <code>View</code> objects in your activity code and build a view hierarchy by inserting new <code>View</code>s into a<code>ViewGroup</code>. You then use that layout by passing the root <code>ViewGroup</code> to <code>setContentView()</code>. </p>
+</blockquote>
+<p>当向 <code>setContentView()</code>传递一个xml布局资源文件的同时，创建了一个<code>View</code>对象并将它插入到<code>Viewgroup</code>中，然后将这个<code>Viewgroup</code>传给<code>setContentView()</code>。</p>
+</li>
+<li><p>onStart()</p>
+<blockquote>
+<p> The <code>onStart()</code> call makes the activity visible to the user, as the app prepares for the activity to enter the foreground and become interactive.</p>
+</blockquote>
+<p><code>onStart()</code> 的时候activity将对用户可见，即将app放到前台并使之可以交互。</p>
+<blockquote>
+<p>When the activity moves to the started state, any lifecycle-aware component tied to the activity’s lifecycle will receive the <a href="https://developer.android.com/reference/android/arch/lifecycle/Lifecycle.Event#on_start" target="_blank" rel="noopener"><code>ON_START</code></a> event.</p>
+</blockquote>
+<p>当activity进入start状态，所有生命周期感知组件将会收到ON_START事件。</p>
+</li>
+<li><p>onResume()</p>
+<blockquote>
+<p> This is the state in which the app interacts with the user. The app stays in this state until something happens to take focus away from the app. </p>
+</blockquote>
+<p>在这个状态（resumed）下，app可以和用户交互，并且将一直保持这个状态直到某个事件发生使焦点从这个app转移，进入Paused状态。</p>
+<blockquote>
+<p> If you want the camera active only when the app is Resumed (visible and active in the foreground), then initialize the camera after the ON_RESUME event demonstrated above. If you want to keep the camera active while the activity is Paused but visible (e.g. in multi-window mode) then you should instead initialize the camera after the ON_START event.</p>
+</blockquote>
+<p>如果你想让你的app只在resumed状态下可用，你需要在ON_RESUME事件之后对相机进行初始化（并在ON_PAUSE释放）。如果你想让它在paused状态并可见下保持可用，你需要在ON_START状态下进行初始化（并在ON_STOP释放）。</p>
+<p>📌dialog不会触发pause,必须要是另外activtiy。在多窗口模式下，焦点的转换也会pause。</p>
+<blockquote>
+<p>Regardless of which build-up event you choose to perform an initialization operation in, make sure to use the corresponding lifecycle event to release the resource. If you initialize something after the ON_START event, release or terminate it after the ON_STOP event. If you initialize after the ON_RESUME event, release after the ON_PAUSE event.</p>
+</blockquote>
+<p>确保你的初始化和释放资源操作是在合适的生命周期下进行的。如果你在ON_START事件后初始化，也要在ON_STOP事件后释放。如果你在ON_RESUME事件后初始化，也要在ON_PAUSE事件后释放。</p>
+<blockquote>
+<p>Note, the code snippet above places camera initialization code in a lifecycle aware component. You can instead put this code directly into the activity lifecycle callbacks such as <a href="https://developer.android.com/reference/android/app/Activity.html#onstart" target="_blank" rel="noopener"><code>onStart()</code></a> and<a href="https://developer.android.com/reference/android/app/Activity.html#onstop" target="_blank" rel="noopener"><code>onStop()</code></a> but this is not recommended. Adding this logic into an independent, lifecycle-aware component allows you to reuse the component across multiple activities without having to duplicate code.</p>
+</blockquote>
+<p>除了将初始化卸载生命周期感知组件中，也可以直接写在生命周期的回调，但是不建议这么做因为生命周期感知组件可以帮助你在多个activity中复用组件。</p>
+</li>
+<li><p>onPause()</p>
+<blockquote>
+<p>There are several reasons why an activity may enter this state. For example:</p>
+<ul>
+<li>Some event interrupts app execution, as described in the <a href="https://developer.android.com/guide/components/activities/activity-lifecycle#onresume" target="_blank" rel="noopener">onResume()</a> section. This is the most common case.</li>
+<li>In Android 7.0 (API level 24) or higher, multiple apps run in multi-window mode. Because only one of the apps (windows) has focus at any time, the system pauses all of the other apps.</li>
+<li>A new, semi-transparent activity (such as a dialog) opens. As long as the activity is still partially visible but not in focus, it remains paused</li>
+</ul>
+</blockquote>
+<p>activity进入PAUSED阶段的情况：</p>
+<p>①一些中断事件</p>
+<p>②多窗口模式切换焦点</p>
+<p>③半透明activity</p>
+<p>❓中断事件是什么也没有说</p>
+<blockquote>
+<p><code>onPause()</code> execution is very brief, and does not necessarily afford enough time to perform save operations. For this reason, you should <strong>not</strong> use <code>onPause()</code> to save application or user data, make network calls, or execute database transactions; such work may not complete before the method completes. Instead, you should perform heavy-load shutdown operations during <code>onStop()</code></p>
+</blockquote>
+<p><code>onPause()</code>操作使非常简短的，它不能提供足够的时间去进行保存操作，所以不要在<code>onPause()</code>中进行保存操作、数据操作、网络操作或数据库操作；你应当将这些负担较重的结束操作移至 <code>onStop()</code>。</p>
+</li>
+<li><p>onStop()</p>
+<blockquote>
+<p>When your activity enters the Stopped state, the <code>Activity</code> object is kept resident in memory: It maintains all state and member information, but is not attached to the window manager. When the activity resumes, the activity recalls this information. You don’t need to re-initialize components that were created during any of the callback methods leading up to the <strong>Resumed</strong> state. The system also keeps track of the current state for each <code>View</code> object in the layout, so if the user entered text into an <code>EditText</code> widget, that content is retained so you don’t need to save and restore it.</p>
+</blockquote>
+<p>当activity处于stop状态时，内存中将会保留activtiy的实例，包括所有状态和成员信息，但是它没有与窗口管理器相连接。系统也保留了布局中所有view的状态 ，比如输入框中的信息。</p>
+<p>❓不应该是“leading up to the started state”吗？</p>
+<blockquote>
+<p><strong>Note:</strong> Once your activity is stopped, the system might destroy the process that contains the activity if the system needs to recover memory. Even if the system destroys the process while the activity is stopped, the system still retains the state of the <code>View</code> objects (such as text in an <code>EditText</code> widget) in a <code>Bundle</code> (a blob of key-value pairs) and restores them if the user navigates back to the activity. </p>
+</blockquote>
+<p>当一个activity处于stopped状态时，系统可能因为内存不足而销毁含activity的进程。即使系统中的怎么做了，系统还是在Bundle中储存了信息（手动）。</p>
+</li>
+</ul>
+<ul>
+<li><p>onDestroy()</p>
+<blockquote>
+<p><a href="https://developer.android.com/reference/android/app/Activity.html#ondestroy" target="_blank" rel="noopener"><code>onDestroy()</code></a> is called before the activity is destroyed. The system invokes this callback either because:</p>
+<ol>
+<li>the activity is finishing (due to the user completely dismissing the activity or due to<a href="https://developer.android.com/reference/android/app/Activity.html#finish" target="_blank" rel="noopener"><code>finish()</code></a> being called on the activity), or</li>
+<li>the system is temporarily destroying the activity due to a configuration change (such as device rotation or multi-window mode)</li>
+</ol>
+</blockquote>
+<p>以下情况下会调用onDestroy()</p>
+<p>①当activity被finish（用户退出或finish()被调用）</p>
+<p>②配置改变导致系统暂时destroy了activity（比如多窗口程序或旋转屏幕）</p>
+<blockquote>
+<p>Instead of putting logic in your Activity to determine why it is being destroyed you should use a <a href="https://developer.android.com/reference/android/arch/lifecycle/ViewModel" target="_blank" rel="noopener"><code>ViewModel</code></a> object to contain the relevant view data for your Activity. If the Activity is going to be recreated due to a configuration change the ViewModel does not have to do anything since it will be preserved and given to the next Activity instance. If the Activity is not going to be recreated then the ViewModel will have the <a href="https://developer.android.com/reference/android/arch/lifecycle/ViewModel#oncleared" target="_blank" rel="noopener"><code>onCleared()</code></a> method called where it can clean up any data it needs to before being destroyed.</p>
+</blockquote>
+<p>不用在onDestroy中加入逻辑考虑是什么导致了Destroy，只需要将相关的view数据集合在ViewModel中，如果是因为配置改变，则ViewModel什么也不用做，因为它将被传递到新的Activity中；否则它的<code>onCleared()</code>方法会被调用用来清除所有数据。</p>
+</li>
+</ul>
+<h2 id="Activity-state-and-ejection（抛出）-from-memory"><a href="#Activity-state-and-ejection（抛出）-from-memory" class="headerlink" title="Activity state and ejection（抛出） from memory"></a>Activity state and ejection（抛出） from memory</h2><blockquote>
+<p>The system kills processes when it needs to free up RAM; the likelihood of the system killing a given process depends on the state of the process at the time. Process state, in turn, depends on the state of the activity running in the process. Table 1 shows the correlation among process state, activity state, and likelihood of the system’s killing the process.</p>
+<table>
+<thead>
+<tr>
+<th>Likelihood of being killed</th>
+<th>Process state</th>
+<th>Activity state</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Least</td>
+<td>Foreground (having or about to get focus)</td>
+<td>Created Started Resumed</td>
+</tr>
+<tr>
+<td>More</td>
+<td>Background (lost focus)</td>
+<td>Paused</td>
+</tr>
+<tr>
+<td>Most</td>
+<td>Background (not visible)</td>
+<td>Stopped</td>
+</tr>
+<tr>
+<td>Empty</td>
+<td>Destroyed</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>系统杀死一个进程取决于进程的状态，进程的状态取决于进程里运行的activity的状态；</p>
+<blockquote>
+<p>The system never kills an activity directly to free up memory. Instead, it kills the process in which the activity runs, destroying not only the activity but everything else running in the process, as well. </p>
+</blockquote>
+<p>系统因为activity的状态杀死了一个进程，意味着这个进程中的所有activity都会被杀掉。</p>
+<h2 id="Saving-and-restoring-transient-UI-state"><a href="#Saving-and-restoring-transient-UI-state" class="headerlink" title="Saving and restoring transient UI state"></a>Saving and restoring transient UI state</h2><p>使用情形：当你的配置发生改变或切换到另一个app中在切换回来，你希望UI的状态不要发生变化，但是可能activtiy已经被destroy了。</p>
+<p>如果时轻量简单的数据保存只用 <a href="https://developer.android.com/reference/android/app/Activity#onsaveinstancestate" target="_blank" rel="noopener"><code>onSaveInstanceState()</code></a>就行，复杂的需要 <a href="https://developer.android.com/reference/android/arch/lifecycle/ViewModel" target="_blank" rel="noopener"><code>ViewModel</code></a>, <a href="https://developer.android.com/reference/android/app/Activity#onsaveinstancestate" target="_blank" rel="noopener"><code>onSaveInstanceState()</code></a>配合使用。</p>
+<ul>
+<li><p>Instance state</p>
+<p>假如是因为系统约束而不是主动（back or finish）去destroy，activity实例实际上已经不在了，但系统认为它还在，当返回这个activity时，系统会利用保存的数据来重新创建一个activity，这样的系统用于恢复之前状态的数据被称为Instance state，他是一个保存在Bundle对象中键值对的集合。你不需要去操作这些数据使它会到之前的状态，但是你需要保存足够多的状态信息。</p>
+</li>
+<li><p>Save simple, lightweight UI state using onSaveInstanceState()</p>
+<blockquote>
+<p><strong>Note:</strong> <a href="https://developer.android.com/reference/android/app/Activity#onsaveinstancestate" target="_blank" rel="noopener"><code>onSaveInstanceState()</code></a> is not called when the user explicitly closes the activity or in other cases when <code>finish()</code>is called.</p>
+</blockquote>
+<p><code>onSaveInstanceState()</code>不能被直接调用。</p>
+<blockquote>
+<p>To save persistent data, such as user preferences or data for a database, you should take appropriate opportunities when your activity is in the foreground. If no such opportunity arises, you should save such data during the <a href="https://developer.android.com/reference/android/app/Activity.html#onstop" target="_blank" rel="noopener"><code>onStop()</code></a> method.</p>
+</blockquote>
+<p>保存持久化的数据，你需要找到合适的机会当你的程序在前台时执行，如果没有合适的机会，可以在<a href="https://developer.android.com/reference/android/app/Activity.html#onstop" target="_blank" rel="noopener"><code>onStop()</code></a> 方法中执行。</p>
+</li>
+<li><p>Restore activity UI state using saved instance state</p>
+<blockquote>
+<p>Instead of restoring the state during <a href="https://developer.android.com/reference/android/app/Activity.html#onCreate(android.os.Bundle" target="_blank" rel="noopener"><code>onCreate()</code></a>) you may choose to implement<a href="https://developer.android.com/reference/android/app/Activity#onrestoreinstancestate" target="_blank" rel="noopener"><code>onRestoreInstanceState()</code></a>, which the system calls after the <a href="https://developer.android.com/reference/android/app/Activity.html#onstart" target="_blank" rel="noopener"><code>onStart()</code></a> method. The system calls <a href="https://developer.android.com/reference/android/app/Activity#onrestoreinstancestate" target="_blank" rel="noopener"><code>onRestoreInstanceState()</code></a> only if there is a saved state to restore, so you do not need to check whether the <a href="https://developer.android.com/reference/android/os/Bundle" target="_blank" rel="noopener"><code>Bundle</code></a> is null:</p>
+</blockquote>
+<p>除了在onCreate方法中恢复数据，也可以在<code>onRestoreInstanceState()</code>中恢复，不过它不用判断是否存在保存的状态。</p>
+<blockquote>
+<p>Caution: Always call the superclass implementation of <a href="https://developer.android.com/reference/android/app/Activity#onrestoreinstancestate" target="_blank" rel="noopener"><code>onRestoreInstanceState()</code></a> so the default implementation can restore the state of the view hierarchy.</p>
+</blockquote>
+<p>一定要在onRestoreInstanceState()调用子类的onRestoreInstanceState()，这样才能层次的恢复view的状态。</p>
+</li>
+</ul>
+<h2 id="Navigating-between-activities"><a href="#Navigating-between-activities" class="headerlink" title="Navigating between activities"></a>Navigating between activities</h2><ul>
+<li><p>Coordinating activities</p>
+<blockquote>
+<p>The order of lifecycle callbacks is well defined, particularly when the two activities are in the same process (app) and one is starting the other. Here’s the order of operations that occur when Activity A starts Activity B:</p>
+<ol>
+<li><p>Activity A’s <code>onPause()</code> method executes.</p>
+</li>
+<li><p>Activity B’s <code>onCreate()</code>, <code>onStart()</code>, and <code>onResume()</code> methods execute in sequence. (Activity B now has user focus.)</p>
+</li>
+<li><p>Then, if Activity A is no longer visible on screen, its <code>onStop()</code> method executes.</p>
+</li>
+</ol>
+</blockquote>
+<p>从activity A启动另一个Activity B，我们认为的生命周期变化是：A‘s onPause()-(如果A不可见了)-&gt;A’s onStop()  -&gt;B‘s onCreate() -&gt;B‘s onStart() -&gt;B‘s onResume() </p>
+<p>但其实是这样的：A‘s onPause() -&gt;B‘s onCreate() -&gt;B‘s onStart() -&gt;B‘s onResume() -(如果A不可见了)-&gt;A’s onStop()  </p>
+</li>
+</ul>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Android开发文档/">Android开发文档</a>, <a class="has-link-grey -link" href="/tags/activity-lifecycle/">activity lifecycle</a>, <a class="has-link-grey -link" href="/tags/android/">android</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/12/24/Compiler-Principles/符号表/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">符号表</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/12/11/Android/android-dev-guide/activities/摘录1 Introduction to Activities/">
+                <span class="level-item">摘录1 Introduction to Activities</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc" style="position: sticky; top: 10px;">
+    <div class="card-content" style="padding: 1rem;">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#Lifecycle-callbacks">
+        <!-- <span class="has-mr-6">1</span> -->
+        <span>Lifecycle callbacks</span>
+        </a></li><li>
+        <a class="is-flex" href="#Activity-state-and-ejection（抛出）-from-memory">
+        <!-- <span class="has-mr-6">2</span> -->
+        <span>Activity state and ejection（抛出） from memory</span>
+        </a></li><li>
+        <a class="is-flex" href="#Saving-and-restoring-transient-UI-state">
+        <!-- <span class="has-mr-6">3</span> -->
+        <span>Saving and restoring transient UI state</span>
+        </a></li><li>
+        <a class="is-flex" href="#Navigating-between-activities">
+        <!-- <span class="has-mr-6">4</span> -->
+        <span>Navigating between activities</span>
+        </a></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="摘录2 Understand the Activity Lifecycle" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>ListView的用法 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="ListView的简单用法12345&amp;lt;ListView&amp;gt;android:id=&quot;@+id/list_view&quot;android:layout_width=&quot;match_parent&quot;android:layout_height=&quot;match_parent&quot;&amp;lt;/ListView&amp;gt;">
+<meta name="keywords" content="android,android第一行代码,ListView">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ListView的用法">
+<meta property="og:url" content="http://yoursite.com/2018/07/30/Android/第一行代码/ListView/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="ListView的简单用法12345&amp;lt;ListView&amp;gt;android:id=&quot;@+id/list_view&quot;android:layout_width=&quot;match_parent&quot;android:layout_height=&quot;match_parent&quot;&amp;lt;/ListView&amp;gt;">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.177Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ListView的用法">
+<meta name="twitter:description" content="ListView的简单用法12345&amp;lt;ListView&amp;gt;android:id=&quot;@+id/list_view&quot;android:layout_width=&quot;match_parent&quot;android:layout_height=&quot;match_parent&quot;&amp;lt;/ListView&amp;gt;">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="ListView的用法" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2018-07-30T06:16:16.000Z">2018-07-30</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.177Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/ListView/">ListView</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/android/">android</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/android第一行代码/">android第一行代码</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    4 分钟 读完 (大约 590 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                ListView的用法
+            
+        </h1>
+        <div class="content">  
+            <h2 id="ListView的简单用法"><a href="#ListView的简单用法" class="headerlink" title="ListView的简单用法"></a>ListView的简单用法</h2><figure class="highlight xml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">ListView</span>&gt;</span></span><br><span class="line">android:id="@+id/list_view"</span><br><span class="line">android:layout_width="match_parent"</span><br><span class="line">android:layout_height="match_parent"</span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">ListView</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String []data=&#123;<span class="hljs-string">"apple"</span>,<span class="hljs-string">"banana"</span>,<span class="hljs-string">"watermelon"</span>&#125;;</span><br><span class="line">ArrayAdapter&lt;String&gt; adapter=<span class="hljs-keyword">new</span> ArrayAdapter&lt;String&gt;(ManActivity.<span class="hljs-keyword">this</span>,android.R.layout.simple_list_item_1,data);</span><br><span class="line">ListView listView=(ListView)getViewById(R.id.list_view);</span><br><span class="line">listView.setAdapter(adapter);</span><br></pre></td></tr></table></figure>
+<p>这里需要通过一个适配器向列表布局传递数据，ArrayAdapter就是其中一种；通过适配器的构造函数设置列表布局的上下文，列表的item布局和item数据。</p>
+<h3 id="定制ListView"><a href="#定制ListView" class="headerlink" title="定制ListView"></a>定制ListView</h3><p>要新定义三个部分，首先自定义一个类用以描述每个item的内容，然后定义一个布局文件描述item的布局，最后自定义一个适配器。</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Fruit</span></span>&#123;</span><br><span class="line">    <span class="hljs-keyword">private</span> String name;</span><br><span class="line">    <span class="hljs-keyword">private</span> String image;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Fruit</span><span class="hljs-params">(String name,String image)</span></span>&#123;</span><br><span class="line">        <span class="hljs-keyword">this</span>.name=name;</span><br><span class="line">        <span class="hljs-keyword">this</span>.image=image;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getName</span><span class="hljs-params">()</span></span>&#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getImageId</span><span class="hljs-params">()</span></span>&#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> image;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FruitAdapter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ArrayAdapter</span></span>&#123;</span><br><span class="line">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> resourseId;<span class="hljs-comment">//用于储存item的layout</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">FruitAdapter</span><span class="hljs-params">(Context context, <span class="hljs-keyword">int</span> textResourceId, List&lt;Fruit&gt; objects)</span></span>&#123;</span><br><span class="line">        <span class="hljs-keyword">super</span>(context,textResourceIcd,objects);</span><br><span class="line">        resourceId = textResourceId;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-comment">//设置每一项的布局</span></span><br><span class="line">    <span class="hljs-meta">@override</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> View <span class="hljs-title">getView</span><span class="hljs-params">(<span class="hljs-keyword">int</span> position,View convertView,ViewGroup parent)</span></span>&#123;</span><br><span class="line">        Fruit fruit=getItem(position);</span><br><span class="line">        View view =LayoutInflater.from(getContext()).inflater(resourceId,<span class="hljs-keyword">null</span>);</span><br><span class="line">        ImageView fruitImage=(ImageView)view.findViewById(R.id.fruit_image);</span><br><span class="line">        TextView fruitText=(TextView)view.findViewById(R.id.fruit_text);</span><br><span class="line">        fruitImage.setImageResource(fruit.getImageId());</span><br><span class="line">        fruitText.setText(fruit.getName());</span><br><span class="line">        returm view;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用时先初始化一个List储存列表中每个item的信息并加入列表，然后和上面一样，使用适配器的构造函数初始化，并为ListView设置适配器。</p>
+<h3 id="提高ListView运行效率"><a href="#提高ListView运行效率" class="headerlink" title="提高ListView运行效率"></a>提高ListView运行效率</h3><p>当ListView滚动时，需要调用适配器的getView函数并更新整个视图，这意味着当列表快速滑动时可能出现性能瓶颈。可以做出以下优化：</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FruitAdapter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ArrayAdapter</span></span>&#123;</span><br><span class="line">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> resourseId;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">FruitAdapter</span><span class="hljs-params">(Context context, <span class="hljs-keyword">int</span> textResourceId, List&lt;Fruit&gt; objects)</span></span>&#123;</span><br><span class="line">        <span class="hljs-keyword">super</span>(context,textResourceIcd,objects);</span><br><span class="line">        resourceId = textResourceId;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-meta">@override</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> View <span class="hljs-title">getView</span><span class="hljs-params">(<span class="hljs-keyword">int</span> position,View convertView,ViewGroup parent)</span></span>&#123;</span><br><span class="line">        Fruit fruit=getItem(position);</span><br><span class="line">        ViewHoder viewHolder;</span><br><span class="line">        <span class="hljs-comment">//利用convertView减少使用inflater去加载视图</span></span><br><span class="line">        <span class="hljs-keyword">if</span>(convertView==<span class="hljs-keyword">null</span>)&#123;</span><br><span class="line">            View view =LayoutInflater.from(getContext()).inflater(resourceId,<span class="hljs-keyword">null</span>);</span><br><span class="line">            <span class="hljs-comment">//利用setTag和自定义的ViewHolder对控件的实例进行缓存</span></span><br><span class="line">            viewHolder=<span class="hljs-keyword">new</span> ViewHolder();</span><br><span class="line">            viewHolder.fruitImage=(ImageView)view.findViewById(R.id.fruit_image);</span><br><span class="line">            viewHolder.fruitText=(TextView)view.findViewById(R.id.fruit_text);</span><br><span class="line">            view.setTag(viewHolder);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-keyword">else</span>&#123;</span><br><span class="line">            view=convertView;</span><br><span class="line">            viewHolder=(ViewHolder)view.getTag();</span><br><span class="line">        &#125;</span><br><span class="line">        viewHolder.fruitImage.setImageResource(fruit.getImageId());</span><br><span class="line">        viewHolder.fruitText.setText(fruit.getName());</span><br><span class="line">        returm view;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ViewHolder</span></span>&#123;</span><br><span class="line">        ImageView fruitImage;</span><br><span class="line">        TextView fruitText;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="ListView的点击事件"><a href="#ListView的点击事件" class="headerlink" title="ListView的点击事件"></a>ListView的点击事件</h3><p>重载点击事件的方法</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">listView.setOnItemClickListener(<span class="hljs-keyword">new</span> OnItenClickListener()&#123;</span><br><span class="line">    <span class="hljs-meta">@override</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onItemClick</span><span class="hljs-params">(AdapterView&lt;?&gt; parent,View view,<span class="hljs-keyword">int</span> position,<span class="hljs-keyword">long</span> id)</span></span>&#123;</span><br><span class="line">        Fruit fruit=fruitList.get(position);</span><br><span class="line">        <span class="hljs-comment">//这里添加额外的动作</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/ListView/">ListView</a>, <a class="has-link-grey -link" href="/tags/android/">android</a>, <a class="has-link-grey -link" href="/tags/android第一行代码/">android第一行代码</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/09/11/Android/第一行代码/activity/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">activity</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/06/05/JavasScript/ProfessionalJavaScript/作用域inJS/">
+                <span class="level-item">作用域 in JS</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc" style="position: sticky; top: 10px;">
+    <div class="card-content" style="padding: 1rem;">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#ListView的简单用法">
+        <!-- <span class="has-mr-6">1</span> -->
+        <span>ListView的简单用法</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#定制ListView">
+        <!-- <span class="has-mr-6">1.1</span> -->
+        <span>定制ListView</span>
+        </a></li><li>
+        <a class="is-flex" href="#提高ListView运行效率">
+        <!-- <span class="has-mr-6">1.2</span> -->
+        <span>提高ListView运行效率</span>
+        </a></li><li>
+        <a class="is-flex" href="#ListView的点击事件">
+        <!-- <span class="has-mr-6">1.3</span> -->
+        <span>ListView的点击事件</span>
+        </a></li></ul></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="ListView的用法" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

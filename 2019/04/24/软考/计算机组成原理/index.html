@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>计算机组成原理 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="本文介绍了软考中有关计算机组成原理的知识点，包括：虚拟存储、编码方式、CPU逻辑组成等。">
+<meta name="keywords" content="软考,计算机组成原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机组成原理">
+<meta property="og:url" content="http://yoursite.com/2019/04/24/软考/计算机组成原理/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="本文介绍了软考中有关计算机组成原理的知识点，包括：虚拟存储、编码方式、CPU逻辑组成等。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2019/04/24/软考/计算机组成原理/1556192791086.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/24/软考/计算机组成原理/bg2010060601.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/24/软考/计算机组成原理/23069658_1364999862MRMY.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/04/24/软考/计算机组成原理/3-2.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/04/24/软考/计算机组成原理/20171116105027707.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/04/24/软考/计算机组成原理/20171116105644715.jpg">
+<meta property="og:image" content="http://share.onlinesjtu.com/pluginfile.php/993/mod_tab/content/358/329.gif">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.353Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="计算机组成原理">
+<meta name="twitter:description" content="本文介绍了软考中有关计算机组成原理的知识点，包括：虚拟存储、编码方式、CPU逻辑组成等。">
+<meta name="twitter:image" content="http://yoursite.com/2019/04/24/软考/计算机组成原理/1556192791086.png">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="计算机组成原理" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2019-04-24T16:00:00.000Z">2019-04-25</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.353Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/计算机组成原理/">计算机组成原理</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/软考/">软考</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    28 分钟 读完 (大约 4129 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                计算机组成原理
+            
+        </h1>
+        <div class="content">  
+            <p>本文介绍了软考中有关计算机组成原理的知识点，包括：虚拟存储、编码方式、CPU逻辑组成等。</p>
+<a id="more"></a>
+<h2 id="1-虚拟储存技术："><a href="#1-虚拟储存技术：" class="headerlink" title="1 虚拟储存技术："></a>1 虚拟储存技术：</h2><p>在程序运行时，则分配给每个程序一定的运行空间，由地址转换部件(硬件或软件)将编程时的地址转换成实际内存的物理地址。如果分配的内存不够，则只调入当前正在运行的或将要运行的程序块（或数据块），<strong>其余部分暂时驻留在辅存中</strong>。一个大作业在执行时，<strong>其一部分地址空间在主存，另一部分在辅存，当所访问的信息不在主存时，则由操作系统而不是程序员来安排I/O指令，把信息从辅存调入主存</strong>。从效果上来看，好像为用户提供了一个存储容量比实际主存大得多的存储器，用户无需考虑所编程序在主存中是否放得下或放在什么位置等问题。称这种存储器为虚拟存储器.</p>
+<p>虚拟存储器只是一个容量非常大的存储器的逻辑模型，不是任何实际的物理存储器。它借助于磁盘等辅助存储器来扩大主存容量，使之为更大或更多的程序所使用。虚拟存储器指的是主存－外存层次，它以透明的方式为用户提供了一个比实际主存空间大得多的程序地址空间。</p>
+<h2 id="2-定点数与浮点数"><a href="#2-定点数与浮点数" class="headerlink" title="2 定点数与浮点数"></a>2 定点数与浮点数</h2><h3 id="2-1-定点数"><a href="#2-1-定点数" class="headerlink" title="2.1 定点数"></a>2.1 定点数</h3><p>即小数点位置固定不变的数，可分为定点小数（纯小数）和定点整数（纯整数）。</p>
+<p>例如：规定定点数x=x0x1x2…x(n-1)xn，假如x为纯整数，那么小数点位于最低位xn的右边，数值范围是$0&lt;=|x|&lt;=2^{n}-1​$，且$x=(-1)^x{^0}(2^0{x_n}+2^1{x_{n-1}}+…+2^nx_1)​$，假如x为纯小数，那么小数点位于最低位x0与x1的之间，数值范围是$0&lt;=|x|&lt;=1-2^{-n}​$，且$x=(-1)^x{^0}(2^{-1}{x_0}+2^{-2}{x_{1}}+…+2^{-n}x_n)​$.</p>
+<p>定点数的加减运算：通过<strong>补码</strong>做加减运算，只需将符号位和数值部分一起参与运算，并且将符号位产生的进位丢掉即可。</p>
+<p>定点数加减运算的溢出分析：</p>
+<ul>
+<li>用一位符号位判断溢出：不论是作加法还是减法，只要实际操作数（减法时即为被减数和“求补”之后的减数）的补码符号位相同，而结果的符号位又与操作数补码符号位不同，即为溢出。</li>
+<li>用两位符号位判断溢出：当2位符号位不同时，表示溢出；否则无溢出。不论是否发生溢出，高位符号位永远代表真正的符号（两位符号位又产生的进位丢掉）。</li>
+</ul>
+<p><img src="/2019/04/24/软考/计算机组成原理/1556192791086.png" alt="1556192791086"></p>
+<h3 id="2-2-浮点数"><a href="#2-2-浮点数" class="headerlink" title="2.2 浮点数"></a>2.2 浮点数</h3><p>根据国际标准IEEE 754，任意一个二进制浮点数V可以表示成下面的形式：$V=(-1)^S<em>(1.M)</em>2^E$</p>
+<p><img src="/2019/04/24/软考/计算机组成原理/bg2010060601.png" alt="img"></p>
+<h2 id="3-原码、补码、反码"><a href="#3-原码、补码、反码" class="headerlink" title="3 原码、补码、反码"></a>3 原码、补码、反码</h2><h3 id="3-1-不同编码方式0的表示"><a href="#3-1-不同编码方式0的表示" class="headerlink" title="3.1 不同编码方式0的表示"></a>3.1 不同编码方式0的表示</h3><table>
+<thead>
+<tr>
+<th></th>
+<th>-0</th>
+<th>+0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原码</td>
+<td>1000 0000</td>
+<td>0000 0000</td>
+</tr>
+<tr>
+<td>反码</td>
+<td>1111 1111</td>
+<td>0000 0000</td>
+</tr>
+<tr>
+<td>补码</td>
+<td><strong>0000 0000</strong>（不是1000 0000）</td>
+<td>0000 0000</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3-2-n位补码与原码的表示范围（包含1位符号位）："><a href="#3-2-n位补码与原码的表示范围（包含1位符号位）：" class="headerlink" title="3.2 n位补码与原码的表示范围（包含1位符号位）："></a>3.2 n位补码与原码的表示范围（包含1位符号位）：</h3><table>
+<thead>
+<tr>
+<th>编码方式</th>
+<th>最小值</th>
+<th>最大值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原码</td>
+<td>-2^n-1^+1</td>
+<td>+2^n-1^-1</td>
+</tr>
+<tr>
+<td>补码</td>
+<td><strong>- 2^n-1^</strong></td>
+<td>+2^n-1^-1</td>
+</tr>
+</tbody>
+</table>
+<p>注意：<strong>补码比原码多表示一个数</strong>2^n-1^，因为人为定义了补码的1000 0000不表示0，表示-128。</p>
+<h3 id="3-3-移码"><a href="#3-3-移码" class="headerlink" title="3.3 移码"></a>3.3 移码</h3><ul>
+<li><strong>计算方法</strong>：移码就是该数的补码的符号位取反；</li>
+<li><strong>浮点数中阶码的计算</strong>：一般浮点数中的阶码用阶数的移码减一表示。如：8.25也就是1000.01，就是1.00001乘以2^3^，阶码的原码是3，以3的移码10000011B减一即：10000010B</li>
+<li>引入的目的：为了保证浮点数的机器零为全0。</li>
+</ul>
+<h2 id="4-CPU逻辑组成"><a href="#4-CPU逻辑组成" class="headerlink" title="4.CPU逻辑组成"></a>4.CPU逻辑组成</h2><h3 id="4-1-组成"><a href="#4-1-组成" class="headerlink" title="4.1 组成"></a>4.1 组成</h3><blockquote>
+<p>参考：<a href="https://software.intel.com/zh-cn/articles/book-processor-architecture_cpu_function_and_composition" target="_blank" rel="noopener">https://software.intel.com/zh-cn/articles/book-processor-architecture_cpu_function_and_composition</a></p>
+</blockquote>
+<p>CPU从逻辑上可以划分成3个模块，分别是<strong>控制单元（控制器）</strong>、<strong>运算单元（运算器）</strong>和<strong>存储单元（寄存器组）</strong>，这三部分由CPU<strong>内部总线</strong>连接起来。</p>
+<p><img src="/2019/04/24/软考/计算机组成原理/23069658_1364999862MRMY.jpg" alt="img"></p>
+<ul>
+<li><p>控制单元：</p>
+<p>控制器是整个计算机系统的指挥中心。在控制器的指挥控制下，运算器、存储器和输入/输出设备等部件协同工作，构成了一台完整的通用计算机。</p>
+<p>其主要功能包括：</p>
+<ol>
+<li>从主存中<strong>取出一条指令</strong>，并指出下一条指令在主存中的位置；</li>
+<li>对指令进行<strong>译码</strong>，并产生相应的操作控制信号，以便启动规定的动作；</li>
+<li>指挥并<strong>控制</strong>CPU、主存和输入/输出设备之间数据流动的方向。</li>
+</ol>
+<p>控制器通常由<strong>程序计数器</strong>（PC）、<strong>指令寄存器</strong>（IR）、<strong>指令译码器</strong>（ID）、时序发生器和操作控制器组成。</p>
+<p>控制单元各个组件的作用</p>
+<ul>
+<li><p><strong>程序计数器</strong>：</p>
+<p>程序计数器用来<u>指出下一条指令在主存储器中的地址</u>。</p>
+<p>在程序执行之前，首先必须将程序的首地址，即程序第一条指令所在主存单元的地址送入PC，因此PC的内容即是从主存提取的第一条指令的地址。</p>
+<p>当执行指令时，CPU能自动递增PC的内容，使其始终保存将要执行的下一条指令的主存地址，为取下一条指令做好准备。若为单字长指令，则(PC)+1àPC，若为双字长指令，则(PC)+2àPC，以此类推。</p>
+<p>但是，当遇到转移指令时，下一条指令的地址将由转移指令的地址码字段来指定，而不是像通常的那样通过顺序递增PC的内容来取得。</p>
+<p>因此，程序计数器的结构应当是具有寄存信息和计数两种功能的结构。</p>
+</li>
+<li><p><strong>指令寄存器</strong>：</p>
+<p>指令寄存器用来<u>保存当前正在执行的一条指令</u>。</p>
+<p>当执行一条指令时，先把该<strong>指令从主存读取到数据寄存器中，然后再传送至指令寄存器</strong>。</p>
+</li>
+<li><p><strong>指令译码器</strong>：</p>
+<p>一条指令被划分为操作码和地址码2个字段。为了执行任何给定的指令，必须对操作码进行测试，以便识别所要求的操作。</p>
+<p>指令译码器对来自<strong>指令寄存器的操作码部分进行译码</strong>，以产生操作性质的控制电位，并将其送到微操作控制线路上，在时序部件定时信号作用下，产生具体的操作控制信号。</p>
+<p>指令寄存器中操作码字段的输出就是指令译码器的输入。操作码一经译码后，即可向操作控制器发出具体操作的特定信号。</p>
+</li>
+</ul>
+</li>
+<li><p>运算单元：</p>
+<p>运算器是计算机中用于实现数据加工处理等功能的部件，它接受控制器的命令，负责完成对操作数据的加工处理任务，其核心部件是算术逻辑单元(Arithmetic Logic Unit，ALU)。</p>
+<p>相对控制器而言，运算器接受控制器的命令而进行动作，即运算器所进行的全部操作都是由控制器发出的控制信号来指挥的，所以它是执行部件。</p>
+<p>运算器由<strong>算术逻辑单元</strong>(ALU)、<strong>累加寄存器</strong>（AC）、<strong>数据寄存器</strong>（DR）和<strong>程序状态字寄存器</strong>（PSW）组成。它有两个主要功能：</p>
+<ol>
+<li>执行所有的算术运算；</li>
+<li>执行所有的逻辑运算，并进行逻辑测试</li>
+</ol>
+<p>运算单元各个组件的作用：</p>
+<ul>
+<li><p><strong>数据寄存器（DR）</strong>：    </p>
+<p>作为CPU和主存、外围设备之间信息传送的中转站；</p>
+<p>弥补CPU和主存、外围设备之间在操作速度上的差别；</p>
+<p>在单累加器结构的运算器中，数据寄存器还可兼作操作数寄存器。</p>
+</li>
+<li><p><strong>地址寄存器</strong>：</p>
+<p>地址寄存器（Address Register，AR）<u>用来保存CPU当前所访问的主存单元的地址</u>。</p>
+<p>由于在主存和CPU之间存在操作速度上的差异，所以必须使用地址寄存器来暂时保存主存的地址信息，直到主存的存取操作完成为止。</p>
+<p>当CPU和主存进行信息交换，即CPU向主存存入/取出数据时，或者CPU从主存中读出指令时，都要使用地址寄存器和数据寄存器。</p>
+</li>
+<li><p><strong>累加寄存器</strong></p>
+<p>累加寄存器通常简称累加器（Accumulator，AC），是一个通用寄存器。</p>
+<p>累加器的功能是：当运算器的算术逻辑单元(ALU)执行算术或逻辑运算时，为ALU提供一个工作区，可以为ALU暂时保存一个操作数或运算结果。</p>
+</li>
+<li><p><strong>程序状态字寄存器</strong></p>
+<p>程序状态字（Program Status Word，PSW）用来表征当前运算的状态及程序的工作方式。</p>
+<p>程序状态字寄存器保存由算术指令和逻辑指令运行或测试的结果所建立起来的各种条件码内容，如运算结果进/借位标志(C)、运算结果溢出标志（O)、运算结果为零标志(Z)、运算结果为负标志(N)、运算结果符号标志（S）等，这些标志位通常分别用1位触发器来保存。</p>
+</li>
+</ul>
+</li>
+<li><p>存储单元：</p>
+</li>
+</ul>
+<p><img src="/2019/04/24/软考/计算机组成原理/3-2.jpg" alt="img"></p>
+<h3 id="4-2-指令周期的数据流"><a href="#4-2-指令周期的数据流" class="headerlink" title="4.2 指令周期的数据流"></a>4.2 指令周期的数据流</h3><blockquote>
+<p>参考：<a href="https://www.cnblogs.com/moonlord/p/5938023.html" target="_blank" rel="noopener">https://www.cnblogs.com/moonlord/p/5938023.html</a></p>
+</blockquote>
+<ol>
+<li><p>取址周期</p>
+<p>| 微操作                 | 解释                                                   |<br>| ———————- | —————————————————— |<br>| （pc）-&gt; MAR -&gt; 地址线 | PC寄存器中的指令地址打给主存地址寄存器，MAR打给主存    |<br>| 1 -&gt; R （读控制线置1） | 控制线置驻村为读信号，说明对该主存单元进行读操作       |<br>| M（MAR）-&gt; MDR         | 把主存相应位置的数据打给主存数据寄存器MDR              |<br>| MDR -&gt; IR              | 把MDR中督导的指令打到指令寄存器（经过数据寄存器）      |<br>| OP（IR） -&gt; CU         | 把指令中的操作码字段打给控制单元CU                     |<br>| （PC）+ 1 -&gt; PC        | PC寄存器中的值根据编址方式+n，表示下次取指的内存单元号 |</p>
+</li>
+</ol>
+<h2 id="5-主存与cache的地址映射方式"><a href="#5-主存与cache的地址映射方式" class="headerlink" title="5.主存与cache的地址映射方式"></a>5.主存与cache的地址映射方式</h2><p>假设某台计算机主存容量为1MB，被分为2048块，则每个Block为512B；Cache容量为8KB，<strong>它的块大小需要和主存一样大</strong>，每块也是512B，所以被分为16块。</p>
+<ul>
+<li><p>直接映射</p>
+<p>就好像就如每个人的停车位按照计算规则是固定分配好的。一个内存地址能被映射到的Cache line是固定的，如下如所示：</p>
+<p>主存的第0块、第16块、第32块、第48块、……、第2032块等128块，只能映射到Cache的第0块；</p>
+<p>主存的第1块、第17块、第33块、第49块、……、第2033块等128块，只能映射到Cache的第1块；</p>
+<p>以此类推，主存的第15块、第31块、第47块、……、第2047块等128块，只能映射到Cache的第15块中。</p>
+<p>映射完毕，Cache总共有0～15即16块，主存中的每128（2048/16）块，只能映射到Cache中的某一个块中。</p>
+<p>即映射规则为cache line index = （主存（Page）的line数）%（cache中 cache line的总数）</p>
+<p><img src="/2019/04/24/软考/计算机组成原理/20171116105027707.jpg" alt="img"></p>
+</li>
+<li><p>全相联映射</p>
+<p>就像停车位可以大家<strong>随便</strong>停一样，停的时候简单，找车的时候需要一个一个停车位的找了。主存中的一个地址可被映射进任意cache line，问题是：当寻找一个地址是否已经被cache时，需要遍历每一个cache line来寻找，这个代价很高。</p>
+<p><img src="/2019/04/24/软考/计算机组成原理/20171116105644715.jpg" alt="img"></p>
+</li>
+<li><p>组相联映射</p>
+<p>组相联映射实际上是直接映射和全相联映射的折中方案，如下图所示。</p>
+<p>主存和Cache都<strong>分组</strong>，<strong>主存中一个组内的块数与Cache中的组数相同</strong>，组间采用直接映射，组内采用全相联映射。也就是说，将Cache分成2^u^组，每组包含2^v^块，主存块存放到哪个组是固定的，至于存到该组哪一块则是灵活的。即主存的某块只能映射到Cache的特定组中的任意一块。主存的某块b与Cache的组k之间满足以下关系：k=b%(2^u).</p>
+<p><img src="http://share.onlinesjtu.com/pluginfile.php/993/mod_tab/content/358/329.gif" alt="329.gif"></p>
+<p>例如，Cache分为8组(u=3)，每组2块(v=1)，主存分为225个区，每个组8块。</p>
+<p>主存中的各块与Cache的组号之间有固定的映射关系，但可自由映射到对应Cache组中的任何一块。例如：</p>
+<p>主存的第0块、第8块、第16块、…第2040块等256块（各区的第一块）均映射于Cache的第0组，但可映射到其中的第0块或第1块；</p>
+<p>主存的第1块、第9块、第17块、…第2041块等均映射于Cache的第2组，但可映射到Cache第2组中的任意一块；</p>
+<p>主存的第2块、第10块、第2042块等均映射于Cache的第3组，但可映射到Cache第3组中的任意一块；</p>
+<p>主存的第7块、第15块、第2047块等均映射于Cache的第8组，但可映射到Cache第8组中的第14块或第15块。</p>
+</li>
+</ul>
+<h2 id="6-算术左移、逻辑左移、循环左移"><a href="#6-算术左移、逻辑左移、循环左移" class="headerlink" title="6 算术左移、逻辑左移、循环左移"></a>6 算术左移、逻辑左移、循环左移</h2><p>逻辑左移时，最高位丢失，<strong>最低位补0</strong>；</p>
+<p>逻辑右移时，<strong>最高位补0</strong>，最低位丢失；</p>
+<p>算术左移时，依次左移一位，<strong>尾部补0</strong>，最高的符号位保持不变。</p>
+<p>算术右移时，依次右移一位，<strong>尾部丢失</strong>，符号位右移后，<strong>原位置上复制一个符号位</strong>；</p>
+<p>循环左移时，将最高位重新放置最低位</p>
+<p>循环右移时，将最低位重新放置最高位</p>
+<blockquote>
+<p>综上：逻辑是补0；算术是补符号位，或者补0</p>
+</blockquote>
+<h2 id="7-海明码校验"><a href="#7-海明码校验" class="headerlink" title="7 海明码校验"></a>7 海明码校验</h2><ul>
+<li><p><strong>确定校验位数：</strong></p>
+<p>设数据有n位，校验码有x位，因为编码后的二进制串有n+x位，因此x应该满足：<strong>2^x^−1≥n+x</strong>。</p>
+<p>分析：因为需要在1、2、4……等2^i^位置处插入检验位，编码后的位串长度不能超过2^x^−1。</p>
+</li>
+<li><p><strong>计算校验位的值</strong>：H~i~表示校验码串位置i处的码字，按照下面方法计算</p>
+<p>因为对于数据位有：</p>
+<blockquote>
+<p>H~3~=H~1~+H~2~</p>
+<p>H~5~=H~1~+H~4~</p>
+<p>H~6~=H~2~+H~4~</p>
+<p>H~7~=H~1~+H~2~+H~4~</p>
+</blockquote>
+<p>则</p>
+<blockquote>
+<p>H~1~=H~3~⊕H~5~⊕H~7~</p>
+<p>H~2~=H~3~⊕H~6~⊕H~7~</p>
+<p>H~4~=H~5~⊕H~6~⊕H~7~</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="8-流水线时间的计算"><a href="#8-流水线时间的计算" class="headerlink" title="8 流水线时间的计算"></a>8 流水线时间的计算</h2><ul>
+<li><p><strong>执行周期</strong>：</p>
+<p>如果不采用流水线的方式，执行周期则为一条指令的开始到下一条指令的开始时间，即<strong>完整执行一条指令所有阶段</strong>的时间。</p>
+<p>如果采用流水线的方式，指令中<strong>用时最长的阶段执行时间</strong>为流水线的周期。</p>
+</li>
+<li><p><strong>流水线执行时间的计算公式</strong><br>$$<br>p = \sum_{i=1}^m△ti+(n-1)△tj<br>$$<br>其中△tj为流水线的周期，△tj为完整执行一条指令所有阶段的时间。</p>
+</li>
+<li><p><strong>吞吐率</strong>：</p>
+<p>定义：吞吐率是单位时间里执行的指令数；即指令条数除以流水线时间。 </p>
+</li>
+</ul>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/计算机组成原理/">计算机组成原理</a>, <a class="has-link-grey -link" href="/tags/软考/">软考</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/04/24/软考/软件工程/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">软件工程</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/04/15/Software-Test/6 基于组合设计的测试生成/">
+                <span class="level-item">基于组合设计的的测试生成</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc" style="position: sticky; top: 10px;">
+    <div class="card-content" style="padding: 1rem;">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#1-虚拟储存技术：">
+        <!-- <span class="has-mr-6">1</span> -->
+        <span>1 虚拟储存技术：</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-定点数与浮点数">
+        <!-- <span class="has-mr-6">2</span> -->
+        <span>2 定点数与浮点数</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#2-1-定点数">
+        <!-- <span class="has-mr-6">2.1</span> -->
+        <span>2.1 定点数</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-2-浮点数">
+        <!-- <span class="has-mr-6">2.2</span> -->
+        <span>2.2 浮点数</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#3-原码、补码、反码">
+        <!-- <span class="has-mr-6">3</span> -->
+        <span>3 原码、补码、反码</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#3-1-不同编码方式0的表示">
+        <!-- <span class="has-mr-6">3.1</span> -->
+        <span>3.1 不同编码方式0的表示</span>
+        </a></li><li>
+        <a class="is-flex" href="#3-2-n位补码与原码的表示范围（包含1位符号位）：">
+        <!-- <span class="has-mr-6">3.2</span> -->
+        <span>3.2 n位补码与原码的表示范围（包含1位符号位）：</span>
+        </a></li><li>
+        <a class="is-flex" href="#3-3-移码">
+        <!-- <span class="has-mr-6">3.3</span> -->
+        <span>3.3 移码</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#4-CPU逻辑组成">
+        <!-- <span class="has-mr-6">4</span> -->
+        <span>4.CPU逻辑组成</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#4-1-组成">
+        <!-- <span class="has-mr-6">4.1</span> -->
+        <span>4.1 组成</span>
+        </a></li><li>
+        <a class="is-flex" href="#4-2-指令周期的数据流">
+        <!-- <span class="has-mr-6">4.2</span> -->
+        <span>4.2 指令周期的数据流</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#5-主存与cache的地址映射方式">
+        <!-- <span class="has-mr-6">5</span> -->
+        <span>5.主存与cache的地址映射方式</span>
+        </a></li><li>
+        <a class="is-flex" href="#6-算术左移、逻辑左移、循环左移">
+        <!-- <span class="has-mr-6">6</span> -->
+        <span>6 算术左移、逻辑左移、循环左移</span>
+        </a></li><li>
+        <a class="is-flex" href="#7-海明码校验">
+        <!-- <span class="has-mr-6">7</span> -->
+        <span>7 海明码校验</span>
+        </a></li><li>
+        <a class="is-flex" href="#8-流水线时间的计算">
+        <!-- <span class="has-mr-6">8</span> -->
+        <span>8 流水线时间的计算</span>
+        </a></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="计算机组成原理" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

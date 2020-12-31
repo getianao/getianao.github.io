@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>7种排序算法总结 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="本文介绍了7种常见算法的思路和实现。📃GitHub代码">
+<meta name="keywords" content="数据结构,算法,排序">
+<meta property="og:type" content="article">
+<meta property="og:title" content="7种排序算法总结">
+<meta property="og:url" content="http://yoursite.com/2019/08/11/Interview/数据结构/排序算法总结/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="本文介绍了7种常见算法的思路和实现。📃GitHub代码">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://camo.githubusercontent.com/f629302315c4add92612036b3e4abca2fa163efe/687474703a2f2f75706c6f61642d696d616765732e6a69616e7368752e696f2f75706c6f61645f696d616765732f313934303331372d376361663761386465633039356138302e706e673f696d6167654d6f6772322f6175746f2d6f7269656e742f7374726970253743696d61676556696577322f322f772f31323430">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.277Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="7种排序算法总结">
+<meta name="twitter:description" content="本文介绍了7种常见算法的思路和实现。📃GitHub代码">
+<meta name="twitter:image" content="https://camo.githubusercontent.com/f629302315c4add92612036b3e4abca2fa163efe/687474703a2f2f75706c6f61642d696d616765732e6a69616e7368752e696f2f75706c6f61645f696d616765732f313934303331372d376361663761386465633039356138302e706e673f696d6167654d6f6772322f6175746f2d6f7269656e742f7374726970253743696d61676556696577322f322f772f31323430">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="7种排序算法总结" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2019-08-11T16:00:00.000Z">2019-08-12</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.277Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/排序/">排序</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/数据结构/">数据结构</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/算法/">算法</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    12 分钟 读完 (大约 1803 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                7种排序算法总结
+            
+        </h1>
+        <div class="content">  
+            <p>本文介绍了7种常见算法的思路和实现。📃<a href="https://github.com/getianao/interview-practice/blob/master/数据结构/SortAlgorithm.java" target="_blank" rel="noopener">GitHub代码</a></p>
+<a id="more"></a>
+<h2 id="1-使用插入的方式排序"><a href="#1-使用插入的方式排序" class="headerlink" title="1 使用插入的方式排序"></a>1 使用插入的方式排序</h2><h3 id="1-1-简单插入排序"><a href="#1-1-简单插入排序" class="headerlink" title="1.1 简单插入排序"></a>1.1 简单插入排序</h3><p>将需要排序的数据序列看作一串先后传来的数据，将第一个到达的数据看作一个有序的子序列，将之后到达的数据插入这个有序表中，保持整个序列仍然有序。</p>
+<p>📜实现思路：根据给出的长度为 L 的数据序列做 L-1 次循环，每次前 i 个数据都是有序的，将第 i+1 个数据从后先前、依次与这前 i 个有序序列中的数据做比较，如果第 i+1 个数据更小，则将它们交换，直到第 i+1 个数据相等或更大为止。</p>
+<p>⏱时间复杂度为$O(n^2)$</p>
+<h3 id="1-2-希尔排序"><a href="#1-2-希尔排序" class="headerlink" title="1.2 希尔排序"></a>1.2 希尔排序</h3><p>将数据序列分成若干个子序列进行直接插入排序，子序列是按照一定间隔从数据序列中挑选数据，重复这个过程，间隔逐渐减小（子序列的数量也会将减少），带整个序列中数据基本有序时，在对整体做一次直接插入排序。</p>
+<p>📜实现思路：需要提前定义一个 dlta[] 数组来确定的间隔量，间隔量由大到小，每次通过间隔量从数据序列中查找子序列；子序列的直接插入排序从前往后、每次只比较两个数据，如果这两个数据不满足小于关系，则从后向前查找合适的位置，一边找一边交换，找到就插入。</p>
+<p>⏱希尔排序的时间复杂度难以确定，取决于增量序列，可以是$O(nlog_{3/2}n)$。</p>
+<h2 id="2-使用交换的方式排序"><a href="#2-使用交换的方式排序" class="headerlink" title="2 使用交换的方式排序"></a>2 使用交换的方式排序</h2><h3 id="2-1-冒泡排序"><a href="#2-1-冒泡排序" class="headerlink" title="2.1 冒泡排序"></a>2.1 冒泡排序</h3><p>正如其名，冒泡排序每次对需要排序的数据序列做一次遍历，可以将最大的数据调整至序列的最后一个，按照这种方法，每次对前 i 个数据做冒泡，使其中最大的数据找到正确的位置，即可完成整个序列的排序。</p>
+<p>📜实现思路：每次对前 i 个数据做冒泡，从前向后依次两两比较，如果前一个大于后一个，就将它们交换；这样重复 len 次之后整个序列有序。</p>
+<p>⏱时间复杂度为$O(n^{2})$</p>
+<h3 id="2-2-快速排序"><a href="#2-2-快速排序" class="headerlink" title="2.2 快速排序"></a>2.2 快速排序</h3><p>在数据序列中任意选择一个数据作为枢纽，将其他比枢纽小的数据枢纽左侧，大的放在枢纽右侧，这样的过程叫一趟快速排序，然后对左右两侧的子序列也做快速排序，直至子序列长度为1。</p>
+<p>📜实现思路：使用 low 和 high 存储开始结束的位置，每次 low 处的数据作为枢纽，先从 high 向前检查，如果high所指位置大于枢纽，则 high– ，否则 low 处数据指定为 high 处的；然后先从 low 向后检查，如果 low 所指位置小于枢纽，则 low– ，否则 high 处数据指定为 low 处的；直到 high==low 。这样就完成了划分，然后对于两端的子序列最相同的操作。注意循环终止条件是 low &gt;= high。</p>
+<p>⏱时间复杂度为$O(nlog_{2}n)$；当数据序列<strong>基本有序</strong>时，快速排序退化为冒泡排序，时间复杂度为$O(n^{2})$。</p>
+<h2 id="3-使用选择的方式排序"><a href="#3-使用选择的方式排序" class="headerlink" title="3 使用选择的方式排序"></a>3 使用选择的方式排序</h2><h3 id="3-1-简单选择排序"><a href="#3-1-简单选择排序" class="headerlink" title="3.1 简单选择排序"></a>3.1 简单选择排序</h3><p>每次在后 i 个数据中选择最小的数据，将它和第一个位置的数据交换。</p>
+<p>📜实现思路：实现十分简单，和它的思路一样，可以考虑使用树形选择优化。</p>
+<p>⏱时间复杂度为$O(n^{2})$。</p>
+<h3 id="3-2-堆排序"><a href="#3-2-堆排序" class="headerlink" title="3.2 堆排序"></a>3.2 堆排序</h3><h4 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h4><p>堆可以分为大顶堆和小顶堆：大顶堆的任意一个非终端节点的值比它的左右子树的根节点要大；小顶堆的任意一个非终端节点的值比它的左右子树的根节点要小。这是一个递归的定义，这意味着大顶堆的非终端节点的值比它左右子树的任意节点的值都要大，小顶堆类似。</p>
+<h4 id="堆的生成"><a href="#堆的生成" class="headerlink" title="堆的生成"></a>堆的生成</h4><p>将一串数据数列（长度为$n$）连续的存储在线性表中，将这个序列看作一个完全二叉树，可以方便的找到任意节点的父节点或子节点。则这串数据的第一个非终端节点序号为$\lfloor{n/2}\rfloor$（向下取整），从这个节点开始向前检查所有非终端节点的两个子树的根节点，以小顶堆为例，选择两个子树的根节点的较小值与根节点交换；这样使整个二叉树满足小顶堆的条件。</p>
+<h4 id="堆顶元素的删除"><a href="#堆顶元素的删除" class="headerlink" title="堆顶元素的删除"></a>堆顶元素的删除</h4><p>在线性表的最后存储删除的元素，将堆顶元素（根节点）和线性表中二叉树的最后一个元素交换，然后从根节点向下检查、交换，完成堆的重新调整。</p>
+<p>堆排序就是先将数据序列调整为堆，然后依次删除所有堆顶元素，直至二叉树消失。</p>
+<p>📜实现思路：实现过程和上面的描述过程类似，要注意顺序表是从0开始还是从1开始的。</p>
+<p>⏱时间复杂度为$O(nlog_{2}n)$。</p>
+<h2 id="4-归并排序"><a href="#4-归并排序" class="headerlink" title="4 归并排序"></a>4 归并排序</h2><p>归并排序首先将整个数据序列看作 len 个有序的子序列（每个子序列的长度为 1 ），然后将这些子序列两两合并，合并之后的序列也是有序的，重复这个两两合并的过程，最后使整个序列有序。</p>
+<p>📜实现思路：首先需要定义一个归并函数，它将两个有序的序列合并为一个有序的序列；然后定义排序函数，排序函数的作用是将给定区间的数据序列排序，它先将这个区间等分为前后两部分，对这两部分序列作为参数分别递归的调用排序函数，得到有序的两个序列，然后调用归并函数对这两部分进行归并；注意递归的终止条件是序列的长度是 1 。</p>
+<p>⏱得到递归式$T(n)=2T(n/2)+O(n)$，根据主定理，时间复杂度为$O(nlog_{2}n)$。</p>
+<h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5 总结"></a>5 总结</h2><p><img src="https://camo.githubusercontent.com/f629302315c4add92612036b3e4abca2fa163efe/687474703a2f2f75706c6f61642d696d616765732e6a69616e7368752e696f2f75706c6f61645f696d616765732f313934303331372d376361663761386465633039356138302e706e673f696d6167654d6f6772322f6175746f2d6f7269656e742f7374726970253743696d61676556696577322f322f772f31323430" alt="image"></p>
+<blockquote>
+<p>参考文献：</p>
+<p><a href="https://github.com/MisterBooo/Article" target="_blank" rel="noopener">十大经典排序算法动画</a></p>
+</blockquote>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/排序/">排序</a>, <a class="has-link-grey -link" href="/tags/数据结构/">数据结构</a>, <a class="has-link-grey -link" href="/tags/算法/">算法</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/08/15/Data-Structure/数据结构复习(数组和二叉树)/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">数据结构复习（数组和二叉树）</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/05/19/软考/计算机网络/">
+                <span class="level-item">计算机网络</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc" style="position: sticky; top: 10px;">
+    <div class="card-content" style="padding: 1rem;">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#1-使用插入的方式排序">
+        <!-- <span class="has-mr-6">1</span> -->
+        <span>1 使用插入的方式排序</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#1-1-简单插入排序">
+        <!-- <span class="has-mr-6">1.1</span> -->
+        <span>1.1 简单插入排序</span>
+        </a></li><li>
+        <a class="is-flex" href="#1-2-希尔排序">
+        <!-- <span class="has-mr-6">1.2</span> -->
+        <span>1.2 希尔排序</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#2-使用交换的方式排序">
+        <!-- <span class="has-mr-6">2</span> -->
+        <span>2 使用交换的方式排序</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#2-1-冒泡排序">
+        <!-- <span class="has-mr-6">2.1</span> -->
+        <span>2.1 冒泡排序</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-2-快速排序">
+        <!-- <span class="has-mr-6">2.2</span> -->
+        <span>2.2 快速排序</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#3-使用选择的方式排序">
+        <!-- <span class="has-mr-6">3</span> -->
+        <span>3 使用选择的方式排序</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#3-1-简单选择排序">
+        <!-- <span class="has-mr-6">3.1</span> -->
+        <span>3.1 简单选择排序</span>
+        </a></li><li>
+        <a class="is-flex" href="#3-2-堆排序">
+        <!-- <span class="has-mr-6">3.2</span> -->
+        <span>3.2 堆排序</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#堆">
+        <!-- <span class="has-mr-6">3.2.1</span> -->
+        <span>堆</span>
+        </a></li><li>
+        <a class="is-flex" href="#堆的生成">
+        <!-- <span class="has-mr-6">3.2.2</span> -->
+        <span>堆的生成</span>
+        </a></li><li>
+        <a class="is-flex" href="#堆顶元素的删除">
+        <!-- <span class="has-mr-6">3.2.3</span> -->
+        <span>堆顶元素的删除</span>
+        </a></li></ul></li></ul></li><li>
+        <a class="is-flex" href="#4-归并排序">
+        <!-- <span class="has-mr-6">4</span> -->
+        <span>4 归并排序</span>
+        </a></li><li>
+        <a class="is-flex" href="#5-总结">
+        <!-- <span class="has-mr-6">5</span> -->
+        <span>5 总结</span>
+        </a></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="7种排序算法总结" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

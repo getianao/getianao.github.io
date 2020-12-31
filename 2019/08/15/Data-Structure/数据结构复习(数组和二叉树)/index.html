@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>数据结构复习（数组和二叉树） - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="本文复习了数据结构的一些知识点，包括数组、链表、二叉树。想到什么就写了什么，不完整。">
+<meta name="keywords" content="数据结构,数组,二叉树">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构复习（数组和二叉树）">
+<meta property="og:url" content="http://yoursite.com/2019/08/15/Data-Structure/数据结构复习(数组和二叉树)/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="本文复习了数据结构的一些知识点，包括数组、链表、二叉树。想到什么就写了什么，不完整。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.245Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据结构复习（数组和二叉树）">
+<meta name="twitter:description" content="本文复习了数据结构的一些知识点，包括数组、链表、二叉树。想到什么就写了什么，不完整。">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="数据结构复习（数组和二叉树）" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2019-08-15T16:00:00.000Z">2019-08-16</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.245Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/二叉树/">二叉树</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/数据结构/">数据结构</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/数组/">数组</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    9 分钟 读完 (大约 1338 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                数据结构复习（数组和二叉树）
+            
+        </h1>
+        <div class="content">  
+            <p>本文复习了数据结构的一些知识点，包括数组、链表、二叉树。想到什么就写了什么，不完整。</p>
+<a id="more"></a>
+<h2 id="1-顺序表和链表的优缺点"><a href="#1-顺序表和链表的优缺点" class="headerlink" title="1 顺序表和链表的优缺点"></a>1 顺序表和链表的优缺点</h2><p>主要从操作和空间两个方面来区分。</p>
+<ul>
+<li><p>顺序表</p>
+<p>顺序表是将数据存放在连续的内存空间上，相邻数据元素的存放地址也相邻（即逻辑和物理的统一）。</p>
+<p>👍优点：存储、读取效率高（因为它可以直接通过下标访问数据）；空间利用率高（OS中的局部性原理，命中率高）。</p>
+<p>👎缺点：插入、删除操作效率低（因为它需要遍历所有元素以重新排序）；定义之后大小不能改变；有空间大小限制；当数据个数远小于预分配空间的大小时，空间浪费巨大。</p>
+</li>
+<li><p>链表</p>
+<p>链表在程序运行中动态分配内存（堆）。</p>
+<p>👍优点：插入、删除效率高（因为它不需要改变原有数据的物理结构，只需要改变指针）；空间大小的限制较小。</p>
+<p>👎缺点：查找速度慢（需要按照顺序遍历链表）</p>
+</li>
+</ul>
+<p>综上所述：频繁的查找（静态操作）、很少的删除和插入（动态操作）适合顺序表，比如堆排序、二分查找。反之适合链表。</p>
+<!--more-->
+<h2 id="2-深度、广度优先搜索"><a href="#2-深度、广度优先搜索" class="headerlink" title="2 深度、广度优先搜索"></a>2 深度、广度优先搜索</h2><p>poj 3984</p>
+<h2 id="3-二叉排序树BST"><a href="#3-二叉排序树BST" class="headerlink" title="3 二叉排序树BST"></a>3 二叉排序树BST</h2><p>对于二叉排序树中的结点，若它的左子树不为空，则左子树上的值均要小于根节点上的值；若它的右子树不为空，则右子树上的值均要大于根节点上的值。</p>
+<h3 id="BST的构造"><a href="#BST的构造" class="headerlink" title="BST的构造"></a>BST的构造</h3><p>BST的是动态树表，它的构造不是一次生成的，而是在查找、插入中生成的：如果书中没有节点的值和查找的值相等，则进行插入操作。</p>
+<h3 id="BST的插入"><a href="#BST的插入" class="headerlink" title="BST的插入"></a>BST的插入</h3><p>BST的插入很简单，按照“左边大右边小”的原则去寻找结点，当搜索到叶子节点仍然不相等的时候，则在这个节点上进行插入。</p>
+<h3 id="BST的删除"><a href="#BST的删除" class="headerlink" title="BST的删除"></a>BST的删除</h3><p>删除BST的某个节点，需要通过节点的子树情况来进行分类，可以分为以下三类：</p>
+<ol>
+<li><p>要删除的节点 p 为叶子节点，则直接删除即可，不会影响树的结构。</p>
+</li>
+<li><p>要删除的节点 p 只有 一颗子树 p<em> （即只有左子树或只有右子树），则直接用 p</em> 替代 p 即可。</p>
+</li>
+<li><p>要删除的节点 p 左右子树均存在（分别是$p_l$和$p_r$），这时候的操作稍微有点复杂，方法有二：</p>
+<p>①将$p_l$替代 p 原有的位置，$p_r$连接到$p_l $的最右边的节点（即 p 的直接前驱）。（因为$ p_l$一定是要小于$p_r$的，而$p_l$中最大的节点就是最右边的叶子节点，将$p_r$连接上去不会导致错误）</p>
+<p>②让$p_l $的最右边的节点（即 p 的直接前驱）替换p的值，然后删除原有的p 的直接前驱即可（这是一个删除，类型一定是上面的1或2）。</p>
+</li>
+</ol>
+<h2 id="4-平衡二叉树AVL"><a href="#4-平衡二叉树AVL" class="headerlink" title="4 平衡二叉树AVL"></a>4 平衡二叉树AVL</h2><p>平衡二叉树的左右子树高度的相差不超过1。</p>
+<ul>
+<li><p><strong>深度</strong>：对于任意节点n，n的深度为从根到n的唯一路径长，<strong>根的深度为0</strong>；</p>
+</li>
+<li><p><strong>高度</strong>：对于任意节点n，n的高度为从n到一片树叶的最长路径长，<strong>所有树叶的高度为0</strong>；</p>
+</li>
+</ul>
+<h3 id="AVL的构造"><a href="#AVL的构造" class="headerlink" title="AVL的构造"></a>AVL的构造</h3><p>当生成二叉树的时候出现不平衡的情况，需要通过旋转的方式使之平衡，可以归纳为下面几种方法：</p>
+<ul>
+<li><p>向右旋转：</p>
+<p>当在左子树的左子树上添加一个结点而导致不平衡时，需要向右旋转。</p>
+</li>
+<li><p>向左旋转：</p>
+<p>当在右子树的右子树上添加一个结点而导致不平衡时，需要向左旋转。</p>
+</li>
+<li><p>先左后右：</p>
+<p>当在左子树的右子树上添加一个结点而导致不平衡时，需要先向左再向右旋转。</p>
+</li>
+<li><p>先右后左：</p>
+<p>当在右子树的左子树上添加一个结点而导致不平衡时，需要先向右再向左旋转。</p>
+</li>
+</ul>
+<h2 id="5-假溢出"><a href="#5-假溢出" class="headerlink" title="5 假溢出"></a>5 假溢出</h2><p>“假溢出”的产生是使用线性表定义队列，随着入队和出队的不断进行，指针rear和front不断变大，当到达线性表的尾部时，已经没有剩余空间用于入队操作；但实际上线性表的首端有大量未使用空间。</p>
+<p>我们一般使用循环队列来解决“假溢出”的问题。</p>
+<h2 id="6-查找第k大的数"><a href="#6-查找第k大的数" class="headerlink" title="6 查找第k大的数"></a>6 查找第k大的数</h2><p>[LeetCode]215 数组第k大的数</p>
+<h2 id="7-最短路径算法"><a href="#7-最短路径算法" class="headerlink" title="7 最短路径算法"></a>7 最短路径算法</h2><h3 id="Dijkstra算法"><a href="#Dijkstra算法" class="headerlink" title="Dijkstra算法"></a>Dijkstra算法</h3><h3 id="Floyd算法"><a href="#Floyd算法" class="headerlink" title="Floyd算法"></a>Floyd算法</h3>
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/二叉树/">二叉树</a>, <a class="has-link-grey -link" href="/tags/数据结构/">数据结构</a>, <a class="has-link-grey -link" href="/tags/数组/">数组</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/08/21/Interview/剑指Offer/剑指offer题解目录/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">剑指offer题解目录</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/08/11/Interview/数据结构/排序算法总结/">
+                <span class="level-item">7种排序算法总结</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc" style="position: sticky; top: 10px;">
+    <div class="card-content" style="padding: 1rem;">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#1-顺序表和链表的优缺点">
+        <!-- <span class="has-mr-6">1</span> -->
+        <span>1 顺序表和链表的优缺点</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-深度、广度优先搜索">
+        <!-- <span class="has-mr-6">2</span> -->
+        <span>2 深度、广度优先搜索</span>
+        </a></li><li>
+        <a class="is-flex" href="#3-二叉排序树BST">
+        <!-- <span class="has-mr-6">3</span> -->
+        <span>3 二叉排序树BST</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#BST的构造">
+        <!-- <span class="has-mr-6">3.1</span> -->
+        <span>BST的构造</span>
+        </a></li><li>
+        <a class="is-flex" href="#BST的插入">
+        <!-- <span class="has-mr-6">3.2</span> -->
+        <span>BST的插入</span>
+        </a></li><li>
+        <a class="is-flex" href="#BST的删除">
+        <!-- <span class="has-mr-6">3.3</span> -->
+        <span>BST的删除</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#4-平衡二叉树AVL">
+        <!-- <span class="has-mr-6">4</span> -->
+        <span>4 平衡二叉树AVL</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#AVL的构造">
+        <!-- <span class="has-mr-6">4.1</span> -->
+        <span>AVL的构造</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#5-假溢出">
+        <!-- <span class="has-mr-6">5</span> -->
+        <span>5 假溢出</span>
+        </a></li><li>
+        <a class="is-flex" href="#6-查找第k大的数">
+        <!-- <span class="has-mr-6">6</span> -->
+        <span>6 查找第k大的数</span>
+        </a></li><li>
+        <a class="is-flex" href="#7-最短路径算法">
+        <!-- <span class="has-mr-6">7</span> -->
+        <span>7 最短路径算法</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#Dijkstra算法">
+        <!-- <span class="has-mr-6">7.1</span> -->
+        <span>Dijkstra算法</span>
+        </a></li><li>
+        <a class="is-flex" href="#Floyd算法">
+        <!-- <span class="has-mr-6">7.2</span> -->
+        <span>Floyd算法</span>
+        </a></li></ul></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="数据结构复习（数组和二叉树）" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

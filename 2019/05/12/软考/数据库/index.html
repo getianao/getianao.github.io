@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>数据库 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="本文介绍了软考中有关数据库的知识点，包括：关系模型、E-R图。">
+<meta name="keywords" content="软考,数据库">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据库">
+<meta property="og:url" content="http://yoursite.com/2019/05/12/软考/数据库/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="本文介绍了软考中有关数据库的知识点，包括：关系模型、E-R图。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2019/05/12/软考/数据库/1557717017544.png">
+<meta property="og:image" content="http://yoursite.com/2019/05/12/软考/数据库/1557717159769.png">
+<meta property="og:image" content="http://yoursite.com/2019/05/12/软考/数据库/1557717253891.png">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.341Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据库">
+<meta name="twitter:description" content="本文介绍了软考中有关数据库的知识点，包括：关系模型、E-R图。">
+<meta name="twitter:image" content="http://yoursite.com/2019/05/12/软考/数据库/1557717017544.png">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="数据库" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2019-05-12T16:00:00.000Z">2019-05-13</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.341Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/数据库/">数据库</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/软考/">软考</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    17 分钟 读完 (大约 2548 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                数据库
+            
+        </h1>
+        <div class="content">  
+            <p>本文介绍了软考中有关数据库的知识点，包括：关系模型、E-R图。</p>
+<a id="more"></a>
+<h2 id="1-关系模型中的一些关键字的定义"><a href="#1-关系模型中的一些关键字的定义" class="headerlink" title="1 关系模型中的一些关键字的定义"></a>1 关系模型中的一些关键字的定义</h2><p><strong>关系</strong>(Relation):一个关系对应通常说的一张表。</p>
+<p><strong>元组(</strong>Tuple):表中的一行即为一个元组。</p>
+<p><strong>属性</strong>(Attribute):表中的一列即为一个属性，给每一个属性起一个名称即属性名。</p>
+<p><strong>码</strong>(Key):也称为码键。表中的某个属性组，它可以<strong>唯一确定一个元组</strong>。</p>
+<p><strong>域(</strong>Domain):属性的取值范围。</p>
+<p>分量:元组中的一个属性值。</p>
+<p><strong>关系模型</strong>：对关系的描述，一般表示为 关系名(属性1，属性2，…，属性n)</p>
+<p><strong>候选码</strong>(Candidate key)：若关系中的某一属性组的值能唯一地标识一个元组，则称该属性组为候选码。</p>
+<p>若一个关系有多个候选码，则选定其中一个为<strong>主码</strong>(Primary key)</p>
+<p>候选码的诸属性称为<strong>主属性</strong>(Prime attribute)。不包含在任何候选码中的属性称为<strong>非主属性</strong>(Nonprimary attribute)或非码属性(Non-key attribute)。</p>
+<p>在最简单的情况下，候选码只包含一个属性。在最极端的情况下，关系模式的所有属性是这个关系模式的候选码，称为全码(All-key)。</p>
+<h2 id="2-E-R图向关系模型的转换规则"><a href="#2-E-R图向关系模型的转换规则" class="headerlink" title="2 E-R图向关系模型的转换规则"></a>2 E-R图向关系模型的转换规则</h2><p>将E-R图转换为关系模型的转换规则如下：</p>
+<h3 id="2-1-实体集转换为关系"><a href="#2-1-实体集转换为关系" class="headerlink" title="2.1 实体集转换为关系"></a>2.1 实体集转换为关系</h3><ul>
+<li>实体集对应于一个关系</li>
+<li>关系名：与实体集同名。</li>
+<li>属性：实体集的所有属性。</li>
+<li>主码：实体集的主码。</li>
+</ul>
+<h3 id="2-2-联系转换成为关系模式。"><a href="#2-2-联系转换成为关系模式。" class="headerlink" title="2.2 联系转换成为关系模式。"></a>2.2 联系转换成为关系模式。</h3><p>联系转换成为关系模式时，要根据联系方式的不同采用不同的转换方式</p>
+<ul>
+<li><p><strong>1:1联系的转换方法</strong></p>
+<ol>
+<li><p>将1:1联系转换为一个独立的关系：与该联系相连的各实体的码以及联系本身的属性均转换为关系的属性，且每个实体的码均是该关系的候选码。</p>
+</li>
+<li><p>将1:1联系与某一端实体集所对应的关系合并，则需要在被合并关系中增加属性，其新增的属性为联系本身的属性和与联系相关的另一个实体集的码。</p>
+</li>
+</ol>
+<blockquote>
+<p>   <img src="/2019/05/12/软考/数据库/1557717017544.png" alt="1557717017544"></p>
+<p>第一步：联系形成的关系独立存在：</p>
+<p>职工表（<strong>职工号</strong>，姓名，年龄）主码：职工号</p>
+<p>产品表（<strong>产品号</strong>，产品名，价格）主码：产品号</p>
+<p>负责（<strong>职工号</strong>，产品号）主码：职工号或产品号</p>
+<p>合并方案1：“负责”与“职工”两关系合并：</p>
+<p>​    职工（<strong>职工号</strong>，姓名，年龄，产品号）</p>
+<p>​    产品（<strong>产品号</strong>，产品名，价格）</p>
+<p>合并方案2：“负责”与“产品”两关系合并：</p>
+<p>​    职工（<strong>职工号</strong>，姓名，年龄）</p>
+<p>​    产品（<strong>产品号</strong>，产品名，价格，职工号）</p>
+</blockquote>
+</li>
+<li><p><strong>1:n联系的转换方法</strong></p>
+<p>a)一种方法是将联系转换为一个独立的关系，其关系的属性由与该联系相连的各实体集的码以及联系本身的属性组成，而该关系的码为n端实体集的码；</p>
+<blockquote>
+<p> b)另一种方法是在n端实体集中增加新属性，新属性由联系对应的1端实体集的码和联系自身的属性构成，新增属性后原关系的码不变。<br><img src="/2019/05/12/软考/数据库/1557717159769.png" alt="1557717159769"></p>
+<p>步骤一：联系形成的关系独立存在。</p>
+<p>仓库（<strong>仓库号</strong>，地点，面积） 主码：仓库号</p>
+<p>产品（<strong>产品号</strong>，产品名，价格）主码：产品号</p>
+<p>仓储（仓库号，<strong>产品号</strong>，数量）主码：产品号</p>
+<p>合并后方案：联系形成的关系与n端对象合并。</p>
+<p>仓库（<strong>仓库号</strong>，地点，面积）</p>
+<p>产品（<strong>产品号</strong>，产品名，价格，仓库号，数量）</p>
+</blockquote>
+</li>
+<li><p><strong>m:n联系的转换方法</strong></p>
+<p>在向关系模型转换时，一个m:n联系转换为一个关系。转换方法为：与该联系相连的各实体集的码以及联系本身的属性均转换为关系的属性，新关系的码为两个相连实体码的组合（该码为多属性构成的组合码）。</p>
+<blockquote>
+<p><img src="/2019/05/12/软考/数据库/1557717253891.png" alt="1557717253891"></p>
+<p>该模型包含两个实体集（学生、课程）和一个m:n联系</p>
+<p>该模型可转换为三个关系模式：</p>
+<p>学生（<strong>学号</strong>，姓名，性别，年龄）主码：学号</p>
+<p>课程（<strong>课程号</strong>，课程名，学分）主码：课程号</p>
+<p>选课（<strong>学号</strong>，<strong>课程号</strong>，成绩）主码：学号+课程号</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="3-求一个关系模式的候选码的方法"><a href="#3-求一个关系模式的候选码的方法" class="headerlink" title="3 求一个关系模式的候选码的方法"></a>3 求一个关系模式的候选码的方法</h2><p>算法：按以下步骤求候选键：</p>
+<ol>
+<li><strong>只在</strong>FD右部出现的属性，<strong>不属于</strong>候选码;</li>
+<li><strong>只在</strong>FD左部出现的属性，一定<strong>存在于</strong>某候选码当中;</li>
+<li>外部属性一定存在于任何候选码当中;</li>
+<li>其他属性逐个与2,3的属性组合，求属性闭包，直至X的闭包等于U，<strong>若等于U，则X为候选码</strong>。</li>
+</ol>
+<blockquote>
+<p>例1：R&lt;U,F&gt;，U=(A,B,C,D,E,G)，F={AB–&gt;C,CD–&gt;E,E–&gt;A,A–&gt;G},求候选码。</p>
+<p>因G只在右边出现，所以G一定不属于候选码;</p>
+<p>而B,D只在左边出现，所以B,D一定存在于候选码;</p>
+<p>B,D的闭包还是B,D,则对B,D进行组合，除了G以外，BD可以跟A,C,E进行组合</p>
+<p>先看ABD：ABD本身自包ABD,而AB–&gt;C,CD–&gt;E,A–&gt;G,所以ABD的闭包为ABDCEG=U</p>
+<p>再看BDC：CD–&gt;E,E–&gt;A,A–&gt;G,BDC本身自包,所以BDC的闭包为BDCEAG=U</p>
+<p>最后看BDE：E–&gt;A,A–&gt;G,AB–&gt;C,BDE本身自包,所以BDE的闭包为BDEAGC=U</p>
+<p>因为(ABD)、(BCD)、(BDE)的闭包都是ABCDEG所以本问题的候选码有3个分别是ABC、BCD和BDE</p>
+</blockquote>
+<h2 id="4-有关关系模式的分解"><a href="#4-有关关系模式的分解" class="headerlink" title="4 有关关系模式的分解"></a>4 有关关系模式的分解</h2><h3 id="4-1-模式分解的定义"><a href="#4-1-模式分解的定义" class="headerlink" title="4.1 模式分解的定义"></a>4.1 模式分解的定义</h3><p>定义：模式分解指将一个关系模式分解为若干个关系模式，应该保证分解后产生的模式和原来的模式等价，等价标准如下：</p>
+<ul>
+<li>分解是具有无损连接性的；</li>
+<li>分解是保持函数依赖的；</li>
+<li>分解既要具有无损连接又要保持函数依赖两种。</li>
+</ul>
+<h3 id="4-2-无损分解"><a href="#4-2-无损分解" class="headerlink" title="4.2 无损分解"></a>4.2 无损分解</h3><h4 id="4-2-1-无损分解的定义"><a href="#4-2-1-无损分解的定义" class="headerlink" title="4.2.1 无损分解的定义"></a>4.2.1 无损分解的定义</h4><p>定义：关系模式R&lt;U,F&gt;的一个分解 ρ={ R1&lt;U1,F1&gt;，R2&lt;U2,F2&gt;， …，Rn&lt;Un,Fn&gt;},若R与R1、R2、…、Rn自然连接的结果<strong>相等</strong>，则称关系模式R的这个分解ρ具有<strong>无损连接性</strong>(Lossless join)。</p>
+<blockquote>
+<p>例一：</p>
+<p>设关系模式S(SNO,CLASSNO,DEPTNO)在某一时刻的关系r如下表</p>
+<table>
+<thead>
+<tr>
+<th>SNO</th>
+<th>CLASSNO</th>
+<th>DEPTNO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S1</td>
+<td>C1</td>
+<td>D1</td>
+</tr>
+<tr>
+<td>S2</td>
+<td>C2</td>
+<td>D2</td>
+</tr>
+<tr>
+<td>S3</td>
+<td>C2</td>
+<td>D2</td>
+</tr>
+<tr>
+<td>S4</td>
+<td>C3</td>
+<td>D1</td>
+</tr>
+</tbody>
+</table>
+<p>若按分解方案一将关系模式S分解为：S11(SNO,DEPTNO)和S12(CLASSNO,DEPTNO)，得到关系r11，r12如下表。</p>
+<table>
+<thead>
+<tr>
+<th>SNO</th>
+<th>DEPTNO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S1</td>
+<td>D1</td>
+</tr>
+<tr>
+<td>S2</td>
+<td>D2</td>
+</tr>
+<tr>
+<td>S3</td>
+<td>D2</td>
+</tr>
+<tr>
+<td>S4</td>
+<td>D1</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>CLASSNO</th>
+<th>DEPTNO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C1</td>
+<td>D1</td>
+</tr>
+<tr>
+<td>C2</td>
+<td>D2</td>
+</tr>
+<tr>
+<td>C3</td>
+<td>D1</td>
+</tr>
+</tbody>
+</table>
+<p>对分解后的两个关系作自然连接r11*r12，得到r’如表如下：</p>
+<table>
+<thead>
+<tr>
+<th>SNO</th>
+<th>CLASSNO</th>
+<th>DEPTNO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S1</td>
+<td>C1</td>
+<td>D1</td>
+</tr>
+<tr>
+<td><strong>S1</strong></td>
+<td><strong>C3</strong></td>
+<td><strong>D1</strong></td>
+</tr>
+<tr>
+<td>S2</td>
+<td>C2</td>
+<td>D2</td>
+</tr>
+<tr>
+<td>S3</td>
+<td>C2</td>
+<td>D2</td>
+</tr>
+<tr>
+<td>S4</td>
+<td>C1</td>
+<td>D1</td>
+</tr>
+<tr>
+<td><strong>S4</strong></td>
+<td><strong>C3</strong></td>
+<td><strong>D1</strong></td>
+</tr>
+</tbody>
+</table>
+<p>显然r’中的元组S1C3D1和S4C1D1都不是原来r中的元组。就是说，我们无法知道原来r中到底有哪些元组，这是我们不希望的。</p>
+<p>让我们再考察第二种分解方案，将关系模式S分解为：S21(SNO,CLASSNO)，S22(SNO,DEPTNO)</p>
+<table>
+<thead>
+<tr>
+<th>SNO</th>
+<th>CLASSNO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S1</td>
+<td>C1</td>
+</tr>
+<tr>
+<td>S2</td>
+<td>C2</td>
+</tr>
+<tr>
+<td>S3</td>
+<td>C2</td>
+</tr>
+<tr>
+<td>S4</td>
+<td>C3</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>SNO</th>
+<th>DEPTNO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S1</td>
+<td>D1</td>
+</tr>
+<tr>
+<td>S2</td>
+<td>D2</td>
+</tr>
+<tr>
+<td>S3</td>
+<td>D2</td>
+</tr>
+<tr>
+<td>S4</td>
+<td>D1</td>
+</tr>
+</tbody>
+</table>
+<p>此时两个关系作自然连接r21*r22会得到原表，说明这种分解方案吗，满足无损分解</p>
+</blockquote>
+<h4 id="4-2-2-无损分解的判定"><a href="#4-2-2-无损分解的判定" class="headerlink" title="4.2.2 无损分解的判定"></a>4.2.2 无损分解的判定</h4><p><strong>定理</strong>：如果R的分解为ρ＝{R1,R2}，F为R上的函数依赖集合，分解ρ具有无损连接性的充分必要条件为：<br>R1∩R2 →(R1-R2) 或 R1∩R2 →(R2-R1)，两个模式的公共属性可以函数确定其中一个模式。</p>
+<blockquote>
+<p>接上例的第二种分解方案：</p>
+<p>U1∩U2＝(SNO,CLASSNO)∩(SNO,DEPTNO)=SNO，U1-U2=(SNO,CLASSNO)-(SNO,DEPTNO)=CLASSNO，显然U1∩U2→U1-U2</p>
+</blockquote>
+<blockquote>
+<p>例二：</p>
+<p>设R=&lt;U,F&gt;, U={ABC},F={A→B},证明ρ1＝｛R1(AB), R2(AC)} 是无损连接，ρ2＝｛R1(AB),R3(BC)}不是无损连接。</p>
+<p>解：ρ1={R1(AB), R2(AC)}<br>R1∩R2 = A, R1－R2 = B<br>由A→B ，得到ρ1是无损连接分解</p>
+<p>ρ2={R1(AB), R2(BC)}<br>R1∩R2 = B, R1－R2 = A, R2－R1 = C<br>B→A, B→C均不成立，所以ρ1不是无损连接分解。</p>
+</blockquote>
+<h3 id="4-3-保持函数依赖"><a href="#4-3-保持函数依赖" class="headerlink" title="4.3 保持函数依赖"></a>4.3 保持函数依赖</h3><p>设关系模式R&lt;U,F&gt;被分解为若干个关系模式 R1&lt;U1,F1&gt;，R2&lt;U2,F2&gt;，…，Rn&lt;Un,Fn&gt; (其中U=U1∪U2∪…∪Un，且不存在Ui⊆Uj，Fi为F在Ui上的投影)，若F所逻辑蕴含的函数依赖一定也由分解得到的某个关系模式中的函数依赖Fi所逻辑蕴含，则称关系模式R的这个分解是保持函数依赖的(Preserve dependency)。    </p>
+<blockquote>
+<p>接例一：</p>
+<p>如果在第二种方法中，要将学生S3从C2班转到C3班，那么两个表都要改变，否则数据库中就会存在不一致信息。这是因为F中的函数依赖CLASSNO→DEPTNO既没有投影到关系模式R22中，而是跨在两个关系模式上。所以这种分解方法不满足保持函数依赖。</p>
+</blockquote>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/数据库/">数据库</a>, <a class="has-link-grey -link" href="/tags/软考/">软考</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/05/14/软考/数据流图/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">数据流图</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/05/11/Computer-Network/vpn为什么能fq/">
+                <span class="level-item">VPN为什么能fq</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc" style="position: sticky; top: 10px;">
+    <div class="card-content" style="padding: 1rem;">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#1-关系模型中的一些关键字的定义">
+        <!-- <span class="has-mr-6">1</span> -->
+        <span>1 关系模型中的一些关键字的定义</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-E-R图向关系模型的转换规则">
+        <!-- <span class="has-mr-6">2</span> -->
+        <span>2 E-R图向关系模型的转换规则</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#2-1-实体集转换为关系">
+        <!-- <span class="has-mr-6">2.1</span> -->
+        <span>2.1 实体集转换为关系</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-2-联系转换成为关系模式。">
+        <!-- <span class="has-mr-6">2.2</span> -->
+        <span>2.2 联系转换成为关系模式。</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#3-求一个关系模式的候选码的方法">
+        <!-- <span class="has-mr-6">3</span> -->
+        <span>3 求一个关系模式的候选码的方法</span>
+        </a></li><li>
+        <a class="is-flex" href="#4-有关关系模式的分解">
+        <!-- <span class="has-mr-6">4</span> -->
+        <span>4 有关关系模式的分解</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#4-1-模式分解的定义">
+        <!-- <span class="has-mr-6">4.1</span> -->
+        <span>4.1 模式分解的定义</span>
+        </a></li><li>
+        <a class="is-flex" href="#4-2-无损分解">
+        <!-- <span class="has-mr-6">4.2</span> -->
+        <span>4.2 无损分解</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#4-2-1-无损分解的定义">
+        <!-- <span class="has-mr-6">4.2.1</span> -->
+        <span>4.2.1 无损分解的定义</span>
+        </a></li><li>
+        <a class="is-flex" href="#4-2-2-无损分解的判定">
+        <!-- <span class="has-mr-6">4.2.2</span> -->
+        <span>4.2.2 无损分解的判定</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#4-3-保持函数依赖">
+        <!-- <span class="has-mr-6">4.3</span> -->
+        <span>4.3 保持函数依赖</span>
+        </a></li></ul></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="数据库" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

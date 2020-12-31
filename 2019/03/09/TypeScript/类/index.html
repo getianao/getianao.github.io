@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>接口 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="javascript是通过函数和基于原型的继承来使用组件的复用；自ECMAScript 6之后，javascript添加了面向对象的方法，使用typescript可以使用类的继承的方法，编译得到的javascript也可以在之前的版本中使用。">
+<meta name="keywords" content="typescript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="接口">
+<meta property="og:url" content="http://yoursite.com/2019/03/09/TypeScript/类/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="javascript是通过函数和基于原型的继承来使用组件的复用；自ECMAScript 6之后，javascript添加了面向对象的方法，使用typescript可以使用类的继承的方法，编译得到的javascript也可以在之前的版本中使用。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.341Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="接口">
+<meta name="twitter:description" content="javascript是通过函数和基于原型的继承来使用组件的复用；自ECMAScript 6之后，javascript添加了面向对象的方法，使用typescript可以使用类的继承的方法，编译得到的javascript也可以在之前的版本中使用。">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="接口" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2019-03-09T16:00:00.000Z">2019-03-10</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.341Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/typescript/">typescript</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    10 分钟 读完 (大约 1510 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                接口
+            
+        </h1>
+        <div class="content">  
+            <p>javascript是通过函数和基于原型的继承来使用组件的复用；自ECMAScript 6之后，javascript添加了面向对象的方法，使用typescript可以使用类的继承的方法，编译得到的javascript也可以在之前的版本中使用。</p>
+<a id="more"></a>
+<h2 id="1-和java比较"><a href="#1-和java比较" class="headerlink" title="1.和java比较"></a>1.和java比较</h2><figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">class</span> Greeter &#123;</span><br><span class="line">    greeting: <span class="hljs-built_in">string</span>;</span><br><span class="line">    <span class="hljs-keyword">constructor</span>(<span class="hljs-params">message: <span class="hljs-built_in">string</span></span>) &#123;</span><br><span class="line">        <span class="hljs-keyword">this</span>.greeting = message;</span><br><span class="line">    &#125;</span><br><span class="line">    greet() &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-string">"Hello, "</span> + <span class="hljs-keyword">this</span>.greeting;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> greeter = <span class="hljs-keyword">new</span> Greeter(<span class="hljs-string">"world"</span>);</span><br></pre></td></tr></table></figure>
+<p>除了类型定义、函数定义方式之外，属性、属性访问、实例的创建、构造函数都和Java相似。</p>
+<p>下面是个更复杂的例子：</p>
+<h2 id="2-继承和方法的重写"><a href="#2-继承和方法的重写" class="headerlink" title="2.继承和方法的重写"></a>2.继承和方法的重写</h2><figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">class</span> Animal &#123;</span><br><span class="line">    name: <span class="hljs-built_in">string</span>;</span><br><span class="line">    <span class="hljs-keyword">constructor</span>(<span class="hljs-params">theName: <span class="hljs-built_in">string</span></span>) &#123; <span class="hljs-keyword">this</span>.name = theName; &#125;</span><br><span class="line">    move(distanceInMeters: <span class="hljs-built_in">number</span> = <span class="hljs-number">0</span>) &#123;</span><br><span class="line">        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">$&#123;this.name&#125;</span> moved <span class="hljs-subst">$&#123;distanceInMeters&#125;</span>m.`</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">class</span> Snake <span class="hljs-keyword">extends</span> Animal &#123;</span><br><span class="line">    <span class="hljs-keyword">constructor</span>(<span class="hljs-params">name: <span class="hljs-built_in">string</span></span>) &#123; <span class="hljs-keyword">super</span>(name); &#125;</span><br><span class="line">    move(distanceInMeters = <span class="hljs-number">5</span>) &#123;</span><br><span class="line">        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Slithering..."</span>);</span><br><span class="line">        <span class="hljs-keyword">super</span>.move(distanceInMeters);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">class</span> Horse <span class="hljs-keyword">extends</span> Animal &#123;</span><br><span class="line">    <span class="hljs-keyword">constructor</span>(<span class="hljs-params">name: <span class="hljs-built_in">string</span></span>) &#123; <span class="hljs-keyword">super</span>(name); &#125;</span><br><span class="line">    move(distanceInMeters = <span class="hljs-number">45</span>) &#123;</span><br><span class="line">        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Galloping..."</span>);</span><br><span class="line">        <span class="hljs-keyword">super</span>.move(distanceInMeters);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> sam = <span class="hljs-keyword">new</span> Snake(<span class="hljs-string">"Sammy the Python"</span>);</span><br><span class="line"><span class="hljs-keyword">let</span> tom: Animal = <span class="hljs-keyword">new</span> Horse(<span class="hljs-string">"Tommy the Palomino"</span>);</span><br><span class="line"></span><br><span class="line">sam.move();</span><br><span class="line">tom.move(<span class="hljs-number">34</span>);</span><br></pre></td></tr></table></figure>
+<p>首先typescript强制要求子类的构造函数中必须调用<code>super()</code>，并且必须在在构造函数访问属性之前；</p>
+<p>sam是Snake类，它调用的<code>move()</code>方法是Snake重写Animal之后的方法。tom是Animal类，它被赋予了Horse类，Animal和Horse都具有<code>move()</code>，所以它调用的<code>move()</code>也是重写后的方法，但是它不能调用Animal中不存在但Horse中存在的方法。</p>
+<h2 id="3-访问权限修饰符"><a href="#3-访问权限修饰符" class="headerlink" title="3.访问权限修饰符"></a>3.访问权限修饰符</h2><p>typescript中有三种访问权限修饰符，和java一样：公共，私有与受保护的修饰符。</p>
+<ul>
+<li>public：typescript中成员默认为<code>public</code>，它表示这个属性在成员外面依然可以访问。</li>
+<li>private：表示不能从类的外部访问；</li>
+<li>protected：表示成员不能从类的外部访问，但是可以在继承的类中访问。注意构造函数也可以声明为<code>protected</code>属性，表示这个类不能被实例化，但是可以被继承。</li>
+</ul>
+<p>在类的赋值的时候，由于typescrip使用的是结构性类型系统，表示typescrip并不关心这个这个类型从何而来，只要所有成员相互兼容，那么这两个类相互兼容。</p>
+<p>但是当两个类中均存在一个成员被声明为<code>private</code>或者<code>protected</code>，不光要求它们类型兼容，同时要求他的声明来自同一出处（继承而来），才认为它们兼容。</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">class</span> Animal &#123;</span><br><span class="line">    <span class="hljs-keyword">private</span> name: <span class="hljs-built_in">string</span>;</span><br><span class="line">    <span class="hljs-keyword">constructor</span>(<span class="hljs-params">theName: <span class="hljs-built_in">string</span></span>) &#123; <span class="hljs-keyword">this</span>.name = theName; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">class</span> Rhino <span class="hljs-keyword">extends</span> Animal &#123;</span><br><span class="line">    <span class="hljs-keyword">constructor</span>(<span class="hljs-params"></span>) &#123; <span class="hljs-keyword">super</span>(<span class="hljs-string">"Rhino"</span>); &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">class</span> Employee &#123;</span><br><span class="line">    <span class="hljs-keyword">private</span> name: <span class="hljs-built_in">string</span>;</span><br><span class="line">    <span class="hljs-keyword">constructor</span>(<span class="hljs-params">theName: <span class="hljs-built_in">string</span></span>) &#123; <span class="hljs-keyword">this</span>.name = theName; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> animal = <span class="hljs-keyword">new</span> Animal(<span class="hljs-string">"Goat"</span>);</span><br><span class="line"><span class="hljs-keyword">let</span> rhino = <span class="hljs-keyword">new</span> Rhino();</span><br><span class="line"><span class="hljs-keyword">let</span> employee = <span class="hljs-keyword">new</span> Employee(<span class="hljs-string">"Bob"</span>);</span><br><span class="line"></span><br><span class="line">animal = rhino;</span><br><span class="line">animal = employee; <span class="hljs-comment">// 错误: Animal 与 Employee 不兼容.</span></span><br></pre></td></tr></table></figure>
+<p>上例中Animal类和Employee类具有完全一样的成员，但是它们是不兼容的。</p>
+<h2 id="4-readonly修饰符"><a href="#4-readonly修饰符" class="headerlink" title="4.readonly修饰符"></a>4.readonly修饰符</h2><p><code>readonly</code>限定了成员只能在声明或构造函数中对它进行初始化，同时不能再被更改。</p>
+<h2 id="5-参数属性"><a href="#5-参数属性" class="headerlink" title="5.参数属性"></a>5.参数属性</h2><p>参数属性可以让我们在构造函数中完成成员的声明和赋值。它通过在构造函数的参数前加上只读或访问权限修饰符来实现。</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">class</span> Octopus &#123;</span><br><span class="line">    readonly numberOfLegs: <span class="hljs-built_in">number</span> = <span class="hljs-number">8</span>;</span><br><span class="line">    <span class="hljs-keyword">constructor</span>(<span class="hljs-params">readonly name: <span class="hljs-built_in">string</span>,</span></span><br><span class="line"><span class="hljs-params">    			<span class="hljs-keyword">public</span> name: <span class="hljs-built_in">string</span>,</span></span><br><span class="line"><span class="hljs-params">				<span class="hljs-keyword">private</span> age: <span class="hljs-built_in">number</span> </span>) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>构造函数中完成了下面几个工作：</p>
+<ol>
+<li>对构造函数的声明。</li>
+<li>声明了于构造函数中参数同名的成员属性。</li>
+<li>当构造函数完成时，成员属性将被传入的值初始化。（不需要在构造函数中操作）</li>
+</ol>
+<h2 id="6-存取器"><a href="#6-存取器" class="headerlink" title="6.存取器"></a>6.存取器</h2><p>java中可以生成 getter &amp; setter 函数来访问 private &amp; protected 的成员属性。而typescript中提供了更方面的存取器方法。</p>
+<p>在成员函数前加上<code>get</code>或<code>set</code>修饰符来表示存取器，但是在对象外部调用时不是像函数的样子调用，而是像直接使用属性一样：在进行赋值时会自动调用<code>get</code>存取器，在取值时自动调用<code>get</code>存取器。</p>
+<p>在代码风格上，社区上习惯将使用存取器的私有成员变量前加下划线<code>_</code>，来表示在类的外部不直接使用它，而将存取器直接命名为该变量名。</p>
+<p>如果只设置了<code>get</code>存取器而没有使用<code>set</code>的话，这个属性将会被编译为<code>readonly</code>。</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> passcode = <span class="hljs-string">"secret passcode"</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">class</span> Employee &#123;</span><br><span class="line">    <span class="hljs-keyword">private</span> _fullName: <span class="hljs-built_in">string</span>;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">get</span> fullName(): <span class="hljs-built_in">string</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._fullName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">set</span> fullName(newName: <span class="hljs-built_in">string</span>) &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> (passcode &amp;&amp; passcode == <span class="hljs-string">"secret passcode"</span>) &#123;</span><br><span class="line">            <span class="hljs-keyword">this</span>._fullName = newName;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Error: Unauthorized update of employee!"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> employee = <span class="hljs-keyword">new</span> Employee();</span><br><span class="line">employee.fullName = <span class="hljs-string">"Bob Smith"</span>;</span><br><span class="line"><span class="hljs-keyword">if</span> (employee.fullName) &#123;</span><br><span class="line">    alert(employee.fullName);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="7-静态属性"><a href="#7-静态属性" class="headerlink" title="7.静态属性"></a>7.静态属性</h2><p>和java一样，在内部声明为static的属性为静态属性，它不属于类的实例而是属于这个类，可以直接被访问。</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">class</span> Grid &#123;</span><br><span class="line">    <span class="hljs-keyword">static</span> origin = &#123;x: <span class="hljs-number">0</span>, y: <span class="hljs-number">0</span>&#125;;</span><br><span class="line">    calculateDistanceFromOrigin(point: &#123;x: <span class="hljs-built_in">number</span>; y: <span class="hljs-built_in">number</span>;&#125;) &#123;</span><br><span class="line">        <span class="hljs-keyword">let</span> xDist = (point.x - Grid.origin.x);</span><br><span class="line">        <span class="hljs-keyword">let</span> yDist = (point.y - Grid.origin.y);</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.sqrt(xDist * xDist + yDist * yDist) / <span class="hljs-keyword">this</span>.scale;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">constructor</span> (<span class="hljs-params"><span class="hljs-keyword">public</span> scale: <span class="hljs-built_in">number</span></span>) &#123; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> grid1 = <span class="hljs-keyword">new</span> Grid(<span class="hljs-number">1.0</span>);  <span class="hljs-comment">// 1x scale</span></span><br><span class="line"><span class="hljs-keyword">let</span> grid2 = <span class="hljs-keyword">new</span> Grid(<span class="hljs-number">5.0</span>);  <span class="hljs-comment">// 5x scale</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(grid1.calculateDistanceFromOrigin(&#123;x: <span class="hljs-number">10</span>, y: <span class="hljs-number">10</span>&#125;));</span><br><span class="line"><span class="hljs-built_in">console</span>.log(grid2.calculateDistanceFromOrigin(&#123;x: <span class="hljs-number">10</span>, y: <span class="hljs-number">10</span>&#125;));</span><br></pre></td></tr></table></figure>
+<h2 id="8-抽象类"><a href="#8-抽象类" class="headerlink" title="8.抽象类"></a>8.抽象类</h2><p>在class前加上<code>abstract</code>表示抽象类，抽象类中必须包含声明的抽象方法，抽象方法也是用<code>abstract</code>修饰。抽象类的子类必须实现父类中的抽象方法。</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> Animal &#123;</span><br><span class="line">    <span class="hljs-keyword">abstract</span> makeSound(): <span class="hljs-built_in">void</span>;</span><br><span class="line">    move(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'roaming the earch...'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="9-高级技巧"><a href="#9-高级技巧" class="headerlink" title="9.高级技巧"></a>9.高级技巧</h2><ul>
+<li><p>构造函数：</p>
+<p>类可以认为包含<strong>静态</strong>和<strong>动态</strong>部分，其中构造函数就属于静态部分</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">class</span> Greeter &#123;</span><br><span class="line">    <span class="hljs-keyword">static</span> standardGreeting = <span class="hljs-string">"Hello, there"</span>;</span><br><span class="line">    greeting: <span class="hljs-built_in">string</span>;</span><br><span class="line">    greet() &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.greeting) &#123;</span><br><span class="line">            <span class="hljs-keyword">return</span> <span class="hljs-string">"Hello, "</span> + <span class="hljs-keyword">this</span>.greeting;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">            <span class="hljs-keyword">return</span> Greeter.standardGreeting;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> greeter1: Greeter;</span><br><span class="line">greeter1 = <span class="hljs-keyword">new</span> Greeter();</span><br><span class="line"><span class="hljs-built_in">console</span>.log(greeter1.greet());</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> greeterMaker: <span class="hljs-keyword">typeof</span> Greeter = Greeter;</span><br><span class="line">greeterMaker.standardGreeting = <span class="hljs-string">"Hey there!"</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> greeter2: Greeter = <span class="hljs-keyword">new</span> greeterMaker();</span><br><span class="line"><span class="hljs-built_in">console</span>.log(greeter2.greet());</span><br></pre></td></tr></table></figure>
+<p><code>typeof Greeter</code>表示了Greeter类的类型，将Greeter赋值给它，它就有了Greeter的静态部分</p>
+</li>
+<li><p>继承为接口：</p>
+<p>将子类扩展为接口便于复用。</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">class</span> Point &#123;</span><br><span class="line">    x: <span class="hljs-built_in">number</span>;</span><br><span class="line">    y: <span class="hljs-built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">interface</span> Point3d <span class="hljs-keyword">extends</span> Point &#123;</span><br><span class="line">    z: <span class="hljs-built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> point3d: Point3d = &#123;x: <span class="hljs-number">1</span>, y: <span class="hljs-number">2</span>, z: <span class="hljs-number">3</span>&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/typescript/">typescript</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/03/10/TypeScript/函数/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">函数</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/03/09/TypeScript/泛型/">
+                <span class="level-item">泛型</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="接口" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

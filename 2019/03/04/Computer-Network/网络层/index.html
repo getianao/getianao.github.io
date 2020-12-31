@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>网络层 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="网络层中有两个重要的问题：转发（forward）和路由选择（routing）；转发就是将传入的数据包在路由器中通过转发表选择对应的转发出口；路由选择是如何制定转发表使路由器之间的传输性能较好。 4.1 网络层提供的两种的服务可靠交付要交给谁？网络 or 用户端。 面向连接的虚电路服务：一个虚电路通常包含一条路径（包含多个连接和交换机），每个连接都有一个编号。两台计算机传输数据时，首先发送的主机确定">
+<meta name="keywords" content="计算机网络,网络层">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络层">
+<meta property="og:url" content="http://yoursite.com/2019/03/04/Computer-Network/网络层/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="网络层中有两个重要的问题：转发（forward）和路由选择（routing）；转发就是将传入的数据包在路由器中通过转发表选择对应的转发出口；路由选择是如何制定转发表使路由器之间的传输性能较好。 4.1 网络层提供的两种的服务可靠交付要交给谁？网络 or 用户端。 面向连接的虚电路服务：一个虚电路通常包含一条路径（包含多个连接和交换机），每个连接都有一个编号。两台计算机传输数据时，首先发送的主机确定">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2019/03/04/Computer-Network/网络层/1551702323613.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/04/Computer-Network/网络层/1552525196684.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/04/Computer-Network/网络层/1551919061758.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/04/Computer-Network/网络层/1552785294327.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/04/Computer-Network/网络层/1552786817246.png">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.209Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网络层">
+<meta name="twitter:description" content="网络层中有两个重要的问题：转发（forward）和路由选择（routing）；转发就是将传入的数据包在路由器中通过转发表选择对应的转发出口；路由选择是如何制定转发表使路由器之间的传输性能较好。 4.1 网络层提供的两种的服务可靠交付要交给谁？网络 or 用户端。 面向连接的虚电路服务：一个虚电路通常包含一条路径（包含多个连接和交换机），每个连接都有一个编号。两台计算机传输数据时，首先发送的主机确定">
+<meta name="twitter:image" content="http://yoursite.com/2019/03/04/Computer-Network/网络层/1551702323613.png">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="网络层" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2019-03-04T16:00:00.000Z">2019-03-05</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.209Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/网络层/">网络层</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/计算机网络/">计算机网络</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    44 分钟 读完 (大约 6586 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                网络层
+            
+        </h1>
+        <div class="content">  
+            <p>网络层中有两个重要的问题：<strong>转发</strong>（forward）和<strong>路由选择</strong>（routing）；转发就是将传入的数据包在路由器中通过转发表选择对应的转发出口；路由选择是如何制定转发表使路由器之间的传输性能较好。</p>
+<h2 id="4-1-网络层提供的两种的服务"><a href="#4-1-网络层提供的两种的服务" class="headerlink" title="4.1 网络层提供的两种的服务"></a>4.1 网络层提供的两种的服务</h2><p>可靠交付要交给谁？网络 or 用户端。</p>
+<p><strong>面向连接的虚电路服务</strong>：一个虚电路通常包含一条路径（包含多个连接和交换机），每个连接都有一个编号。两台计算机传输数据时，首先发送的主机确定了目的地址，要确定需要的路由器和路径，为路径编号并写入转发表；在设置好了虚电路之后，传输的数据报在首部指定好虚电路的序号，并在交换机根据交换表更改标号来选择连接，数据报就可以按照次序的、完整的、无重复的在计算机之间传输（若使用可靠传输的网络协议）。在传输结束之后，通知路由器更新路由表。</p>
+<p>这样就是用网络来提供可靠传输的服务。<u>帧中继</u>（Frame Relay）和<u>异步传输</u>模式（ATM）就是连接的虚电路网络架构</p>
+<a id="more"></a>
+<p><strong>为什么不使用VC：</strong>但是这样要保证可靠传输的服务就要使用<u>昂贵</u>的路由器；由于计算机有很强的差错处理的能力，所以可以将这个任务交给用户终端，而<u>网络层只是尽可能的提供简单的、无连接的、尽最大努力交付的数据报服务</u>，而不用对出现错误的数据报进行处理。</p>
+<p><strong>无连接的数据报服务</strong>：每个<u>数据报</u>在网络层中独立发送，所以数据报首部要包含完整的目标地址，同时用户接受的数据包会出现不按次序的问题和差错。那么将差错处理、流量控制交给用户终端的运输层，使网络中的路由器结构简单，价格便宜。</p>
+<h2 id="4-2-网际协议IP"><a href="#4-2-网际协议IP" class="headerlink" title="4.2 网际协议IP"></a>4.2 网际协议IP</h2><p>路由器将不同的网络连接，虽然这些网络物理性能各异，但是它们都使用相同的网际协议ip，<u>所以在外界可以将它们看作一个虚拟互联网络，就好像一个统一的网络</u>。</p>
+<p>假如只考虑网络层上的数据报传送，数据报从H~1~传递到H~2~，首先要查找路由器上的转发表，来看目的主机是否在在本地。如果是，就直接交付，如果不是，就需要间接交付到另一个路由器上，再查询这个路由器的转发表，直到间接转发到目的主机所在本地的路由器，进行直接转发。</p>
+<h3 id="4-2-1-ip地址："><a href="#4-2-1-ip地址：" class="headerlink" title="4.2.1 ip地址："></a>4.2.1 ip地址：</h3><p>分类的ip地址分类方式：ip地址的长度一共是4个字节（<strong>32位</strong>），将这32位分成两个部分：<br>$$<br>ip地址:= （(网络号),(主机号)）<br>$$<br>网络号表示为在世界范围内唯一的一个网络，而主机号则标识这主机。</p>
+<p>在此基础上，可以将ip分为4类：</p>
+<table>
+<thead>
+<tr>
+<th>网络类别</th>
+<th>格式</th>
+<th>最大可指派网络数</th>
+<th>第一个可指派的网络号</th>
+<th>最后一个可指派的网络号</th>
+<th>每个网络中的最大主机数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A型地址</td>
+<td>8位网络号+24位主机号（其中网络号开头为<strong>0</strong>）</td>
+<td>2^8-1^-2（全0表示本网络，0+全1表示回环网络）</td>
+<td><strong>1</strong>（最小是0）</td>
+<td><strong>126</strong>（最大是127）</td>
+<td>2^24^-2=16777216-2（全0表示主机所在的网络地址，全1表示网络上的所有主机）</td>
+</tr>
+<tr>
+<td>B型地址</td>
+<td>16位网络号+16位主机号（其中网络号开头为<strong>10</strong>）</td>
+<td>2^16-2^-1（全0不行，<strong>全1可以</strong>）</td>
+<td><strong>128.1</strong>（最小是128.0）</td>
+<td><strong>191.255</strong></td>
+<td>2^16^-2=65536-2（全0、全1不行，原因同上）</td>
+</tr>
+<tr>
+<td>C型地址</td>
+<td>24位网络号+8位主机号（其中网络号开头为<strong>110</strong>）</td>
+<td>2^24-3^-1（全0不行，全1可以）</td>
+<td><strong>192.0.1</strong></td>
+<td><strong>192.255.255</strong></td>
+<td>2^8^-2=256-2（全0、全1不行，原因同上）</td>
+</tr>
+<tr>
+<td>D型地址</td>
+<td>1110+多播地址</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>E型地址</td>
+<td>1111+保留</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>特殊地址</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>网络号</th>
+<th>主机号</th>
+<th>源地址</th>
+<th>目的地址</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>可以</td>
+<td>不可</td>
+<td>该主机所在的网络地址</td>
+</tr>
+<tr>
+<td>0</td>
+<td>host-id</td>
+<td>可以</td>
+<td>不可</td>
+<td>本网络中的一台主机</td>
+</tr>
+<tr>
+<td>全1</td>
+<td>全1</td>
+<td>不可</td>
+<td>可以</td>
+<td>只在本网络广播</td>
+</tr>
+<tr>
+<td>net-id</td>
+<td>全1</td>
+<td>不可</td>
+<td>可以</td>
+<td>对net-id上的所有主机进行广播</td>
+</tr>
+<tr>
+<td>127</td>
+<td>非全0或非全1的任何数</td>
+<td>可以</td>
+<td>可以</td>
+<td>用于本地软件进行回环测试</td>
+</tr>
+</tbody>
+</table>
+<p><strong>局域网地址</strong>：</p>
+<p>IPv4地址协议中预留了3个IP地址段，作为私有地址，供组织机构内部使用。</p>
+<p>A类地址：10.0.0.0–10.255.255.255</p>
+<p>B类地址：172.16.0.0–172.31.255.255 </p>
+<p>C类地址：192.168.0.0–192.168.255.255</p>
+<h3 id="4-2-2-ip地址和硬件地址的区别："><a href="#4-2-2-ip地址和硬件地址的区别：" class="headerlink" title="4.2.2 ip地址和硬件地址的区别："></a>4.2.2 ip地址和硬件地址的区别：</h3><p><strong>ip地址只在网络层和以上使用，而MAC地址只在物理层和数据链路层上使用</strong>；</p>
+<p>当网络层的数据报传到数据链路层上时，会在数据报中添加上MAC帧，原有的ip帧就无法被看到，直到传回网络层将MAC层剥去。在传输中可能会多次在数据报上添加/剥去MAC帧，因为它可能会在多个局域网中传输。</p>
+<p><img src="/2019/03/04/Computer-Network/网络层/1551702323613.png" alt="1551702323613"></p>
+<h3 id="4-2-3-地址解析协议ARP："><a href="#4-2-3-地址解析协议ARP：" class="headerlink" title="4.2.3 地址解析协议ARP："></a>4.2.3 地址解析协议ARP：</h3><ul>
+<li><p><strong>为什么要使用ARP</strong>：</p>
+<p>由于<strong>格式</strong>不同，ip和硬件地址的映射关系不简单；并且由于可能更换硬件设备（加入、撤走主机，更换网络适配器）导致ip对应的<strong>硬件地址改变</strong>，所以在主机ARP高速缓存中存放ip-mac的映射表，并且经常更新它。</p>
+</li>
+<li><p>作用</p>
+<p>ARP协议的作用是<strong>从网络层的ip中解析出硬件MAC地址</strong>。</p>
+</li>
+<li><p>流程：</p>
+<p>ARP协议是在局域网中使用的；主机A要向本局域网内的主机B发送一个数据报，那么主机A就在其ARP缓存中寻找主机B的硬件地址；</p>
+<p>如果找到了，就将数据报做成MAC帧，就可以发送到B主机；</p>
+<p>如果没有找到，就在本局域网中发送ARP分组请求的广播；广播中会说明主机A的ip和MAC以及主机B的ip，主机B在就收到之后就会向主机A发送ARP响应分组的单播，这样主机A的ARP缓存中就会存储主机B的IP和MAC的关系，主机B亦然。</p>
+<p>如果目标IP不是在同一局域网内，主机A首先将数据报发送到路由器上（通过ARP协议找到路由器的MAC），路由器查询转发到其他路由器（通过ARP，一个路由器可以在多个网络中），由其他路由器发送到本局域网内的主机B上。</p>
+</li>
+<li><p>使用ARP共有4中情况：</p>
+<ol>
+<li>发送方是主机且接收方是同一局域网中的另一主机：使用ARP协议（可能需要发送ARP请求分组）找到接收方的MAC。</li>
+<li>发送方是主机且接收方是另一网络中的另一主机：使用ARP协议找到<strong>本网络中的一个路由器的MAC地址</strong>（这个路由器也连接在其他网络下），将数据报发送给路由器，交给它处理。</li>
+<li>发送方是路由器接收方是同一局域网中的另一主机：使用ARP协议找到接收方的MAC。</li>
+<li>发送方是路由器且接收方是另一网络中的另一主机：使用ARP协议找到本网络中的<strong>另一个路由器</strong>的MAC地址，将数据报发送给路由器，交给它处理。</li>
+</ol>
+</li>
+</ul>
+<p>ARP的使用让所有网络中的主机都可以使用统一格式的地址编码（即IP），就好像在同一网络中一样，而不是使用不同形式的硬件地址，这样将IP和MAC转化的任务交给ARP，不需要用户或主机手动的去操作复杂的地址。</p>
+<h3 id="4-2-4-IP数据报的格式"><a href="#4-2-4-IP数据报的格式" class="headerlink" title="4.2.4 IP数据报的格式"></a>4.2.4 IP数据报的格式</h3><p>IP数据报首部最少20字节，可能大于20字节（加上可变部分）。</p>
+<p><img src="/2019/03/04/Computer-Network/网络层/1552525196684.png" alt="1552525196684"></p>
+<h3 id="4-2-5-IP层分组转发的流程"><a href="#4-2-5-IP层分组转发的流程" class="headerlink" title="4.2.5 IP层分组转发的流程"></a>4.2.5 IP层分组转发的流程</h3><ol>
+<li>首先从数据报的首部解析出目的<strong>IP地址</strong>D，转至2；</li>
+<li>如果N就是与该路由直接相连的网络，则进行<strong>直接交付</strong>，结束转发流程；否则进行<strong>间接交付</strong>（通过其他路由器），转至3。</li>
+<li>查询路由表，如果路由表中有<strong>目的地址</strong>是D的特定主机地址，则按照路由表中的指向转发至下一个路由器，否则转至4。</li>
+<li>如果路由表中有到达<strong>网络地址</strong>N的路由，则按照路由表中的指向转发至下一个路由器，否则转至5。</li>
+<li>如果路由表中存在<strong>默认</strong>路由，则按照路由表中的指向转发默认路由，否则转至6。</li>
+<li>报告转发出错。</li>
+</ol>
+<p><strong>总结查询顺序</strong>：得到ip→是否属于本地网络→一样目的地址→属于一样的网络→默认路由</p>
+<h2 id="4-3-划分子网和构建超网"><a href="#4-3-划分子网和构建超网" class="headerlink" title="4.3 划分子网和构建超网"></a>4.3 划分子网和构建超网</h2><h3 id="4-3-1-为什么要划分子网："><a href="#4-3-1-为什么要划分子网：" class="headerlink" title="4.3.1 为什么要划分子网："></a>4.3.1 为什么要划分<strong>子网</strong>：</h3><ol>
+<li>如果物理网络太多，而每一个物理网络都需要分配一个网络号，会使<strong>转发表过大</strong>，增加路由器成本和查询时间。</li>
+<li>有的网络号下实际主机数量并没有<strong>充分利用主机号的空间</strong>，使得ip地址空间利用率低。</li>
+<li>每次有新局域网加入的时候，都需要去<strong>申请新的网络号</strong>，十分麻烦。</li>
+</ol>
+<p>所以采用划分子网的方法，将原有的主机号中抽几位出来作为子网号，原本的两级ip地址变为三级网络地址，即$ip地址:= （(网络号),(子网号)，(主机号)）$，这样在外部看来仍然是一个网络，但是当数据报发送至网络主机上时，会按照子网号和主机号转发到相应的子网。</p>
+<h3 id="4-3-2-子网掩码"><a href="#4-3-2-子网掩码" class="headerlink" title="4.3.2 子网掩码"></a>4.3.2 子网掩码</h3><p>既然划分子网的ip在外界看来没有什么区别，那么路由器在寻找目标主机的时候要怎么区分呢？</p>
+<p>事实上路由器中的转发表中还存储了子网掩码来得到网络号，以便进行转发；这里将原本的网络号和子网号统一的称为网络号，剩下的为主机号。</p>
+<ul>
+<li><p>子网掩码的<strong>含义</strong>：</p>
+<p>子网掩码由和ip号等长的二进制数表示，将ip中网络号的位置填1，主机号的位置填0，例如A类ip的子网掩码就是255.255.0.0。</p>
+</li>
+<li><p>怎么通过子网掩码得到网络号和主机号：</p>
+<p>将ip和子网掩码进行与操作，得到的就是网络号，ip号中剩下的就是主机号。</p>
+</li>
+</ul>
+<p>子网的划分实际上并没有提高ip的利用率</p>
+<p><strong>传统上，子网号并不能使用全0或全1</strong>，因为在CIDR以前，会导致第一个子网的网络地址和主网络的网络地址是重叠的，最后一个子网的广播地址和主网络的广播地址是重叠的；现在虽然允许使用全0/全1子网号，但不提倡。</p>
+<h3 id="4-3-3-使用子网的分组转发："><a href="#4-3-3-使用子网的分组转发：" class="headerlink" title="4.3.3 使用子网的分组转发："></a>4.3.3 使用子网的分组转发：</h3><p>转发流程和没有子网一样，只不过在比较是否属于本网络（是否同一局域网内）和寻找网络（寻找目的主机所在网络）的时候，需要将<strong>比较的网络的子网掩码和目的 ip 做“与”运算</strong>，得到假设的网络号，并和比较的主机网络号对比，相同就是找到了。</p>
+<ol>
+<li>首先从数据报的首部解析出目的IP地址D，转至2；</li>
+<li>如果D是与该路由直接相连的网络（<strong>将本机的IP以及目的地址D分别和对应此IP的子网掩码做“与”运算，得到网络号比对</strong>），则进行<strong>直接交付</strong>，结束转发流程；否则进行间接交付（通过其他路由器），转至3。</li>
+<li>查询路由表，如果路由表中有目的地址是D的特定主机地址，则按照路由表中的指向转发至下一个路由器，否则转至4。</li>
+<li>如果路由表中有到达网络地址N的路由（<strong>将下一跳地址IP以及目的地址D分别和对应此下一跳IP的子网掩码做“与”运算，得到网络号比对</strong>），则按照路由表中的指向转发至下一个路由器，否则转至5。</li>
+<li>如果路由表中存在默认路由，则按照路由表中的指向转发默认路由，否则转至6。</li>
+<li>报告转发出错。</li>
+</ol>
+<h3 id="4-3-4-超网（无分类域间路由选择）"><a href="#4-3-4-超网（无分类域间路由选择）" class="headerlink" title="4.3.4 超网（无分类域间路由选择）"></a>4.3.4 超网（无分类域间路由选择）</h3><p>VLSM（Variable Length Subnet Mast）:可变长子网掩码</p>
+<p>CIDR（Classless Inter-Domain Routing）:无分类域间路由选择</p>
+<p>不再给定ip的分类方式，回到将地址分为两段的方法：$ip地址:= （(网络前缀),(主机号)）$；而网络前缀没有要求，IP的地址后面可以加上左斜线加数字（CIDR记法），来表示网络前缀的长度；1</p>
+<ul>
+<li><p>好处：</p>
+<ol>
+<li>不再将网络号分为5类，可以增大这32位地址的利用率。</li>
+<li>直到了网络前缀大小，就知道了主机的范围。</li>
+<li>可以更加贴切的按照主机数量的需求给用户提供ip段。</li>
+</ol>
+</li>
+<li><p>最长前缀匹配：</p>
+<p>当组织将自己的ip段分发到下面的部门，有数据报传来的时候，路由表中数据报的目标主机的网络前缀将会和组织和部门都符合，但部门的网络前缀属于组织，它的网络前缀更长，数据报就会优先选择长的网络前缀。</p>
+</li>
+<li><p>二叉线索查找路由表</p>
+</li>
+</ul>
+<h2 id="4-4-网际控制报文协议-ICMP"><a href="#4-4-网际控制报文协议-ICMP" class="headerlink" title="4.4 网际控制报文协议 ICMP"></a>4.4 网际控制报文协议 ICMP</h2><p>网际控制报文协议是为<strong>主机和服务器提供异常和差错报告</strong>的协议。它不是一个高层协议，而是ip协议，它在ip数据报中作为数据部分被封装，加上首部进行传输。</p>
+<ul>
+<li><p>ICMP的分类：</p>
+<p>ICMP差错报告报文：当发生<strong>终点不可达</strong>、<strong>时间超过</strong>、<strong>参数问题</strong>、<strong>改变路由</strong>的问题时发送。</p>
+<p>ICMP询问报文：测试目标主机的状态或时间戳时发送的回送请求和回答。</p>
+</li>
+<li><p>ICMP的结构：</p>
+<p><img src="/2019/03/04/Computer-Network/网络层/1551919061758.png" alt="1551919061758"></p>
+</li>
+<li><p>ICMP实例：</p>
+<p>ping命令就是连续发送4个ICMP询问报文（回送请求报文）来检验与主机的连通性，它直接使用了网络成的ICMP，而没有使用运输层的TCP或UDP。</p>
+</li>
+</ul>
+<h2 id="4-5-互联网的路由选择协议"><a href="#4-5-互联网的路由选择协议" class="headerlink" title="4.5 互联网的路由选择协议"></a>4.5 互联网的路由选择协议</h2><p>路由选择协议就是用于获取路由表中各个项目的算法。</p>
+<h3 id="4-5-1-理想的路由选择"><a href="#4-5-1-理想的路由选择" class="headerlink" title="4.5.1 理想的路由选择"></a>4.5.1 理想的路由选择</h3><p>理想的路由算法有如下几个特点：（1）算法必须是正确和完整的（2）算法在计算上简单（3）算法能自适应通讯量和网络拓扑的变化（4）算法具有稳定性（5）算法是公平的（6）算法是最佳的</p>
+<p>根据第3个特点来划分，可以将路由选择协议分为静态路由选择策略（非自适应性路由选择）和动态路由选择策略（自适应性路由选择）。</p>
+<h3 id="4-5-2-分层次的路由选择"><a href="#4-5-2-分层次的路由选择" class="headerlink" title="4.5.2 分层次的路由选择"></a>4.5.2 分层次的路由选择</h3><p>现在互联网ISP采用分层次的路由选择，可分为两大类：</p>
+<ul>
+<li><p>IGP内部网关协议（Interior Gateway Protocol）：自治系统内部使用的路由选择协议，如RIP和OSPF。</p>
+</li>
+<li><p>EGP外部网关协议（Extemal Gateway Protocol）：数据报在不同自治系统传输时使用的协议，如BGP。</p>
+</li>
+</ul>
+<h3 id="4-5-3-RIP"><a href="#4-5-3-RIP" class="headerlink" title="4.5.3 RIP"></a>4.5.3 RIP</h3><p>RIP（Routing Information Protocol）<strong>路由信息协议</strong>，是一种分布式的基于距离向量的路由选择协议，最大的优点是简单</p>
+<ul>
+<li><p>工作原理：</p>
+<p>RIP协议要求每个路由器寻找并记录到每一个网络的最短距离，和这个最短距离的下一跳路由器。</p>
+<p>特点：</p>
+<ul>
+<li>仅和<strong>相邻</strong>的路由器交换信息</li>
+<li>交换的信息是和所有网络最短距离</li>
+<li>按照固定的时间间隔交换路由信息，以保证网络拓扑结构发生变化时及时更新路由表</li>
+</ul>
+</li>
+<li><p>距离向量算法</p>
+<p>对于每一个相邻路由器发来的RIP报文，进行以下操作（假设发来RIP的路由地址是X，RIP表中的目的地址是N，最短距离是d）：</p>
+<ol>
+<li><p>首先对发来的RIP报文做处理，将表中的下一跳路由地址都修改为X，并将d都加1，跳转2。</p>
+</li>
+<li><p>对修改后的RIP报文中的每一个项目，做如下判断：</p>
+<p>如果当前路由的路由表中<strong>没有</strong>目标地址是N的，则将这条收到的项目添加。</p>
+<p>如果<strong>有</strong>，并且下一跳路由地址是X，则用收到的项目去替换原有项目（原因是相同时以最新消息为准）；如果下一跳路由地址<strong>不是X</strong>，则需要对比它们的最短路径，如果收到的项目更小，则更新，大于或等于不更新。</p>
+</li>
+<li><p>将3分钟没有收到相邻路由器的RIP报文，则将到此路由器的距离设为16，表示不可达。</p>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="4-5-4-OSPF"><a href="#4-5-4-OSPF" class="headerlink" title="4.5.4 OSPF"></a>4.5.4 OSPF</h3><p>OSPF（Open Shortest Path First）<strong>开放最短路径优先</strong>，“开放”是指使用了Dijkstra的最短路径算法，它的优点是OSPF更新过程收敛速度极快。</p>
+<ul>
+<li><p>OSPF的三个特点和RIP都不一样：</p>
+<ul>
+<li>向本自治系统的<strong>所有路由器</strong>发送信息，通过洪泛法（flooding）。</li>
+<li>发送的信息是与本路由器<strong>相邻</strong>的所有路由器的<strong>链路状态</strong>。链路状态说明了两个路由器之间的费用、距离、时延、带宽等“代价”。</li>
+<li>只有当链路状态发生变化时，路由器才向所有路由器发送信息。</li>
+</ul>
+</li>
+<li><p>OSPF不使用UDP而使用IP数据报来传送，这样可以使OSPF构成的数据报较短，从而减少路信息的通讯量也不必将长的数据报分片传送。</p>
+</li>
+</ul>
+<h3 id="4-5-5-BGP"><a href="#4-5-5-BGP" class="headerlink" title="4.5.5 BGP"></a>4.5.5 BGP</h3><p>BGP<strong>边界网关协议</strong></p>
+<ul>
+<li><p>在不同自治系统传输不使用RIP或OSPF协议的原因</p>
+<ol>
+<li><p>互联网的规模太大，自治系统AS之间的路由选择十分复杂。</p>
+</li>
+<li><p>自治系统之间的路由选择不是以性能最佳优先，需要考虑其他策略。比如对于付费路由的通过，对于政治、安全、经济方面的考虑。</p>
+</li>
+</ol>
+</li>
+</ul>
+<h2 id="4-6-ipv6"><a href="#4-6-ipv6" class="headerlink" title="4.6 ipv6"></a>4.6 ipv6</h2><h3 id="4-6-1-IPv6的特点"><a href="#4-6-1-IPv6的特点" class="headerlink" title="4.6.1 IPv6的特点"></a>4.6.1 IPv6的特点</h3><ol>
+<li>更大的地址空间：地址有128位</li>
+<li>扩展的地址层次结构</li>
+<li>灵活的首部格式：IPv6定义了多种可选的扩展首部。</li>
+<li>改进的选项：在有效载荷中可以包含新的选项</li>
+<li>允许协议继续扩充</li>
+<li>支持即插即用</li>
+<li>支持资源的预分配</li>
+<li>IPv6的首部改为8字节对齐</li>
+</ol>
+<h3 id="4-6-2-IPv6数据报的格式"><a href="#4-6-2-IPv6数据报的格式" class="headerlink" title="4.6.2 IPv6数据报的格式"></a>4.6.2 IPv6数据报的格式</h3><p>IPv6数据报有两大部分构成：基本首部和有效负载，有效负载又可以分为两部分：N个扩展首部和数据部分。（扩展首部不属于IPv6数据报的首部）</p>
+<p>基本首部为40字节；</p>
+<p><img src="/2019/03/04/Computer-Network/网络层/1552785294327.png" alt="1552785294327"></p>
+<h3 id="4-6-3-IPv6的地址"><a href="#4-6-3-IPv6的地址" class="headerlink" title="4.6.3 IPv6的地址"></a>4.6.3 IPv6的地址</h3><p>IPv6数据报的目标地址可以分为3类：单播，多播，任拨（一组计算机中的一个）。</p>
+<p>IPv6通常将路由器和主机统称为<strong>结点</strong>，一个结点可能有多条链路的接口，IPv6为结点的每个接口分配单播的IPv6地址。</p>
+<p>IPv6地址使用冒号十六进制记法，允许将数字前面的0省略，一连串连续的0可以用两个冒号代替，同时还可以使用CIDR的斜线表示法。</p>
+<p>IPv6的地址分类：</p>
+<table>
+<thead>
+<tr>
+<th>地址类型</th>
+<th>二进制前缀</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>未指明地址</td>
+<td>00……0（128位），可以为::/128</td>
+</tr>
+<tr>
+<td>环回地址</td>
+<td>00……1（128位），可以为::1/128</td>
+</tr>
+<tr>
+<td>多播地址</td>
+<td>11111111（8位），可以为FF00::/8</td>
+</tr>
+<tr>
+<td>本地链路单播地址</td>
+<td>1111111010（10位），可以为FE80::/10</td>
+</tr>
+<tr>
+<td>全球单播地址</td>
+<td>q其他</td>
+</tr>
+</tbody>
+</table>
+<p>本地链路单播地址是指有些单位网络使用TCP/IP，但是并没有炼连入互联网，这样网络上的主机可以使用这个地址进行本地通讯。</p>
+<p>全球单播地址的划分方法目前还只是草案，下一种方法都可以。</p>
+<p><img src="/2019/03/04/Computer-Network/网络层/1552786817246.png" alt="1552786817246"></p>
+<h3 id="4-6-4-IPv4向IPv6过渡的方法"><a href="#4-6-4-IPv4向IPv6过渡的方法" class="headerlink" title="4.6.4 IPv4向IPv6过渡的方法"></a>4.6.4 IPv4向IPv6过渡的方法</h3><ul>
+<li><p>双协议栈</p>
+<p>双协议栈主机同时具有IPv6和IPv4的地址，并通过DNS来确定查询使用哪一种地址；</p>
+<p>当IPv6数据报从IPv6主机发送到IPv4上时，会将IPv6首部转化成IPv4首部，但这将造成一部分字段信息丢失，这意味着再传回IPv6主机时，这些字段将无法恢复。</p>
+</li>
+<li><p>隧道技术</p>
+<p>隧道技术是指IPv6数据报在进入IPv4网络时，将IPv6数据报封装为IPv4数据报，IPv6数据报将成为IPv4数据报的数据部分。</p>
+</li>
+</ul>
+<h3 id="4-6-5-ICMP"><a href="#4-6-5-ICMP" class="headerlink" title="4.6.5 ICMP"></a>4.6.5 ICMP</h3><p>IPv6也是不保证数据报的可靠交付，它的ICMP叫做ICMPv6，同时ICMPv6还合并了ARP和IGMP；</p>
+<h2 id="4-7-ip多播"><a href="#4-7-ip多播" class="headerlink" title="4.7 ip多播"></a>4.7 ip多播</h2><h3 id="4-7-1-基本概念"><a href="#4-7-1-基本概念" class="headerlink" title="4.7.1 基本概念"></a>4.7.1 基本概念</h3><p>多播即一对多通讯，多克可以大大减少网络资源。</p>
+<p>多播只能用于目的地址，不能用于源地址。</p>
+<h3 id="4-7-2-网际组管理协议IGMP"><a href="#4-7-2-网际组管理协议IGMP" class="headerlink" title="4.7.2 网际组管理协议IGMP"></a>4.7.2 网际组管理协议IGMP</h3><p>IGMP（Internet Group Management Protocol）网际组管理协议，它的作用是让连接在本地局域网的多播路由器知道是否有主机参加或退出了多播。</p>
+<ul>
+<li>工作流程<ol>
+<li>当一台主机加入新的多播组的时候，该主机影响多播组的多播地址发送一个IGMP报文，来声明自己为多播组成员。本地的多播路由器接收到IGMP报文后，利用多播路由选择协议将这个组关系转发给其他多播路由器。</li>
+<li>本地多播路由器周期性探寻本地局域网上的主机是否仍为组成员；只要有一台主机是活跃的，那么这个组就是活跃的，反之就不再将这个组的成员关系转发到其他多播路由器。 </li>
+</ol>
+</li>
+</ul>
+<h3 id="4-7-3-多播路由选择协议"><a href="#4-7-3-多播路由选择协议" class="headerlink" title="4.7.3 多播路由选择协议"></a>4.7.3 多播路由选择协议</h3><p>多播路由选择协议将局域网的多播路由器和互联网上的其他的多播路由器协同工作，以便将多播数据以最小代价传输给所有组成员。</p>
+<p>隧道技术：适用于多播组的位置来地理上很分散的时候。两个支持多播的网络之间没有多播路由器，不支持多播，此时将多播数据报加上普通数据报首部成为单播数据报，通过“隧道”发送。</p>
+<h2 id="4-8-虚拟专用网vpn和网络地址转换NAT"><a href="#4-8-虚拟专用网vpn和网络地址转换NAT" class="headerlink" title="4.8 虚拟专用网vpn和网络地址转换NAT"></a>4.8 虚拟专用网vpn和网络地址转换NAT</h2><h3 id="4-8-1-VPN"><a href="#4-8-1-VPN" class="headerlink" title="4.8.1 VPN"></a>4.8.1 VPN</h3><p>采用专用IP地址的互联网叫做专用互联网（Private Address），专用地址即本地地址。</p>
+<p>利用互联网作为通讯载体的专用网叫做虚拟专用网（Virtual Private Address）。</p>
+<p>vpn可分为两类</p>
+<ul>
+<li><p>内联VPN：</p>
+<p>有专用网A和B，同时A和B至少有一个路由器有一个全球IP地址，当有两个专用网之间的通讯发生的时候，数据通过共有的互联网传输。</p>
+</li>
+<li><p>外联VPN：</p>
+<p>可以将外部机构加入至VPN。</p>
+</li>
+<li><p>远程接入VPN：</p>
+<p>通过VPN软件在其他网络下与专用网通讯。</p>
+</li>
+</ul>
+<h3 id="4-8-2-NAT和NAPT"><a href="#4-8-2-NAT和NAPT" class="headerlink" title="4.8.2 NAT和NAPT"></a>4.8.2 NAT和NAPT</h3><p>网络地址转换NAT（Network Address Translation），当同时具有专用地址和全球IP地址的主机要和互联网进行通讯的时候，通过NAT将本地地址转换成全球IP地址。</p>
+<p>而使用端口号的NAT叫做NAPT（Network Address and Port Translation）。</p>
+<h2 id="4-9-多协议标记交换MPLS"><a href="#4-9-多协议标记交换MPLS" class="headerlink" title="4.9 多协议标记交换MPLS"></a>4.9 多协议标记交换MPLS</h2><p>多协议标记交换MPLS（MultiProtocol Label Switching）：该协议使每个分组携带一个叫做标记的小整数，当分组到达标记交换机时，交换机读取分组的标记，用标记来检索分组转发表，使转发的过程大大加快。</p>
+<p>特点：</p>
+<ul>
+<li>支持面向连接的服务质量</li>
+<li>支持流量工程，平衡网络负担</li>
+<li>有效的支持虚拟专用网VPN</li>
+</ul>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/网络层/">网络层</a>, <a class="has-link-grey -link" href="/tags/计算机网络/">计算机网络</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/03/04/Computer-Network/网络层习题/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">网络层课后习题</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/03/03/Software-Test/2/">
+                <span class="level-item">SET</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="网络层" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

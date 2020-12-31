@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>算符优先分析法 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="1.基本概念 算符文法(OG)：文法G中没有形如A=&amp;gt;···bc···的产生式，其中b、c为非终结符，则G为算符文法（operator grammar）。 也就是说产生式的右部不能出现两个非终结符相邻，就好像算式中两个操作数相连。 算符文法的两个性质：">
+<meta name="keywords" content="编译原理,优先分析法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算符优先分析法">
+<meta property="og:url" content="http://yoursite.com/2018/12/27/Compiler-Principles/算符优先分析法/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="1.基本概念 算符文法(OG)：文法G中没有形如A=&amp;gt;···bc···的产生式，其中b、c为非终结符，则G为算符文法（operator grammar）。 也就是说产生式的右部不能出现两个非终结符相邻，就好像算式中两个操作数相连。 算符文法的两个性质：">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/算符优先分析法/1543670970716.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/算符优先分析法/1543672858703.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/算符优先分析法/1543718212365.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/算符优先分析法/1543719971535.png">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.201Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="算符优先分析法">
+<meta name="twitter:description" content="1.基本概念 算符文法(OG)：文法G中没有形如A=&amp;gt;···bc···的产生式，其中b、c为非终结符，则G为算符文法（operator grammar）。 也就是说产生式的右部不能出现两个非终结符相邻，就好像算式中两个操作数相连。 算符文法的两个性质：">
+<meta name="twitter:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/算符优先分析法/1543670970716.png">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="算符优先分析法" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2018-12-27T16:00:00.000Z">2018-12-28</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.201Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/优先分析法/">优先分析法</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/编译原理/">编译原理</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    17 分钟 读完 (大约 2542 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                算符优先分析法
+            
+        </h1>
+        <div class="content">  
+            <h2 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1.基本概念"></a>1.基本概念</h2><ol>
+<li><p><strong>算符文法(OG)</strong>：文法G中没有形如A=&gt;···bc···的产生式，其中b、c为非终结符，则G为算符文法（operator grammar）。</p>
+<p>也就是说产生式的右部不能出现两个非终结符相邻，就好像算式中两个操作数相连。</p>
+<p><strong>算符文法的两个性质：</strong> </p>
+<a id="more"></a>
+<p>①算符文法中任何句型都不包含两个相邻的非终结符。</p>
+<p>②如果Ab（bA）出现在算符文法的句型y中，则<strong>y中含b的短语必含A</strong>，含A的短语不一定含b。<strong>即在算符文法某个句型中若出现终结符和非终结符相邻的情况，则在这个句型的所有短语出现非终结符的地方一定会出现那个终结符</strong>。 </p>
+</li>
+<li><p><strong>算符优先文法(OPG)</strong>：一个不含ε产生式的算符文法G，任意终结符对(a,b)之间最多只有一种优先关系存在，则G为算符优先文法（operator precedence grammar）。</p>
+<p>以算式类比，也就是说我们只关心算符之间的优先关系，不关心操作数的优先关系，利用算符的优先性和结合性来判断哪个部分先计算（归约）。</p>
+<p><strong>注意 ：这里的优先关系与简单优先分析法中不一样。</strong></p>
+<blockquote>
+<p>a、b为终结符，A、B、C为非终结符</p>
+<ol>
+<li><p>a和b优先级相等，表示为 <code>a=·b</code> ，当且仅当G中存在产生式规则A=&gt;···ab···或者A=&gt;···aBb···。（中间可以多一个非终结符）</p>
+<p><em>解读：表示a、b在同一句柄中同时归约。</em></p>
+</li>
+<li><p>a优先级小于b，表示为 <code>a&lt;b</code> ，当且仅当G中存在产生式规则A=&gt;···aB···，且B=+=&gt;b···或B=+=&gt;Cb···。（开头可以多一个非终结符）</p>
+<p><em>解读：表示b、a不在一个句柄中，b比a先归约。</em></p>
+</li>
+<li><p>a优先级大于b，表示为 <code>a&gt;·b</code> ，当且仅当G中存在产生式规则A=&gt;··Bb···，且B=+=&gt;···a或B=+=&gt;···aC。（结尾可以多一个非终结符）</p>
+<p><em>解读：表示b、a不在一个句柄中，a比b先归约。</em></p>
+</li>
+</ol>
+</blockquote>
+</li>
+<li><p><strong>FIRSTVT()</strong>：FIRSTVT(B)={b|B=+=&gt;b···或B=+=&gt;Cb···}</p>
+</li>
+<li><p><strong>LASTVT()</strong>：·LASTVT(B)={b|B=+=&gt;···b或B=+=&gt;···bC}</p>
+</li>
+<li><p><strong>素短语：</strong>（a）它首先是一个短语，（b）它至少含一个终结符号，（c）除自身外，不再包含其他素短语。 </p>
+</li>
+</ol>
+<h2 id="2-FIRSTVT-的构造算法"><a href="#2-FIRSTVT-的构造算法" class="headerlink" title="2.FIRSTVT()的构造算法"></a>2.FIRSTVT()的构造算法</h2><ol>
+<li><p><strong>原理:</strong></p>
+<p>①如果有这样的表达式：A=&gt;a···或者A=&gt;Ba···，那么a∈FIRSTVT(A)。</p>
+<p>②如果有这样的表达式：B=&gt;A···且有a∈FIRSTVT(A)，则a∈FIRSTVT(B)。</p>
+</li>
+<li><p><strong>算法：</strong></p>
+<p>数据结构：</p>
+<p>​    布尔数组F[m,n]，m为非终结符数量，n为终结符数量，为真时表示对应a∈FIRSTVT(A)。</p>
+<p>​    栈S：暂存用于进行原理②的元素。</p>
+<p>流程图：</p>
+<p><img src="/2018/12/27/Compiler-Principles/算符优先分析法/1543670970716.png" alt="1543670970716"></p>
+<p>类似原理可以构造LASTVT()的算法。</p>
+</li>
+<li><p><strong>代码</strong></p>
+<figure class="highlight c++ hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">"fstream"</span></span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stack&gt;</span></span></span><br><span class="line"><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment"> * 文法输入文件格式要求:</span></span><br><span class="line"><span class="hljs-comment"> * 所有符号均为单个字符，</span></span><br><span class="line"><span class="hljs-comment"> * 每个产生式占一行，</span></span><br><span class="line"><span class="hljs-comment"> * 非终结符用大写字母A-Z表示，</span></span><br><span class="line"><span class="hljs-comment"> * 终结符用小写字母a-z和其他符号表示</span></span><br><span class="line"><span class="hljs-comment"> * 产生式右部用|表示或</span></span><br><span class="line"><span class="hljs-comment"> * </span></span><br><span class="line"><span class="hljs-comment"> * 示例：</span></span><br><span class="line"><span class="hljs-comment"> * S-&gt;#E#</span></span><br><span class="line"><span class="hljs-comment"> * E-&gt;E+T</span></span><br><span class="line"><span class="hljs-comment"> * E-&gt;T</span></span><br><span class="line"><span class="hljs-comment"> * T-&gt;T*F</span></span><br><span class="line"><span class="hljs-comment"> * T-&gt;F</span></span><br><span class="line"><span class="hljs-comment"> * F-&gt;P!F|P</span></span><br><span class="line"><span class="hljs-comment"> * P-&gt;(E)</span></span><br><span class="line"><span class="hljs-comment"> * P-&gt;i</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MAX_NUM 30 <span class="hljs-comment">//非终结符最大数量</span></span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//产生式的前两个字符</span></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EasyProductions</span></span></span><br><span class="line"><span class="hljs-class">&#123;</span></span><br><span class="line">  <span class="hljs-keyword">public</span>:</span><br><span class="line">    <span class="hljs-keyword">char</span> firstChar;</span><br><span class="line">    <span class="hljs-keyword">char</span> secondChar;</span><br><span class="line">    EasyProductions *nextPtr = <span class="hljs-literal">NULL</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//Tchar∈firstvt(Vchar)</span></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VTRelation</span></span></span><br><span class="line"><span class="hljs-class">&#123;</span></span><br><span class="line">  <span class="hljs-keyword">public</span>:</span><br><span class="line">    <span class="hljs-keyword">char</span> Tchar;</span><br><span class="line">    <span class="hljs-keyword">char</span> Vchar;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//文法中终结符，非终结符数目</span></span><br><span class="line"><span class="hljs-keyword">int</span> tNum, vNum;</span><br><span class="line"><span class="hljs-comment">//储存终结符，非终结符</span></span><br><span class="line"><span class="hljs-keyword">char</span> tSymb[MAX_NUM], vSymb[MAX_NUM];</span><br><span class="line"><span class="hljs-comment">//存放VTRelation的栈</span></span><br><span class="line"><span class="hljs-built_in">stack</span>&lt;VTRelation *&gt; stk;</span><br><span class="line"><span class="hljs-comment">//26个非终结符的EasyProductions链表指针，序号为对应ascii码</span></span><br><span class="line">EasyProductions *productions[MAX_NUM];</span><br><span class="line"><span class="hljs-comment">//firstvt矩阵</span></span><br><span class="line"><span class="hljs-keyword">int</span> **firstvt;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//判断是否为非终结符</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">isTerminal</span><span class="hljs-params">(<span class="hljs-keyword">char</span> c)</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (c &lt;= <span class="hljs-number">90</span> &amp;&amp; c &gt;= <span class="hljs-number">65</span>)</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</span><br><span class="line">    <span class="hljs-keyword">else</span></span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//判断终结符是否已经保存至数组</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">isInTNum</span><span class="hljs-params">(<span class="hljs-keyword">char</span> c)</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; tNum; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> (tSymb[i] == c)</span><br><span class="line">            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//判断终结符是否已经保存至数组</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">isInVNum</span><span class="hljs-params">(<span class="hljs-keyword">char</span> c)</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; vNum; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> (vSymb[i] == c)</span><br><span class="line">            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-comment">//通过终结符字符找在数组中的编号</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">findIndexByTchar</span><span class="hljs-params">(<span class="hljs-keyword">char</span> c)</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; tNum; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> (tSymb[i] == c)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="hljs-keyword">return</span> i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-comment">//通过非终结符字符找在数组中的编号</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">findIndexByVchar</span><span class="hljs-params">(<span class="hljs-keyword">char</span> c)</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; vNum; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> (vSymb[i] == c)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="hljs-keyword">return</span> i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-comment">//将出现过的终结符或非终结符保存至数组</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">saveSymb</span><span class="hljs-params">(<span class="hljs-keyword">char</span> c)</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (isTerminal(c))</span><br><span class="line">    &#123; <span class="hljs-comment">//是终结符</span></span><br><span class="line">        <span class="hljs-keyword">if</span> (!isInTNum(c))</span><br><span class="line">        &#123;</span><br><span class="line">            tSymb[tNum] = c;</span><br><span class="line">            tNum++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">else</span></span><br><span class="line">    &#123; <span class="hljs-comment">//是非终结符</span></span><br><span class="line">        <span class="hljs-keyword">if</span> (!isInVNum(c))</span><br><span class="line">        &#123;</span><br><span class="line">            vSymb[vNum] = c;</span><br><span class="line">            vNum++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//解析每条产生式的前两个字符</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">analysisGrammar</span><span class="hljs-params">(<span class="hljs-keyword">char</span> buffer[], EasyProductions *productions[])</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">    <span class="hljs-keyword">int</span> start = <span class="hljs-number">3</span>;  <span class="hljs-comment">//从3开始为产生式右部开头</span></span><br><span class="line">    <span class="hljs-keyword">int</span> offset = <span class="hljs-number">0</span>; <span class="hljs-comment">//距离产生式右部开头的偏移量</span></span><br><span class="line">    saveSymb(buffer[<span class="hljs-number">0</span>]);</span><br><span class="line">    <span class="hljs-keyword">while</span> (buffer[start + offset] != <span class="hljs-number">0</span>) <span class="hljs-comment">//产生式读完 //没有换行符</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> (buffer[start + offset] != <span class="hljs-string">'|'</span>)</span><br><span class="line">            saveSymb(buffer[start + offset]);</span><br><span class="line">        <span class="hljs-keyword">if</span> (offset == <span class="hljs-number">0</span> &amp;&amp; buffer[start + offset] != <span class="hljs-string">'|'</span>) <span class="hljs-comment">//开头</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="hljs-keyword">if</span> (buffer[start + offset + <span class="hljs-number">1</span>] != <span class="hljs-number">0</span> || buffer[start + offset + <span class="hljs-number">1</span>] != <span class="hljs-string">'|'</span>) <span class="hljs-comment">//开头有两字符</span></span><br><span class="line">            &#123;</span><br><span class="line">                EasyProductions *production = <span class="hljs-keyword">new</span> EasyProductions;</span><br><span class="line">                production-&gt;firstChar = buffer[start + offset];</span><br><span class="line">                production-&gt;secondChar = buffer[start + offset + <span class="hljs-number">1</span>];</span><br><span class="line">                <span class="hljs-keyword">if</span> (productions[buffer[<span class="hljs-number">0</span>] - <span class="hljs-number">65</span>] == <span class="hljs-literal">NULL</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    productions[buffer[<span class="hljs-number">0</span>] - <span class="hljs-number">65</span>] = production;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="hljs-keyword">else</span> <span class="hljs-comment">//头插法</span></span><br><span class="line">                &#123;</span><br><span class="line">                    EasyProductions *temp = productions[buffer[<span class="hljs-number">0</span>] - <span class="hljs-number">65</span>]-&gt;nextPtr;</span><br><span class="line">                    productions[buffer[<span class="hljs-number">0</span>] - <span class="hljs-number">65</span>]-&gt;nextPtr = production;</span><br><span class="line">                    production-&gt;nextPtr = temp;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="hljs-keyword">else</span> <span class="hljs-comment">//开头只有一个字符</span></span><br><span class="line">            &#123;</span><br><span class="line">                EasyProductions *production = <span class="hljs-keyword">new</span> EasyProductions;</span><br><span class="line">                production-&gt;firstChar = buffer[start + offset];</span><br><span class="line">                production-&gt;secondChar = <span class="hljs-number">0</span>;</span><br><span class="line">                <span class="hljs-keyword">if</span> (productions[buffer[<span class="hljs-number">0</span>] - <span class="hljs-number">65</span>] == <span class="hljs-literal">NULL</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    productions[buffer[<span class="hljs-number">0</span>] - <span class="hljs-number">65</span>] = production;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="hljs-keyword">else</span> <span class="hljs-comment">//头插法</span></span><br><span class="line">                &#123;</span><br><span class="line">                    EasyProductions *temp = productions[buffer[<span class="hljs-number">0</span>] - <span class="hljs-number">65</span>]-&gt;nextPtr;</span><br><span class="line">                    productions[buffer[<span class="hljs-number">0</span>] - <span class="hljs-number">65</span>]-&gt;nextPtr = production;</span><br><span class="line">                    production-&gt;nextPtr = temp;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            offset++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-keyword">else</span> <span class="hljs-comment">//不是开头，跳过</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="hljs-keyword">if</span> (buffer[start + offset] == <span class="hljs-string">'|'</span>)<span class="hljs-comment">//重新开头</span></span><br><span class="line">            &#123;</span><br><span class="line">                offset++;</span><br><span class="line">                start = start + offset;</span><br><span class="line">                offset = <span class="hljs-number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="hljs-keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                offset++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//读取当前目录下grammar.txt并解析文法</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">readGrammar</span><span class="hljs-params">(EasyProductions *productions[])</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">    <span class="hljs-keyword">char</span> buffer[<span class="hljs-number">256</span>];</span><br><span class="line">    <span class="hljs-function">ifstream <span class="hljs-title">inf</span><span class="hljs-params">(<span class="hljs-string">"grammar.txt"</span>)</span></span>;</span><br><span class="line">    <span class="hljs-keyword">if</span> (!inf.is_open())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"Error opening file"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">while</span> (!inf.eof()) <span class="hljs-comment">//每读一句产生式就解析</span></span><br><span class="line">    &#123;</span><br><span class="line">        inf.getline(buffer, <span class="hljs-number">100</span>);</span><br><span class="line">        analysisGrammar(buffer, productions);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//算法原理第一步：如果有这样的表达式：A=&gt;a···或者A=&gt;Ba···，那么a∈FIRSTVT(A)。</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">stepOne</span><span class="hljs-params">()</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; MAX_NUM; i++) <span class="hljs-comment">//遍历每个非终结符的EasyProductions</span></span><br><span class="line">    &#123;</span><br><span class="line">        EasyProductions *production;</span><br><span class="line">        production = productions[i]; <span class="hljs-comment">//链表头指针</span></span><br><span class="line">        <span class="hljs-keyword">while</span> (production != <span class="hljs-literal">NULL</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="hljs-keyword">if</span> (isTerminal(production-&gt;firstChar))</span><br><span class="line">            &#123; <span class="hljs-comment">//产生式第一个字符是终结符</span></span><br><span class="line">                <span class="hljs-comment">//保存至矩阵中</span></span><br><span class="line">                firstvt[findIndexByVchar((<span class="hljs-keyword">char</span>)(i + <span class="hljs-number">65</span>))][findIndexByTchar(production-&gt;firstChar)] = <span class="hljs-number">1</span>;</span><br><span class="line">                <span class="hljs-comment">//保存到关系中并压栈</span></span><br><span class="line">                VTRelation *relation = <span class="hljs-keyword">new</span> VTRelation;</span><br><span class="line">                relation-&gt;Vchar = (<span class="hljs-keyword">char</span>)(i + <span class="hljs-number">65</span>);</span><br><span class="line">                relation-&gt;Tchar = production-&gt;firstChar;</span><br><span class="line">                stk.push(relation);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isTerminal(production-&gt;secondChar) &amp;&amp; production-&gt;secondChar != <span class="hljs-number">0</span>)</span><br><span class="line">            &#123; <span class="hljs-comment">//产生式第一个字符不是终结符但第二个字符是终结符</span></span><br><span class="line">                <span class="hljs-comment">//保存至矩阵中</span></span><br><span class="line">                firstvt[findIndexByVchar((<span class="hljs-keyword">char</span>)(i + <span class="hljs-number">65</span>))][findIndexByTchar(production-&gt;secondChar)] = <span class="hljs-number">1</span>;</span><br><span class="line">                <span class="hljs-comment">//保存到关系中并压栈</span></span><br><span class="line">                VTRelation *relation = <span class="hljs-keyword">new</span> VTRelation;</span><br><span class="line">                relation-&gt;Vchar = (<span class="hljs-keyword">char</span>)(i + <span class="hljs-number">65</span>);</span><br><span class="line">                relation-&gt;Tchar = production-&gt;secondChar;</span><br><span class="line">                stk.push(relation);</span><br><span class="line">            &#125;</span><br><span class="line">            production = production-&gt;nextPtr; <span class="hljs-comment">//指向下个节点</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-comment">//算法原理第二步：B=&gt;A···且有a∈FIRSTVT(A)，则a∈FIRSTVT(B)</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">stepTwo</span><span class="hljs-params">()</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">    <span class="hljs-keyword">while</span> (!stk.empty())</span><br><span class="line">    &#123; <span class="hljs-comment">//栈不为空</span></span><br><span class="line">        VTRelation *relation = stk.top();</span><br><span class="line">        <span class="hljs-keyword">int</span> nnn = stk.size();</span><br><span class="line">        stk.pop();</span><br><span class="line">        nnn = stk.size();                 <span class="hljs-comment">//弹出,得到(A,a)</span></span><br><span class="line">        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; MAX_NUM; i++) <span class="hljs-comment">//遍历每个非终结符的EasyProductions</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="hljs-keyword">if</span> ((<span class="hljs-keyword">char</span>)i == relation-&gt;Vchar) <span class="hljs-comment">//A-&gt;···时跳过</span></span><br><span class="line">                <span class="hljs-keyword">continue</span>;</span><br><span class="line">            EasyProductions *production;</span><br><span class="line">            production = productions[i]; <span class="hljs-comment">//链表头指针</span></span><br><span class="line">            <span class="hljs-keyword">while</span> (production != <span class="hljs-literal">NULL</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="hljs-keyword">if</span> (production-&gt;firstChar == relation-&gt;Vchar) <span class="hljs-comment">//找到B-&gt;A···,得到(B,a)</span></span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="hljs-keyword">if</span> (firstvt[findIndexByVchar((<span class="hljs-keyword">char</span>)(i + <span class="hljs-number">65</span>))][findIndexByTchar(relation-&gt;Tchar)] == <span class="hljs-number">1</span>) <span class="hljs-comment">//已知则跳过</span></span><br><span class="line">                    &#123;</span><br><span class="line">                        production = production-&gt;nextPtr; <span class="hljs-comment">//指向下个节点</span></span><br><span class="line">                        <span class="hljs-keyword">continue</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="hljs-comment">//保存至矩阵中</span></span><br><span class="line">                    firstvt[findIndexByVchar((<span class="hljs-keyword">char</span>)(i + <span class="hljs-number">65</span>))][findIndexByTchar(relation-&gt;Tchar)] = <span class="hljs-number">1</span>;</span><br><span class="line">                    <span class="hljs-comment">//保存到关系中并压栈</span></span><br><span class="line">                    VTRelation *relationStack = <span class="hljs-keyword">new</span> VTRelation;</span><br><span class="line">                    relationStack-&gt;Vchar = (<span class="hljs-keyword">char</span>)(i + <span class="hljs-number">65</span>);</span><br><span class="line">                    relationStack-&gt;Tchar = relation-&gt;Tchar;</span><br><span class="line">                    stk.push(relationStack);</span><br><span class="line">                &#125;</span><br><span class="line">                production = production-&gt;nextPtr; <span class="hljs-comment">//指向下个节点</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-comment">//打印FirstVT矩阵</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">printFirstVT</span><span class="hljs-params">()</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; vNum; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"FirstVT("</span> &lt;&lt; vSymb[i] &lt;&lt; <span class="hljs-string">")=&#123; "</span>;</span><br><span class="line">        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; tNum; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="hljs-keyword">if</span> (firstvt[i][j] == <span class="hljs-number">1</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="hljs-built_in">cout</span> &lt;&lt; tSymb[j] &lt;&lt; <span class="hljs-string">" "</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"&#125;"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment"> * FirstVT构造算法</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">//初始化terminal数组</span></span><br><span class="line">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; MAX_NUM; i++)</span><br><span class="line">        productions[i] = <span class="hljs-literal">NULL</span>;</span><br><span class="line">    tNum = <span class="hljs-number">0</span>, vNum = <span class="hljs-number">0</span>;</span><br><span class="line">    readGrammar(productions);</span><br><span class="line">    <span class="hljs-comment">//初始化firstvt矩阵</span></span><br><span class="line">    firstvt = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span> *[vNum]; <span class="hljs-comment">//非终结符为行</span></span><br><span class="line">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; vNum; i++)</span><br><span class="line">        firstvt[i] = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[tNum]; <span class="hljs-comment">//终结符为列</span></span><br><span class="line">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; vNum; i++)</span><br><span class="line">        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; tNum; j++)</span><br><span class="line">            firstvt[i][j] = <span class="hljs-number">0</span>;</span><br><span class="line">    stepOne();</span><br><span class="line">    stepTwo();</span><br><span class="line">    printFirstVT();</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="3-算符优先关系矩阵的构造算法"><a href="#3-算符优先关系矩阵的构造算法" class="headerlink" title="3.算符优先关系矩阵的构造算法"></a>3.算符优先关系矩阵的构造算法</h2><ol>
+<li><p><strong>原理</strong></p>
+<p>=·关系</p>
+<p>查看所有产生式的右部，寻找A=&gt;···ab···或者A=&gt;···aBb···的产生式，可得a=·b。</p>
+<p>&lt;·关系</p>
+<p>查看所有产生式的右部，寻找A=&gt;···aB···的产生式，对于每一b∈FIRSTVT(B)，可得a&lt;·b。</p>
+<p>>·关系</p>
+<p>查看所有产生式的右部，寻找A=&gt;··Bb···的产生式，对于每一a∈LASTVT(B)，可得a&gt;·b。</p>
+</li>
+<li><p><strong>算法：</strong></p>
+<p>流程图：</p>
+<p><img src="/2018/12/27/Compiler-Principles/算符优先分析法/1543672858703.png" alt="1543672858703"></p>
+</li>
+<li><p><strong>代码</strong></p>
+</li>
+</ol>
+<h2 id="4-优先函数"><a href="#4-优先函数" class="headerlink" title="4.优先函数"></a>4.优先函数</h2><p>若a&lt; b   则 f(a)&lt;g(b)<br>若a= b   则  f(a)=g(b)<br>若a&gt;b   则  f(a)&gt;g(b)<br>函数f 称为栈内优先函数，g称为比较(栈外)优先函数。</p>
+<p>如果在构造过程中有一个值大于2n（n为非终结符的数量），表示该算符优先文法不存在算符优先函数。</p>
+<p>所以<strong>一个算符优先文法可能不存在算符优先函数与之对应</strong>。</p>
+<h2 id="5-算符优先分析法"><a href="#5-算符优先分析法" class="headerlink" title="5.算符优先分析法"></a>5.算符优先分析法</h2><p>读入字符串为X~1~X~2~···X~n~#</p>
+<p>数组S[n+2]用于存放压入栈的字符</p>
+<p>流程图：</p>
+<p><img src="/2018/12/27/Compiler-Principles/算符优先分析法/1543718212365.png" alt="1543718212365"></p>
+<p>代码：</p>
+<h2 id="5-实例"><a href="#5-实例" class="headerlink" title="5.实例"></a>5.实例</h2><blockquote>
+<p>算术表达式文法G[E]：<br>E→E +T | T<br>T→T * F | F<br>F→i |（E）<br>对输入串i+i#的算符优先分析</p>
+</blockquote>
+<ol>
+<li><p>求非终结符的FIRSTVT()和LASTVT()集：</p>
+<p>FIRSTVT()={ + * i ( }</p>
+<p>FIRSTVT()={ * i ( }</p>
+<p>FIRSTVT()={ i ( }</p>
+<p>LASTVT()={ + * i )}</p>
+<p>LASTVT()={ * i )}</p>
+<p>LASTVT()={ i )}</p>
+</li>
+<li><p>求算符优先关系矩阵</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>+</th>
+<th>*</th>
+<th>（</th>
+<th>）</th>
+<th>i</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>+</td>
+<td>&gt;</td>
+<td>&lt;</td>
+<td>&lt;</td>
+<td>&gt;</td>
+<td>&lt;</td>
+</tr>
+<tr>
+<td>*</td>
+<td>&gt;</td>
+<td>&gt;</td>
+<td>&lt;</td>
+<td>&gt;</td>
+<td>&lt;</td>
+</tr>
+<tr>
+<td>(</td>
+<td>&lt;</td>
+<td>&lt;</td>
+<td>&lt;</td>
+<td>=</td>
+<td>&lt;</td>
+</tr>
+<tr>
+<td>)</td>
+<td>&gt;</td>
+<td>&gt;</td>
+<td></td>
+<td>&gt;</td>
+<td></td>
+</tr>
+<tr>
+<td>i</td>
+<td>&gt;</td>
+<td>&gt;</td>
+<td></td>
+<td>&gt;</td>
+</tr>
+</tbody>
+</table>
+<ol start="3">
+<li>用算符优先分析法进行归约</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>S栈</th>
+<th>优先关系</th>
+<th>当前符号</th>
+<th>输入串</th>
+<th>动作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>#</td>
+<td>&lt;</td>
+<td>i</td>
+<td>+i#</td>
+<td>移进</td>
+</tr>
+<tr>
+<td>#i</td>
+<td>&gt;</td>
+<td>+</td>
+<td>i#</td>
+<td>归约</td>
+</tr>
+<tr>
+<td>#N</td>
+<td>&lt;</td>
+<td>+</td>
+<td>i#</td>
+<td>移进</td>
+</tr>
+<tr>
+<td>#N+</td>
+<td>&lt;</td>
+<td>i</td>
+<td>#</td>
+<td>移进</td>
+</tr>
+<tr>
+<td>#N+i</td>
+<td>&gt;</td>
+<td>#</td>
+<td></td>
+<td>归约</td>
+</tr>
+<tr>
+<td>#N+N</td>
+<td>&gt;</td>
+<td>#</td>
+<td></td>
+<td>归约</td>
+</tr>
+<tr>
+<td>#N</td>
+<td>=</td>
+<td>#</td>
+<td></td>
+<td>完成</td>
+</tr>
+</tbody>
+</table>
+<p>语法树：</p>
+<p><img src="/2018/12/27/Compiler-Principles/算符优先分析法/1543719971535.png" alt="1543719971535"></p>
+<h2 id="6-总结"><a href="#6-总结" class="headerlink" title="6. 总结"></a>6. 总结</h2><p>通过算符优先分析法我们避免了单非终结符的归约，可以检查字符串是否为文法的句子，但是可以发现我们无法知道句子是怎么进行归约的，语法树也不是真正的语法树。</p>
+<p>同时<strong>算符优先分析法也无法完全确定字符串能够被正确归约</strong>，有一些字符串可能可以通过算符优先分析法进行归约，但实际上它不是该文法的句子。</p>
+<p>算符优先分析法在对文法的要求较高，适用于表达式的语法分析。</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/优先分析法/">优先分析法</a>, <a class="has-link-grey -link" href="/tags/编译原理/">编译原理</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/12/27/Compiler-Principles/其它LR分析技术/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">其它LR分析技术</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/12/27/Compiler-Principles/引论/">
+                <span class="level-item">编译原理引论</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="算符优先分析法" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

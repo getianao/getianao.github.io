@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>RDD编程 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="3.2 创建RDD1.在驱动器程序中对一个集合进行并行化 将已有集合传给SparkContext的parallelize()的方法  lines=sc.parallelize([&amp;quot;pandas&amp;quot;,&amp;quot;i like pandas&amp;quot;]) 2.从外部储存中读取数据数据来创建RDD">
+<meta name="keywords" content="大数据,RDD">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RDD编程">
+<meta property="og:url" content="http://yoursite.com/2018/01/08/Big-Data/RDD编程/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="3.2 创建RDD1.在驱动器程序中对一个集合进行并行化 将已有集合传给SparkContext的parallelize()的方法  lines=sc.parallelize([&amp;quot;pandas&amp;quot;,&amp;quot;i like pandas&amp;quot;]) 2.从外部储存中读取数据数据来创建RDD">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.185Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RDD编程">
+<meta name="twitter:description" content="3.2 创建RDD1.在驱动器程序中对一个集合进行并行化 将已有集合传给SparkContext的parallelize()的方法  lines=sc.parallelize([&amp;quot;pandas&amp;quot;,&amp;quot;i like pandas&amp;quot;]) 2.从外部储存中读取数据数据来创建RDD">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="RDD编程" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2018-01-08T16:00:00.000Z">2018-01-09</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.185Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/RDD/">RDD</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/大数据/">大数据</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    9 分钟 读完 (大约 1396 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                RDD编程
+            
+        </h1>
+        <div class="content">  
+            <h1 id="3-2-创建RDD"><a href="#3-2-创建RDD" class="headerlink" title="3.2 创建RDD"></a>3.2 创建RDD</h1><p>1.在驱动器程序中对一个集合进行并行化</p>
+<p>将已有集合传给SparkContext的parallelize()的方法</p>
+<p> <code>lines=sc.parallelize([&quot;pandas&quot;,&quot;i like pandas&quot;])</code></p>
+<p>2.从外部储存中读取数据数据来创建RDD</p>
+<a id="more"></a>
+<p> <code>path = &quot;Current.txt&quot;  #Current fold file `</code>path = “Current1.txt，Current2.txt，”  #Current fold file  多个文件<code>path = &quot;file:///usr/local/spark/spark-1.6.0-bin-hadoop2.6/README.md&quot;  #local file</code>path = “file:///usr/local/spark/spark-1.6.0-bin-hadoop2.6/licenses/“  #ocal file  整个文件夹<code></code>path = “hdfs://master:9000/examples/examples/src/main/resources/people.txt”  #从HDFS读取一个文件`</p>
+<p> <code>lines=sc.textFile(path)</code></p>
+<h1 id="3-3-RDD操作"><a href="#3-3-RDD操作" class="headerlink" title="3.3 RDD操作"></a>3.3 RDD操作</h1><p>转化操作：返回一个新的RDD，返回值是RDD，如map(),filter()</p>
+<p>行动操作：向驱动器返回结果或把结果写入外部系统，返回值是其他数据类型，如count(),first()</p>
+<h3 id="3-3-1转化操作"><a href="#3-3-1转化操作" class="headerlink" title="3.3.1转化操作"></a>3.3.1转化操作</h3><p>转化出来的RDD是惰性的，只有在进行行动操作是才会被计算</p>
+<h3 id="3-3-2行动操作"><a href="#3-3-2行动操作" class="headerlink" title="3.3.2行动操作"></a>3.3.2行动操作</h3><p>每次进行一个新的行动操作时，整个RDD都会从头开始计算，为避免这种情况，用户可以将中间结果持久化。</p>
+<p>3.3.3惰性求值</p>
+<p>可以把一些操作合并到一起来减少计算数据的步骤</p>
+<h1 id="3-4-向spark传递函数"><a href="#3-4-向spark传递函数" class="headerlink" title="3.4 向spark传递函数"></a>3.4 向spark传递函数</h1><p>通过lambda表达式传递</p>
+<p> <code>word=rdd.filter(lambda s:&quot;error&quot; in s)</code></p>
+<p>传递顶层函数或局部定义的函数</p>
+<p> <code>def containsError(s)`</code>    return “error” in s<code></code>word=rdd.filter(containsError)`</p>
+<p>当传递的对象是某个对象的成员，或者包含对某个对象中一个字段的引用时，Spark会将整个对象发到工作节点上，会传递比原来大得多的数据，有时python会不知道怎么去处理，而导致失败，所以应避免这种情况。</p>
+<p> <code>def getMatchesNoReference(self,rdd)`</code>    query=self.query<code></code>    return rdd.filter(lambda x:qurey in x)`</p>
+<p>而避免</p>
+<p> <code>def getMatchesNoReference(self,rdd)`</code>    return rdd.filter(lambda x:self.qurey in x)`</p>
+<h1 id="3-5常见转化操作和行动操作"><a href="#3-5常见转化操作和行动操作" class="headerlink" title="3.5常见转化操作和行动操作"></a>3.5常见转化操作和行动操作</h1><h2 id="3-5-1基本RDD"><a href="#3-5-1基本RDD" class="headerlink" title="3.5.1基本RDD"></a>3.5.1基本RDD</h2><h3 id="1-针对各个元素的转化操作"><a href="#1-针对各个元素的转化操作" class="headerlink" title="1.针对各个元素的转化操作"></a>1.针对各个元素的转化操作</h3><p>map() :参数是函数，函数应用于RDD每一个元素，返回值是新的RDD</p>
+<p>flatMap():参数是函数，函数应用于RDD每一个元素，将元素数据进行拆分，变成迭代器，返回值是新的RDD</p>
+<p>map()和flatmap()的区别：map是对于RDD中的每一个元素进行操作成为一个新的元素，新的元素可能是个列表，多个列表组成一个新的RDD；而flatmap()是对RDD中的每个元素进行操作之后的多个列表进行合并，可以去除掉空元素和None，形成一个列表成为RDD</p>
+<p> <code>#map()例：计算RDD中各值的平方`</code>nums=sc.parallelize([1,2,3,4])<code>squared=nums.map(lambda x:x*x).collect()</code>for num in squared:<code></code>    print “%i”%(num)`</p>
+<p> <code>#例：flatMap() 将行数据切分为单词`</code>lines=sc.parallelize([“hello world”,”hi”])<code>words=lines.flatMap(lambda line:line.split(&quot; &quot;)).collect()</code>for word in words:<code></code>    print “%s”%(word)`</p>
+<h3 id="2-伪集合操作"><a href="#2-伪集合操作" class="headerlink" title="2.伪集合操作"></a>2.伪集合操作</h3><p>这些要求RDD是同一类型的</p>
+<p>filter()  参数是函数，函数会过滤掉不符合条件的元素，返回值是新的RDD</p>
+<p>distinct()  参数是RDD，求出两个RDD的共同元素；</p>
+<p>union()  参数是RDD，生成包含两个RDD所有元素的新RDD，如果两个RDD中有重复的元素，合并的RDD也会包含重复的元素；</p>
+<p>intersection() 参数是RDD，求出两个RDD的共同元素</p>
+<p>subtract() 参数是RDD，将原RDD里和参数RDD里相同的元素去掉</p>
+<p>cartesian()  参数是RDD，求两个RDD的笛卡儿积</p>
+<h3 id="3-行动操作"><a href="#3-行动操作" class="headerlink" title="3.行动操作"></a>3.行动操作</h3><p>reduce() 操作两个RDD中的元素，操作之后返回一个同样类型的新元素；<strong>并行整合</strong>所有RDD数据，例如求和操作</p>
+<p>fold(0)(func) 和reduce功能一样，不过fold带有初始值，初始值是你提供操作的单位元素，如*对应的是1；</p>
+<p>aggregate(zeroValue)(seqOp,combop) 和reduce功能一样，但是返回的RDD数据类型和原RDD不一样</p>
+<p> <code>#例子：计算RDD的平均值`</code>sunCount=nums.aggregate((0,0),(lambda acc,value:(acc[0]+value,acc[1]+1),(lambda acc1,acc2:(acc1[0]+acc2[0],acc[1]+acc2[1]))))<code>#acc[0]用来存nums元素的总和，acc[1]存储元素数量，value用来遍历每个元素的值，acc2将acc1的聚合结果再次聚合</code>return sumCount[0]/float(sumCount[1])`</p>
+<p>collect() 返回RDD所有元素</p>
+<p>takeSample(withReplacement,num,seed) withReplacement为true表示有放回</p>
+<p> <code>rdd.takeSample(false,1)</code></p>
+<p>take(n) 返回RDD后n个元素(从后向前看)</p>
+<p>takeOrdered(num)(ordering) 从RDD中按照提供的方式返回前num个元素</p>
+<p> <code>rdd.takeOrdered(2)(myOrdering)</code></p>
+<p>top(n) 返回RDD前n个元素(从后向前看)</p>
+<p>foreach(func)  对RDD每个元素都是使用特定函数</p>
+<p>count()  RDD里元素个数</p>
+<p>countByValue() 各元素在RDD中出现次数</p>
+<h3 id="3-5-2在不同rdd类型间转换"><a href="#3-5-2在不同rdd类型间转换" class="headerlink" title="3.5.2在不同rdd类型间转换"></a>3.5.2在不同rdd类型间转换</h3><p>Java和Scala有些函数只能使用特定类型的RDD，而python中所有的函数都实现在基本的RDD类中</p>
+<h2 id="3-6持久化（缓存）"><a href="#3-6持久化（缓存）" class="headerlink" title="3.6持久化（缓存）"></a>3.6持久化（缓存）</h2><p>由于RDD是惰性求值的，所以在每次调用行动操作时，spark都会重新计算，持久化储存一个RDD时，计算出的RDD的节点会分别保存他们所求出的分区数据</p>
+<p>scala和Java中，默认情况下persist()会把数据以序列化的形式保存在JVM的堆空间中，而python会始终序列化要持久化的数据，默认序列化的形式就是保存在JVM的堆空间；当把数据写到磁盘或者堆外储存上时，也总是使用序列化后的数据/</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/RDD/">RDD</a>, <a class="has-link-grey -link" href="/tags/大数据/">大数据</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/01/13/Cloud-Computing/1-intro/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">云计算简介</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/11/20/Data-Structure/数据结构—图—哈夫曼编码/">
+                <span class="level-item">图——哈夫曼编码</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="RDD编程" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

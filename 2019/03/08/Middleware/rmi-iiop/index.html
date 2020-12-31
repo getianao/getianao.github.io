@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>rmi-iiop - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="rmi一、RMIrmi结构rmi即远程方法调用，字面意思就是可以在客户机上远程调用服务器上的方法。   rmi可以分成三部分：第一层是存根（Stubs）和骨架（Skeletons），第二层是引用层，用来通过名字寻找对象，第三层是传输层，用于依赖于TCP/IP的客户机和服务机的通讯。">
+<meta name="keywords" content="中间件,远程方法调用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rmi-iiop">
+<meta property="og:url" content="http://yoursite.com/2019/03/08/Middleware/rmi-iiop/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="rmi一、RMIrmi结构rmi即远程方法调用，字面意思就是可以在客户机上远程调用服务器上的方法。   rmi可以分成三部分：第一层是存根（Stubs）和骨架（Skeletons），第二层是引用层，用来通过名字寻找对象，第三层是传输层，用于依赖于TCP/IP的客户机和服务机的通讯。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2019/03/08/Middleware/rmi-iiop/238310f75b550014ddfdb1692b65c33a.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/08/Middleware/rmi-iiop/3d7877359da9ce21cb5f57306d02f207.jpg">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.281Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="rmi-iiop">
+<meta name="twitter:description" content="rmi一、RMIrmi结构rmi即远程方法调用，字面意思就是可以在客户机上远程调用服务器上的方法。   rmi可以分成三部分：第一层是存根（Stubs）和骨架（Skeletons），第二层是引用层，用来通过名字寻找对象，第三层是传输层，用于依赖于TCP/IP的客户机和服务机的通讯。">
+<meta name="twitter:image" content="http://yoursite.com/2019/03/08/Middleware/rmi-iiop/238310f75b550014ddfdb1692b65c33a.png">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="rmi-iiop" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2019-03-08T16:00:00.000Z">2019-03-09</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.281Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/中间件/">中间件</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/远程方法调用/">远程方法调用</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    12 分钟 读完 (大约 1820 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                rmi-iiop
+            
+        </h1>
+        <div class="content">  
+            <h2 id="rmi"><a href="#rmi" class="headerlink" title="rmi"></a>rmi</h2><h2 id="一、RMI"><a href="#一、RMI" class="headerlink" title="一、RMI"></a>一、RMI</h2><h3 id="rmi结构"><a href="#rmi结构" class="headerlink" title="rmi结构"></a>rmi结构</h3><p>rmi即远程方法调用，字面意思就是可以在客户机上远程调用服务器上的方法。</p>
+<p><img src="/2019/03/08/Middleware/rmi-iiop/238310f75b550014ddfdb1692b65c33a.png" alt="img"> </p>
+<p><code>rmi</code>可以分成三部分：第一层是存根（Stubs）和骨架（Skeletons），第二层是引用层，用来通过名字寻找对象，第三层是传输层，用于依赖于TCP/IP的客户机和服务机的通讯。</p>
+<a id="more"></a>
+<h3 id="rmi流程"><a href="#rmi流程" class="headerlink" title="rmi流程"></a>rmi流程</h3><ol>
+<li>客户端调用远程方法，首先 Stubs 负责将调用的远程方法名和传入参数打包。</li>
+<li>客户端通过引用层找到目标服务器，并通过传输层将数据传送到服务器。</li>
+<li>服务器接受到数据，通过引用层，Skeletons解析远程方法名和传入参数。</li>
+<li>服务器调用远程方法。</li>
+<li>服务器将返回值或异常值沿相反方向返回。</li>
+<li>客户端的 Stubs 解析返回数据。</li>
+</ol>
+<p><img src="/2019/03/08/Middleware/rmi-iiop/3d7877359da9ce21cb5f57306d02f207.jpg" alt="img"> </p>
+<h3 id="实现的RMI的步骤"><a href="#实现的RMI的步骤" class="headerlink" title="实现的RMI的步骤"></a>实现的RMI的步骤</h3><h4 id="1-定义远程接口"><a href="#1-定义远程接口" class="headerlink" title="1.定义远程接口"></a>1.定义远程接口</h4><p>远程对象需要由实现远程接口实现。远程接口继承于<code>java.rmi.Remote</code>，然后在接口内声明远程函数，要注意远程函数需要抛出<code>java.rmi.RemoteException</code>异常，用于调用远程函数失败时使用。</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">package</span> example.hello;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">import</span> java.rmi.Remote;</span><br><span class="line"><span class="hljs-keyword">import</span> java.rmi.RemoteException;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Hello</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Remote</span> </span>&#123;</span><br><span class="line">    <span class="hljs-function">String <span class="hljs-title">sayHello</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> RemoteException</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-实现服务器"><a href="#2-实现服务器" class="headerlink" title="2.实现服务器"></a>2.实现服务器</h4><p>在服务器的主函数中。主要完成了两个任务。①实现远程对象的接口并导出为存根；②将远程对象的存根注册到java rmi中。</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">package</span> example.hello;</span><br><span class="line">        </span><br><span class="line"><span class="hljs-keyword">import</span> java.rmi.registry.Registry;</span><br><span class="line"><span class="hljs-keyword">import</span> java.rmi.registry.LocateRegistry;</span><br><span class="line"><span class="hljs-keyword">import</span> java.rmi.RemoteException;</span><br><span class="line"><span class="hljs-keyword">import</span> java.rmi.server.UnicastRemoteObject;</span><br><span class="line">        </span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Server</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Hello</span> </span>&#123;</span><br><span class="line">        </span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Server</span><span class="hljs-params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">sayHello</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-string">"Hello, world!"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">        </span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String args[])</span> </span>&#123;</span><br><span class="line">        </span><br><span class="line">        <span class="hljs-keyword">try</span> &#123;</span><br><span class="line">            Server obj = <span class="hljs-keyword">new</span> Server();</span><br><span class="line">            Hello stub = (Hello) UnicastRemoteObject.exportObject(obj, <span class="hljs-number">0</span>);</span><br><span class="line">            <span class="hljs-comment">// Bind the remote object's stub in the registry</span></span><br><span class="line">            Registry registry = LocateRegistry.getRegistry();</span><br><span class="line">            registry.bind(<span class="hljs-string">"Hello"</span>, stub);</span><br><span class="line"></span><br><span class="line">            System.err.println(<span class="hljs-string">"Server ready"</span>);</span><br><span class="line">        &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            System.err.println(<span class="hljs-string">"Server exception: "</span> + e.toString());</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在本例中，将服务器自身实现为远程对象。这样就在<code>main</code>函数中直接调用；将远程对象和服务器分开实现可以。</p>
+<p><code>UnicastRemoteObject.exportObject</code>这个静态方法导出了所需的远程对象，用以接收来自未知TCP端口的远程方法调用，并返回了一个用于传输远程对象给客户端的存根（stub）；在执行完这个函数之后，java rmi 运行时将会在一个新的socket或者一个共享的socket中<strong>监听</strong>远程函数调用；stub中保存了主机名、端口以便联络远程对象。</p>
+<p>对于客户端来说，要调用远程对象的方法，就必须知道远程对象的stub，所以服务器中将一个name和stub通过 <code>registry.bind</code>函数绑定起来。</p>
+<p>本例中远程对象在实现函数<code>sayHello()</code>时并不需要抛出异常，因为这个函数本身的实现时不抛出任何异常的。</p>
+<h4 id="3-实现客户端"><a href="#3-实现客户端" class="headerlink" title="3.实现客户端"></a>3.实现客户端</h4><p>准备工作都做好了，使用起来就方便多了；在客户端中只需要在registry中通过name找到stub，然后调用远程方法就可以了。</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">package</span> example.hello;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">import</span> java.rmi.registry.LocateRegistry;</span><br><span class="line"><span class="hljs-keyword">import</span> java.rmi.registry.Registry;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Client</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Client</span><span class="hljs-params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        String host = (args.length &lt; <span class="hljs-number">1</span>) ? <span class="hljs-keyword">null</span> : args[<span class="hljs-number">0</span>];</span><br><span class="line">        <span class="hljs-keyword">try</span> &#123;</span><br><span class="line">            Registry registry = LocateRegistry.getRegistry(host);</span><br><span class="line">            Hello stub = (Hello) registry.lookup(<span class="hljs-string">"Hello"</span>);</span><br><span class="line">            String response = stub.sayHello();</span><br><span class="line">            System.out.println(<span class="hljs-string">"response: "</span> + response);</span><br><span class="line">        &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            System.err.println(<span class="hljs-string">"Client exception: "</span> + e.toString());</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>LocateRegistry.getRegistry(host)</code>函数表示指定主机名的registry，<code>host</code>为空表示使用本地的主机地址。</p>
+<h4 id="4-运行"><a href="#4-运行" class="headerlink" title="4.运行"></a>4.运行</h4><blockquote>
+<p>Server exception: java.rmi.ConnectException: Connection refused to host: 192.168.44.1; nested exception is:<br>    java.net.ConnectException: Connection refused: connect<br>java.rmi.ConnectException: Connection refused to host: 192.168.44.1; nested exception is:<br>    java.net.ConnectException: Connection refused: connect<br>    at sun.rmi.transport.tcp.TCPEndpoint.newSocket(Unknown Source)<br>    at sun.rmi.transport.tcp.TCPChannel.createConnection(Unknown Source)<br>···</p>
+</blockquote>
+<p>解决方法：确保在server启动之前，通过<code>start rmiregistry</code> 启动<code>rmiregistry</code>。</p>
+<blockquote>
+<p>Server exception: java.rmi.ServerException: RemoteException occurred in server thread; nested exception is:<br>    java.rmi.UnmarshalException: error unmarshalling arguments; nested exception is:<br>    java.lang.ClassNotFoundException: com.whut.distributedTelephoneDirectory.Hello<br>java.rmi.ServerException: RemoteException occurred in server thread; nested exception is:<br>    java.rmi.UnmarshalException: error unmarshalling arguments; nested exception is:<br>    java.lang.ClassNotFoundException: com.whut.distributedTelephoneDirectory.Hello</p>
+<p>···</p>
+</blockquote>
+<p>解决方法：异常说明没有找到Hello类，确保<code>rmiregistry</code>已经在工程的bin（编译输出文件夹）目录下启动。 </p>
+<h2 id="二-iiop"><a href="#二-iiop" class="headerlink" title="二 iiop"></a>二 iiop</h2><p>Internet Inter-ORB Protocol (IIOP)互联网内部对象请求代理协议，RMI-IIOP 将CORBA的功能添加到java-rmi中，为很多其他语言平台提供了互操作性和连沟通性； RMI-IIOP使java应用可以透明的调用远程网络服务提供的操作，并且这个操作使用了iiop工业标准。</p>
+<p>RMI-IIOP可以让使用rmi编程的java程序员通过iiop来传输，RMI-IIOP为使用其他语言实现CORBA对象提供了互操作性，并且所有远程接口都可以只使用rmi进行定义。</p>
+<h3 id="实现的RMI的步骤-1"><a href="#实现的RMI的步骤-1" class="headerlink" title="实现的RMI的步骤"></a>实现的RMI的步骤</h3><h4 id="1-定义远程类的接口"><a href="#1-定义远程类的接口" class="headerlink" title="1.定义远程类的接口"></a>1.定义远程类的接口</h4><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//HelloInterface.java</span></span><br><span class="line"><span class="hljs-keyword">import</span> java.rmi.Remote;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">HelloInterface</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">java</span>.<span class="hljs-title">rmi</span>.<span class="hljs-title">Remote</span> </span>&#123;</span><br><span class="line">   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">sayHello</span><span class="hljs-params">( String from )</span> <span class="hljs-keyword">throws</span> java.rmi.RemoteException</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-定义实现类"><a href="#2-定义实现类" class="headerlink" title="2. 定义实现类"></a>2. 定义实现类</h4><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//HelloImpl.java</span></span><br><span class="line"><span class="hljs-keyword">import</span> javax.rmi.PortableRemoteObject;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HelloImpl</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">PortableRemoteObject</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">HelloInterface</span> </span>&#123;</span><br><span class="line">   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">HelloImpl</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> java.rmi.RemoteException </span>&#123;</span><br><span class="line">       <span class="hljs-keyword">super</span>();     <span class="hljs-comment">// invoke rmi linking and remote object initialization</span></span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">sayHello</span><span class="hljs-params">( String from )</span> <span class="hljs-keyword">throws</span> java.rmi.RemoteException </span>&#123;</span><br><span class="line">       System.out.println( <span class="hljs-string">"Hello from "</span> + from + <span class="hljs-string">"!!"</span> );</span><br><span class="line">       System.out.flush();</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>远程类实现接口并继承于<code>PortableRemoteObject</code>，可以让远程来使用基于IIOP传输的协议。</p>
+<p>要注意构造函数要调用父类的构造函数<code>PortableRemoteObject</code>来导出远程对象，同时构造函数要抛出<code>RemoteException</code>异常，因为如果网络不通畅可能导致无法导出远程对象而产生异常。</p>
+<h4 id="3-定义服务器"><a href="#3-定义服务器" class="headerlink" title="3.定义服务器"></a>3.定义服务器</h4><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//HelloServer.java</span></span><br><span class="line"><span class="hljs-keyword">import</span> javax.naming.InitialContext;</span><br><span class="line"><span class="hljs-keyword">import</span> javax.naming.Context;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HelloServer</span> </span>&#123;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">try</span> &#123;</span><br><span class="line">            <span class="hljs-comment">// Step 1: Instantiate the Hello servant</span></span><br><span class="line">            HelloImpl helloRef = <span class="hljs-keyword">new</span> HelloImpl();</span><br><span class="line"></span><br><span class="line">            <span class="hljs-comment">// Step 2: Publish the reference in the Naming Service </span></span><br><span class="line">            <span class="hljs-comment">// using JNDI API</span></span><br><span class="line">            </span><br><span class="line">            <span class="hljs-comment">//        	Properties props = new Properties();</span></span><br><span class="line"><span class="hljs-comment">//            props.setProperty("java.naming.factory.initial","com.sun.jndi.cosnaming.CNCtxFactory");</span></span><br><span class="line"><span class="hljs-comment">//            props.setProperty("java.naming.provider.url", "iiop://localhost:2809");</span></span><br><span class="line"><span class="hljs-comment">//        		</span></span><br><span class="line"><span class="hljs-comment">//            Context initialNamingContext = new InitialContext(props);</span></span><br><span class="line">            </span><br><span class="line">            Context initialNamingContext = <span class="hljs-keyword">new</span> InitialContext();</span><br><span class="line">            initialNamingContext.rebind(<span class="hljs-string">"HelloService"</span>, helloRef );</span><br><span class="line"></span><br><span class="line">            System.out.println(<span class="hljs-string">"Hello Server: Ready..."</span>);</span><br><span class="line"></span><br><span class="line">         &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            System.out.println(<span class="hljs-string">"Trouble: "</span> + e);</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">         &#125; </span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4-定义客户端"><a href="#4-定义客户端" class="headerlink" title="4.定义客户端"></a>4.定义客户端</h4><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//HelloClient.java</span></span><br><span class="line"><span class="hljs-keyword">import</span> java.rmi.RemoteException;</span><br><span class="line"><span class="hljs-keyword">import</span> java.net.MalformedURLException;</span><br><span class="line"><span class="hljs-keyword">import</span> java.rmi.NotBoundException;</span><br><span class="line"><span class="hljs-keyword">import</span> javax.rmi.*;</span><br><span class="line"><span class="hljs-keyword">import</span> java.util.Vector;</span><br><span class="line"><span class="hljs-keyword">import</span> javax.naming.NamingException;</span><br><span class="line"><span class="hljs-keyword">import</span> javax.naming.InitialContext;</span><br><span class="line"><span class="hljs-keyword">import</span> javax.naming.Context;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HelloClient</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span>  <span class="hljs-title">main</span><span class="hljs-params">( String args[] )</span> </span>&#123;</span><br><span class="line">        Context ic;</span><br><span class="line">        Object objref;</span><br><span class="line">        HelloInterface hi;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-keyword">try</span> &#123;</span><br><span class="line">            <span class="hljs-comment">//Properties props = new Properties();</span></span><br><span class="line">            <span class="hljs-comment">//props.setProperty("java.naming.factory.initial","com.sun.jndi.cosnaming.CNCtxFactory");</span></span><br><span class="line">            <span class="hljs-comment">//props.setProperty("java.naming.provider.url", "iiop://localhost:2809");</span></span><br><span class="line">            <span class="hljs-comment">//ic = new InitialContext(props);</span></span><br><span class="line">            ic = <span class="hljs-keyword">new</span> InitialContext();</span><br><span class="line">         </span><br><span class="line">        <span class="hljs-comment">// STEP 1: Get the Object reference from the Name Service</span></span><br><span class="line">        <span class="hljs-comment">// using JNDI call.</span></span><br><span class="line">            objref = ic.lookup(<span class="hljs-string">"HelloService"</span>);</span><br><span class="line">            System.out.println(<span class="hljs-string">"Client: Obtained a ref. to Hello server."</span>);</span><br><span class="line"></span><br><span class="line">        <span class="hljs-comment">// STEP 2: Narrow the object reference to the concrete type and</span></span><br><span class="line">        <span class="hljs-comment">// invoke the method.</span></span><br><span class="line">            hi = (HelloInterface) PortableRemoteObject.narrow(</span><br><span class="line">                objref, HelloInterface.class);</span><br><span class="line">            hi.sayHello( <span class="hljs-string">" MARS "</span> );</span><br><span class="line"></span><br><span class="line">        &#125; <span class="hljs-keyword">catch</span>( Exception e ) &#123;</span><br><span class="line">            System.err.println( <span class="hljs-string">"Exception "</span> + e + <span class="hljs-string">"Caught"</span> );</span><br><span class="line">            e.printStackTrace( );</span><br><span class="line">            <span class="hljs-keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="5-编译运行"><a href="#5-编译运行" class="headerlink" title="5.编译运行"></a>5.编译运行</h4><p>首先将所有代码编译，然后要在生成java文件的路径<code>bin</code>下使用<code>rmic</code> 来生成<code>skeletons</code> 和 <code>stubs</code>。</p>
+<figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rmic -iiop HelloImpl</span><br></pre></td></tr></table></figure>
+<p>然后继续在该路径在开启Naming Service。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">start orbd -ORBInitialPort 2809</span><br></pre></td></tr></table></figure>
+<p>然后就可以依次启动服务器和客户端了。</p>
+<blockquote>
+<p>reference:</p>
+<p><a href="http://blog.jobbole.com/104655/" target="_blank" rel="noopener">http://blog.jobbole.com/104655/</a></p>
+<p><a href="http://zhuzhucs.com/2017/05/30/RMI-Helloworld/" target="_blank" rel="noopener">http://zhuzhucs.com/2017/05/30/RMI-Helloworld/</a></p>
+<p><a href="http://zhuanlan.51cto.com/art/201806/576009.htm" target="_blank" rel="noopener">http://zhuanlan.51cto.com/art/201806/576009.htm</a></p>
+<p><a href="http://jm.taobao.org/2018/06/13/%E5%BA%94%E7%94%A8/" target="_blank" rel="noopener">http://jm.taobao.org/2018/06/13/%E5%BA%94%E7%94%A8/</a></p>
+<p><a href="https://docs.oracle.com/javase/6/docs/technotes/guides/rmi/hello/hello-world.html" target="_blank" rel="noopener">https://docs.oracle.com/javase/6/docs/technotes/guides/rmi/hello/hello-world.html</a></p>
+</blockquote>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/中间件/">中间件</a>, <a class="has-link-grey -link" href="/tags/远程方法调用/">远程方法调用</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/03/08/Middleware/中间件复习/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">中间件复习</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/03/05/TypeScript/接口/">
+                <span class="level-item">接口</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="rmi-iiop" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

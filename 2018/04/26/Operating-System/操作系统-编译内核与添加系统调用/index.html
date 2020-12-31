@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>操作系统-编译内核与添加系统调用 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="1.linux内核编译要添加系统调用函数是无法在现有的环境下直接添加的，需要在源代码中添加之后编译，才能使用，所以在添加系统调用之前，先学学如何将内核源码编译。不得不说开源大法好啊。">
+<meta name="keywords" content="操作系统,linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统-编译内核与添加系统调用">
+<meta property="og:url" content="http://yoursite.com/2018/04/26/Operating-System/操作系统-编译内核与添加系统调用/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="1.linux内核编译要添加系统调用函数是无法在现有的环境下直接添加的，需要在源代码中添加之后编译，才能使用，所以在添加系统调用之前，先学学如何将内核源码编译。不得不说开源大法好啊。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://blog.getianao.com/wp-content/uploads/2018/04/Screenshot-from-2018-04-24-19-05-42.png">
+<meta property="og:image" content="http://blog.getianao.com/wp-content/uploads/2018/04/Screenshot-from-2018-04-24-19-13-42.png">
+<meta property="og:image" content="http://blog.getianao.com/wp-content/uploads/2018/04/Screenshot-from-2018-04-24-19-41-26.png">
+<meta property="og:image" content="http://blog.getianao.com/wp-content/uploads/2018/04/Screenshot-from-2018-04-24-19-51-07.png">
+<meta property="og:image" content="http://yoursite.com/2018/04/26/Operating-System/操作系统-编译内核与添加系统调用/f050914e150c7ae1b2d13587d78bfb3b.png">
+<meta property="og:image" content="http://yoursite.com/2018/04/26/Operating-System/操作系统-编译内核与添加系统调用/3a08e9dbed6a8f4fab7b11865b80fa1f.png">
+<meta property="og:image" content="http://yoursite.com/2018/04/26/Operating-System/操作系统-编译内核与添加系统调用/f716953e44bd00c74c05a97af644b27a.png">
+<meta property="og:image" content="http://yoursite.com/2018/04/26/Operating-System/操作系统-编译内核与添加系统调用/042a595027842a8758e38e0cf03c2893.png">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.281Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="操作系统-编译内核与添加系统调用">
+<meta name="twitter:description" content="1.linux内核编译要添加系统调用函数是无法在现有的环境下直接添加的，需要在源代码中添加之后编译，才能使用，所以在添加系统调用之前，先学学如何将内核源码编译。不得不说开源大法好啊。">
+<meta name="twitter:image" content="http://blog.getianao.com/wp-content/uploads/2018/04/Screenshot-from-2018-04-24-19-05-42.png">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="操作系统-编译内核与添加系统调用" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2018-04-26T16:00:00.000Z">2018-04-27</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.281Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/linux/">linux</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/操作系统/">操作系统</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    15 分钟 读完 (大约 2192 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                操作系统-编译内核与添加系统调用
+            
+        </h1>
+        <div class="content">  
+            <h3 id="1-linux内核编译"><a href="#1-linux内核编译" class="headerlink" title="1.linux内核编译"></a>1.linux内核编译</h3><p>要添加系统调用函数是无法在现有的环境下直接添加的，需要在源代码中添加之后编译，才能使用，所以在添加系统调用之前，先学学如何将内核源码编译。<br>不得不说开源大法好啊。</p>
+<a id="more"></a>
+<p>①<strong>准备源代码</strong><br>首先在linux内核的官网下载内核的源代码<br><a href="https://www.kernel.org/" title="The Linux Kernel Archives" target="_blank" rel="noopener">The Linux Kernel Archives</a><br>这里我下载了现在最新的稳定版4.16.3。</p>
+<p>老版本的内核源码结构可能和现在的有所不同。</p>
+<p>将压缩文件剪切到/usr/src路径下并解压；<br>顾名思义，这里是存放用户程序的内核源代码的，你可能在里面发现一些头文件的源代码。<br>你还会发现里面的源代码大都是.c文件。</p>
+<p><a href="Screenshot-from-2018-04-24-19-05-42.png"><img src="http://blog.getianao.com/wp-content/uploads/2018/04/Screenshot-from-2018-04-24-19-05-42.png" alt></a></p>
+<p>②<strong>准备编译环境</strong><br>需要的编译器和软件很多，比如gcc和ncurses，就不一一列出了。不过没事，你可以直接跳到下一步，尝试运行一下内核配置文件，可能会有许多地方报错，不过没事，大多都是软件没有安装，根据它的提示去安装就行了。</p>
+<p>③<strong>内核配置</strong><br>在解压的文件夹的路径下输入</p>
+<pre><code>sudo make menuconfig
+</code></pre><p><strong>注意一定要在超级管理员权限下运行，不然可能会报错没有安装ncurses库或者头文件。</strong></p>
+<p>如果能打开就说明上一步已经完成了</p>
+<p><a href="Screenshot-from-2018-04-24-19-13-42.png"><img src="http://blog.getianao.com/wp-content/uploads/2018/04/Screenshot-from-2018-04-24-19-13-42.png" alt></a><br>在这里就可以对内核进行详细的配置了，由需求不同可以自己更改配置，决定是否对一些模块进行编译，从而对内核进行裁剪。这里我保持了默认配置，保存退出。<br>详细配置可以参考<a href="https://www.cnblogs.com/kulin/archive/2013/01/04/linux-core.html" title="内核配置与裁剪浅析" target="_blank" rel="noopener">内核配置与裁剪浅析</a></p>
+<p>④<strong>内核编译</strong><br>现在就可以开始编译了，继续在解压的文件夹路径下输入 sudo make 就可以开始编译了，编译的时间可能比较长，网上别人是四核四线程只用了半个小时，而我四核八线程却花了接近两个小时，不解。</p>
+<p>噢噢，原来可以使用sudo make -j4来指定编译时的线程数，而gcc默认是用单线程来编译的。改成4线程后只需要40分钟了。<br>不过但我用8线程时，编译后的内核总是不完整，唉，又有问题了。<br><strong>注意开始之前应为你的电脑留有至少15g的容量，否则就会和我一样，编译了一个小时后提示失败</strong></p>
+<p>⑤<strong>安装内核</strong><br>安装模块：<br>继续在该目录下输入sudo make modules_install，系统会自动安装模块到/lib/modules下的一个新目录下，你会发现多了一个4.16.3的文件夹。</p>
+<p>拷贝bzImage文件：<br>将/usr/src/linux-4.16.3/arch/x86/boot下的bzImage拷贝到/boot/mykernel目录下（mykernel是我自己建立的，方便管理，直接放在/boot下也可以），并按照一般内核映像文件的命名方式为它改名为vmlinuz-4.16.3。<br>这里选择usr/src/linux-4.16.3/arch/x86_64不知道行不行。<br>(事实证明是可以的)</p>
+<p>制作initrd文件：<br>cd到/boot/mykernel下，输入</p>
+<pre><code>sudo mkinitramfs  -o ./initrd.img-4.16.3 /lib/modules/4.16.3
+</code></pre><p>创建initrd.img-4.16.3。</p>
+<p>修改grub启动项：<br>要能引导起我们的新系统，需要更改grub配置，增加启动选项。配置文件为/boot/grub/grub.cfg。<br>menuentry 之后就是我们的启动选项，你可以修改或者增添一个。</p>
+<p>主要改动三个地方：<br>（1）menuentry后单引号内的名称，提示我们内核版本<br>（2）倒数第二行 liunx后的内核映像文件，让路径指向我们刚刚生成的/boot/mykernel/vmlinuz-4.16.3<br>(3)最后一行initrd后的路径，让它指向我们刚刚生成的/boot/mykernel/initrd.img-4.16.3<br><strong>注意（2）（3）两点中的路径要省略/boot，直接从/boot路径后开始写，不然会找不到文件</strong></p>
+<p><a href="Screenshot-from-2018-04-24-19-41-26.png"><img src="http://blog.getianao.com/wp-content/uploads/2018/04/Screenshot-from-2018-04-24-19-41-26.png" alt></a></p>
+<p>⑥<strong>重启</strong><br>重启，在启动选项里选择我们刚刚加入的新内核，就可以启动了。<br>启动之后在终端输入</p>
+<pre><code>uname  -a
+</code></pre><p>查看当前内核版本。</p>
+<p><a href="Screenshot-from-2018-04-24-19-51-07.png"><img src="http://blog.getianao.com/wp-content/uploads/2018/04/Screenshot-from-2018-04-24-19-51-07.png" alt></a></p>
+<p>如果遇到了无法启动的问题，可以在启动项中的Ubuntu高级选项中选择之前的内核进行启动。</p>
+<h3 id="2-添加系统调用"><a href="#2-添加系统调用" class="headerlink" title="2.添加系统调用"></a>2.添加系统调用</h3><p>知道了怎么去编译自己的内核，然后去添加系统调用就简单多了，但是还是有很多需要注意的地方。<br><strong>注意下面相关文件的修改是对于内核版本4.16.3的，之前版本的修改方式可能不同</strong></p>
+<p><strong>① 增加系统调用号</strong></p>
+<pre><code>vim arch/x86/entry/syscalls/syscall_64.tbl
+</code></pre><p>在文件末端增加自己的系统调用函数以及对应的系统调用编号，注意不要覆盖原有的系统调用。<br>第一个参数是编号，我在第一次添加时以为332到512的编号是空的，就使用了333，但是它其实在syscall_32.tbl中被定义过了，它的abi是i386。所以我为了防止冲突，直接选择了一个很大的数。<br>第二个参数是abi，也就是应用程序二进制接口，它是一个针对编译器的限定。这里了选择64就可以啦。<br><img src="/2018/04/26/Operating-System/操作系统-编译内核与添加系统调用/f050914e150c7ae1b2d13587d78bfb3b.png" alt><br><strong>②实现系统调用函数</strong></p>
+<pre><code>vim kernel/sys.c
+</code></pre><p>在文件末端加入对应的实现函数：</p>
+<p><img src="/2018/04/26/Operating-System/操作系统-编译内核与添加系统调用/3a08e9dbed6a8f4fab7b11865b80fa1f.png" alt><br>其中的asmlinkage用在大多数的系统调用中。所有的sys_函数都有asmlinkage来告诉编译器不要使用寄存器而是栈来编译。</p>
+<p>还有函数如果没有参数，参数表中需要指明void，否则编译时是会报错的。</p>
+<p><strong>③声明系统调用函数</strong></p>
+<pre><code>vim include/linux/syscalls.h
+</code></pre><p>在末端加入系统调用函数的声明</p>
+<p><img src="/2018/04/26/Operating-System/操作系统-编译内核与添加系统调用/f716953e44bd00c74c05a97af644b27a.png" alt><br>这样就向内内核里添加了一个系统调用。</p>
+<p><strong>④编译内核</strong><br>按照之前的方法编译并运行内核就行了。</p>
+<p><strong>⑤使用系统调用</strong></p>
+<p><img src="/2018/04/26/Operating-System/操作系统-编译内核与添加系统调用/042a595027842a8758e38e0cf03c2893.png" alt><br>用syscall函数通过系统调用编号来调用刚刚添加的函数。<br>还记得我们在定义函数中打印用的不是printf而是printk吗？它其实和printf相似，只不过它是运行在内核中的，不一定会将内容显示到终端上，但是一定在内核缓冲区里，可以使用dmesg查看效果。</p>
+<pre><code>dmesg &apos;tail -n 6
+</code></pre><p>可以查看最后的6条信息。</p>
+<p>参考文献：<br><a href="https://www.cnblogs.com/kulin/archive/2013/01/04/linux-core.html" title="内核配置与裁剪浅析" target="_blank" rel="noopener">内核配置与裁剪浅析</a><br><a href="http://blog.chinaunix.net/uid-24782829-id-3211008.html" title="linux内核编程4部曲之一：linux内核编译（2.6.12版本）图文解说" target="_blank" rel="noopener">linux内核编程4部曲之一：linux内核编译（2.6.12版本）图文解说</a><br><a href="https://blog.csdn.net/qq_34247099/article/details/50949720" title="Linux 内核编译（三天吐血经历！)" target="_blank" rel="noopener">Linux 内核编译（三天吐血经历！)</a><br><a href="https://blog.csdn.net/qq_38882906/article/details/79681660#%E7%BC%96%E8%AF%91%E5%86%85%E6%A0%B8%E5%B9%B6%E5%AE%89%E8%A3%85" title="编译 Linux 4.15.11 内核并增加系统调用" target="_blank" rel="noopener">编译 Linux 4.15.11 内核并增加系统调用</a><br><a href="https://blog.csdn.net/a364572/article/details/50764234" title="在linux 4.x内核中增加系统调用" target="_blank" rel="noopener">在linux 4.x内核中增加系统调用</a><br><a href="https://zhidao.baidu.com/question/1114586366342830339.html" title="如何在内核中获取当前时间" target="_blank" rel="noopener">如何在内核中获取当前时间</a><br><a href="https://blog.csdn.net/sinat_28750977/article/details/50837996" title="linux添加系统调用总结(内核版本4.4.4)" target="_blank" rel="noopener">linux添加系统调用总结(内核版本4.4.4)</a><br><a href="http://blog.sina.com.cn/s/blog_69d581ad0100tied.html" title="内核消息的输出：printk(),syslogd,dmesg,/proc/kmsg" target="_blank" rel="noopener">内核消息的输出：printk(),syslogd,dmesg,/proc/kmsg</a><br><a href="http://blog.chinaunix.net/uid-24782829-id-3211009.html" title="linux内核编程4部曲之二：增加linux内核系统调用" target="_blank" rel="noopener">linux内核编程4部曲之二：增加linux内核系统调用</a><br><a href="https://baike.baidu.com/item/printk/7445353?fr=aladdin" title="百度百科-printk" target="_blank" rel="noopener">百度百科-printk</a></p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/linux/">linux</a>, <a class="has-link-grey -link" href="/tags/操作系统/">操作系统</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/06/05/JavasScript/ProfessionalJavaScript/作用域inJS/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">作用域 in JS</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/04/21/Numerical-Analysis/数值分析-插值方法MATLAB实现/">
+                <span class="level-item">数值分析-插值方法MATLAB实现</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="操作系统-编译内核与添加系统调用" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>简单优先分析法 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="1.基本概念通过语法树来理解这三个概念更加简单：  文法G1[S]：S→ABA→bBA→AaB→aB→Sb">
+<meta name="keywords" content="编译原理,优先分析法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简单优先分析法">
+<meta property="og:url" content="http://yoursite.com/2018/12/27/Compiler-Principles/简单优先分析法/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="1.基本概念通过语法树来理解这三个概念更加简单：  文法G1[S]：S→ABA→bBA→AaB→aB→Sb">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/简单优先分析法/1543647171179.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/简单优先分析法/1543649946422.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/简单优先分析法/1543650185683.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/简单优先分析法/1543650386516.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/简单优先分析法/1543655865525.png">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.201Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="简单优先分析法">
+<meta name="twitter:description" content="1.基本概念通过语法树来理解这三个概念更加简单：  文法G1[S]：S→ABA→bBA→AaB→aB→Sb">
+<meta name="twitter:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/简单优先分析法/1543647171179.png">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="简单优先分析法" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2018-12-27T16:00:00.000Z">2018-12-28</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.201Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/优先分析法/">优先分析法</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/编译原理/">编译原理</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    10 分钟 读完 (大约 1473 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                简单优先分析法
+            
+        </h1>
+        <div class="content">  
+            <h2 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1.基本概念"></a>1.基本概念</h2><p>通过语法树来理解这三个概念更加简单：</p>
+<blockquote>
+<p>文法G1[S]：<br>S→AB<br>A→bB<br>A→Aa<br>B→a<br>B→Sb </p>
+</blockquote>
+<a id="more"></a>
+<p><img src="/2018/12/27/Compiler-Principles/简单优先分析法/1543647171179.png" alt="1543647171179"></p>
+<ol>
+<li><p><strong>短语</strong>：若S=*=&gt;αAδ且A=+=&gt;β，则称β是相对于非终结符A的句型αβδ的短语。</p>
+<p>即：<strong>语法树中以非终结符作为根的子树的叶子所组成的字符串。</strong></p>
+<p>如：ba是相对于非终结符A的句型AB的短语。句型baSb的短语有ba，a，Sb，baSb。</p>
+</li>
+<li><p><strong>直接短语</strong>：若S=*=&gt;αAδ且A=&gt;β，则称β是相对于非终结符A的句型αβδ的直接短语。</p>
+<p>即：语法树中以非终结符的作为根的子树，<strong>它的孩子都是叶子，没有其他子树</strong>。</p>
+<p><strong>直接短语是某个产生式右部的符号串</strong>。 </p>
+<p>如：Sb是相对于非终结符B的句型AB的短语。句型baSb的短语有a，Sb。</p>
+</li>
+<li><p><strong>句柄</strong>：位于句型最左边的<strong>直接短语</strong>称为该句型的句柄。</p>
+<p>即：<strong>位于语法树中最左边的直接短语。</strong></p>
+<p>如：句型baSb的句柄是a。</p>
+</li>
+<li><p><strong>素短语</strong>：它属于一个短语，它至少含有一个终结符，而且除他之外不含有其他素短语。</p>
+</li>
+<li><p><strong>最左素短语</strong>：位于句型最左边的素短语 。</p>
+</li>
+<li><p><strong>规范归约</strong>：即最左归约，<strong>规范推导</strong>：即最右推导；<strong>规范句型</strong>：根据最右推导得出的句型。</p>
+</li>
+<li><p><strong>在优先分析法中，为什么说归约的不是真正意义上的句柄，而是最左素短语</strong>：</p>
+<p>由于优先分析法是通过比较相邻两个终结符的优先关系来确定待归约符号串，分析时不考虑非终结符，因此这类待归约串与句柄的定义有区别，我们称为最左素短语。</p>
+</li>
+<li><p>由上一条，<strong>所以优先分析法都不是规范归约。</strong></p>
+</li>
+</ol>
+<h2 id="2-优先关系定义"><a href="#2-优先关系定义" class="headerlink" title="2.优先关系定义"></a><strong>2.优先关系定义</strong></h2><ol>
+<li><p>X和Y优先级相等，表示为 <code>X=·Y</code>，当且仅当G中存在产生式规则A=&gt;···XY···。</p>
+<p><em>解读：X、Y的优先级相同，当XY存在一个句柄之中，它们将同时被归约。表现在语法树中S=·b。</em></p>
+<p><img src="/2018/12/27/Compiler-Principles/简单优先分析法/1543649946422.png" alt="1543649946422"></p>
+</li>
+<li><p>X优先级小于Y，表示为 <code>X&lt;·Y</code> ，当且仅当G中存在产生式规则A=&gt;···XB···，B=+=&gt;Y···。</p>
+<p><em>解读：X优先级小于Y，当XY存在一个句型中时，它们将不可能出现在同一个句柄中，Y一定比X先被规约。表现在语法树中b&lt;·a。</em></p>
+<p><img src="/2018/12/27/Compiler-Principles/简单优先分析法/1543650185683.png" alt="1543650185683"></p>
+</li>
+<li><p>X优先级大于Y，表示为 <code>X&gt;·Y</code> ，当且仅当G中存在产生式规则A=&gt;··BD···，B=+=&gt;···X，D=*=&gt;Y···。</p>
+<p><em>解读：X优先级大于Y，当XY存在一个句型中时，它们将不可能出现在同一个句柄中，X一定比Y先被规约。表现在语法树中a&gt;·S。</em></p>
+<p><img src="/2018/12/27/Compiler-Principles/简单优先分析法/1543650386516.png" alt="1543650386516"></p>
+</li>
+<li><p>X和Y的优先级为空，表示在文法的任何句型中都不会出现该符号对相邻出现的情况。</p>
+</li>
+</ol>
+<p><strong>注意</strong>：以上优先关系之间不具有对成性。</p>
+<h2 id="3-简单优先文法定义"><a href="#3-简单优先文法定义" class="headerlink" title="3.简单优先文法定义"></a>3.简单优先文法定义</h2><p>一个文法是简单优先文法，需要满足以下两个条件：</p>
+<ol>
+<li>在文法符号集中V，任意两个符号之间必须之后一种优先关系存在。（显然满足）</li>
+<li>在文法中，两个产生式不能有相同的右部。</li>
+</ol>
+<h2 id="4-简单优先分析法的操作步骤"><a href="#4-简单优先分析法的操作步骤" class="headerlink" title="4.简单优先分析法的操作步骤"></a>4.简单优先分析法的操作步骤</h2><ol>
+<li><p>将输入输入串a~1~a~2~···a~n~#依次压栈，不断比较栈顶符号a~i~和下一个待输入符号a~j~的优先级，若a~i~&gt;·a~j~则进行下一步，否则重复此步骤。</p>
+<p><em>解读：停止条件是a~i~&gt;·a~j~表示前面输入串一定比后面先归约，所以只需要在前面找句柄就行了。</em></p>
+</li>
+<li><p>栈顶符号a~i~即为句柄尾，从此处向左寻找句柄头a~k~，满足a~k-1~&lt;·a~k~。</p>
+<p><em>解读：从后向前找a~k-1~&lt;·a~k~表示a~k~之前的输入串一定比a~i~···a~k~后归约，由此确定现在就是要归约a~i~···a~k~。</em></p>
+</li>
+<li><p>由句柄a~i~···a~k~在文法中寻找右部为a~i~···a~k~的产生式；找到则将句柄替换为相应左部，找不到则说明该输入串不是该文法的句子。</p>
+</li>
+<li><p>重复以上步骤直到归约完成。</p>
+</li>
+</ol>
+<h2 id="5-实例"><a href="#5-实例" class="headerlink" title="5.实例"></a>5.实例</h2><p>由于还是以上面的例子不满足简单优先文法定义（b和b的优先关系不唯一），这里我们用另一个文法来举例。</p>
+<blockquote>
+<p>文法G2[S]：<br>S→bAb   ①<br>A→(B   ②<br>A→a   ③<br>B→Aa)   ④ </p>
+<p>输入串为b(aa)b#</p>
+</blockquote>
+<ol>
+<li>首先我们做出文法符号的优先关系矩阵：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>S</th>
+<th>A</th>
+<th>B</th>
+<th>a</th>
+<th>b</th>
+<th>(</th>
+<th>)</th>
+<th>#</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>A</td>
+<td></td>
+<td></td>
+<td></td>
+<td>=</td>
+<td>=</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>B</td>
+<td></td>
+<td></td>
+<td></td>
+<td>&gt;</td>
+<td>&gt;</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>a</td>
+<td></td>
+<td></td>
+<td></td>
+<td>&gt;</td>
+<td>&gt;</td>
+<td></td>
+<td>=</td>
+<td></td>
+</tr>
+<tr>
+<td>b</td>
+<td></td>
+<td>=</td>
+<td></td>
+<td>&lt;</td>
+<td></td>
+<td>&lt;</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>(</td>
+<td></td>
+<td>&lt;</td>
+<td>=</td>
+<td>&lt;</td>
+<td></td>
+<td>&lt;</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>)</td>
+<td></td>
+<td></td>
+<td></td>
+<td>&gt;</td>
+<td>&gt;</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>#</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>这里#比其相邻所有符号的优先性都要小。</p>
+<ol start="2">
+<li>然后按照简单优先分析法进行归约：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>栈S</th>
+<th>当前输入符</th>
+<th>输入串剩余部分</th>
+<th>动作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>#</td>
+<td>b</td>
+<td>(aa)b#</td>
+<td>移进</td>
+</tr>
+<tr>
+<td>2</td>
+<td>#b</td>
+<td>(</td>
+<td>aa)b#</td>
+<td>移进</td>
+</tr>
+<tr>
+<td>3</td>
+<td>#b(</td>
+<td>a</td>
+<td>a)b#</td>
+<td>移进</td>
+</tr>
+<tr>
+<td>4</td>
+<td>#b(a</td>
+<td>a</td>
+<td>)b#</td>
+<td>归约③</td>
+</tr>
+<tr>
+<td>5</td>
+<td>#b(A</td>
+<td>a</td>
+<td>)b#</td>
+<td>移进</td>
+</tr>
+<tr>
+<td>6</td>
+<td>#b(Aa</td>
+<td>)</td>
+<td>b#</td>
+<td>移进</td>
+</tr>
+<tr>
+<td>7</td>
+<td>#b(Aa)</td>
+<td>b</td>
+<td>#</td>
+<td>归约④</td>
+</tr>
+<tr>
+<td>8</td>
+<td>#b(B</td>
+<td>b</td>
+<td>#</td>
+<td>归约②</td>
+</tr>
+<tr>
+<td>9</td>
+<td>#bA</td>
+<td>b</td>
+<td>#</td>
+<td>移进</td>
+</tr>
+<tr>
+<td>10</td>
+<td>#bAb</td>
+<td>#</td>
+<td></td>
+<td>归约①</td>
+</tr>
+<tr>
+<td>11</td>
+<td>#S</td>
+<td>#</td>
+<td></td>
+<td>接受</td>
+</tr>
+</tbody>
+</table>
+<p>其语法树如下：</p>
+<p><img src="/2018/12/27/Compiler-Principles/简单优先分析法/1543655865525.png" alt="1543655865525"></p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/优先分析法/">优先分析法</a>, <a class="has-link-grey -link" href="/tags/编译原理/">编译原理</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/12/27/Compiler-Principles/自顶向下语法分析方法/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">自顶向下语法分析方法</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/12/27/Compiler-Principles/LR(0)分析/">
+                <span class="level-item">LR(0)分析</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="简单优先分析法" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

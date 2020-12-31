@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>activity - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="intent启动avtivity方式显式intent12Intent intent =new Intent(MainActivity.this,SecondActivity.class);//上下文，目标活动startActivity(intent); 隐式intent系统根据action和category去选择合适的activity">
+<meta name="keywords" content="android,android第一行代码,activity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="activity">
+<meta property="og:url" content="http://yoursite.com/2018/09/11/Android/第一行代码/activity/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="intent启动avtivity方式显式intent12Intent intent =new Intent(MainActivity.this,SecondActivity.class);//上下文，目标活动startActivity(intent); 隐式intent系统根据action和category去选择合适的activity">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.177Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="activity">
+<meta name="twitter:description" content="intent启动avtivity方式显式intent12Intent intent =new Intent(MainActivity.this,SecondActivity.class);//上下文，目标活动startActivity(intent); 隐式intent系统根据action和category去选择合适的activity">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="activity" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2018-09-11T07:30:16.000Z">2018-09-11</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.177Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/activity/">activity</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/android/">android</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/android第一行代码/">android第一行代码</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    8 分钟 读完 (大约 1270 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                activity
+            
+        </h1>
+        <div class="content">  
+            <h2 id="intent启动avtivity方式"><a href="#intent启动avtivity方式" class="headerlink" title="intent启动avtivity方式"></a>intent启动avtivity方式</h2><h3 id="显式intent"><a href="#显式intent" class="headerlink" title="显式intent"></a>显式intent</h3><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Intent intent =<span class="hljs-keyword">new</span> Intent(MainActivity.<span class="hljs-keyword">this</span>,SecondActivity.class);<span class="hljs-comment">//上下文，目标活动</span></span><br><span class="line">startActivity(intent);</span><br></pre></td></tr></table></figure>
+<h3 id="隐式intent"><a href="#隐式intent" class="headerlink" title="隐式intent"></a>隐式intent</h3><p>系统根据action和category去选择合适的activity</p>
+<a id="more"></a>
+<ul>
+<li>指定action、默认categor或指定category</li>
+</ul>
+<p>默认category：</p>
+<figure class="highlight xml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">activity</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">".SecondActivity"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">intent-filter</span>&gt;</span></span><br><span class="line"><span class="hljs-comment">&lt;!--自己定义的启动的action是com.example.activitytest.ACTION_START--&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">action</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"com.example.activitytest.ACTION_START"</span>/&gt;</span></span><br><span class="line"><span class="hljs-comment">&lt;!--系统默认的category--&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">category</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"android.intent.category.DEFAULT"</span>/&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">intent-filter</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">activity</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Intent intent =<span class="hljs-keyword">new</span> Intent(<span class="hljs-string">"com.example.activitytest.ACTION_START"</span>);<span class="hljs-comment">//传入action</span></span><br><span class="line">startActivity(intent);</span><br></pre></td></tr></table></figure>
+<p>指定category：</p>
+<figure class="highlight xml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">activity</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">".SecondActivity"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">intent-filter</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">action</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"com.example.activitytest.ACTION_START"</span>/&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">category</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"android.intent.category.DEFAULT"</span>/&gt;</span></span><br><span class="line"><span class="hljs-comment">&lt;!--可以添加多条category--&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">category</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"com.example.activitytest.MY_CATEGORY"</span>/&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">intent-filter</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">activity</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Intent intent =<span class="hljs-keyword">new</span> Intent(<span class="hljs-string">"com.example.activitytest.ACTION_START"</span>);</span><br><span class="line">intent.addCategory(<span class="hljs-string">"com.example.activitytest.MY_CATEGORY"</span>)</span><br><span class="line">startActivity(intent);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>启动其他应用的活动</li>
+</ul>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Intent intent =<span class="hljs-keyword">new</span> Intent(Intent.ACTION_VIEW);<span class="hljs-comment">//系统内置动作//ACTION_DIAL</span></span><br><span class="line">intent.setData(Url.parse(<span class="hljs-string">"http://www.baidu.com"</span>))</span><br><span class="line"><span class="hljs-comment">//电话活动</span></span><br><span class="line"><span class="hljs-comment">//Intent intent =new Intent(Intent.ACTION_DIAL);</span></span><br><span class="line"><span class="hljs-comment">//intent.setData(Url.parse("tel:10086"))</span></span><br><span class="line">startActivity(intent);</span><br></pre></td></tr></table></figure>
+<p>可以选择用浏览器或者自己的活动打开网页</p>
+<figure class="highlight xml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">activity</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">".SecondActivity"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">intent-filter</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">action</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"android.intent.action.ACTION_VIEW"</span>/&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">category</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">"android.intent.category.DEFAULT"</span>/&gt;</span></span><br><span class="line"><span class="hljs-comment">&lt;!--配置不同的信息--&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">data</span> <span class="hljs-attr">android:scheme</span>=<span class="hljs-string">"http"</span>/&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">intent-filter</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">activity</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="intent之间的消息传递"><a href="#intent之间的消息传递" class="headerlink" title="intent之间的消息传递"></a>intent之间的消息传递</h2><h3 id="向下传递数据"><a href="#向下传递数据" class="headerlink" title="向下传递数据"></a>向下传递数据</h3><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//FirstActivity.class</span></span><br><span class="line">Intent intent =<span class="hljs-keyword">new</span> Intent(FirstActivity.<span class="hljs-keyword">this</span>,SecondActivity.class);</span><br><span class="line">String data=<span class="hljs-string">"This s data"</span>;</span><br><span class="line">intent.putExtra(<span class="hljs-string">"extra_data"</span>,data);</span><br><span class="line">startActivity(intent);</span><br></pre></td></tr></table></figure>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//SecondActivity.class</span></span><br><span class="line">Intent intent =getIntent;</span><br><span class="line">String data=intent.getStringExtra(<span class="hljs-string">"extra_data"</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="向上返回数据"><a href="#向上返回数据" class="headerlink" title="向上返回数据"></a>向上返回数据</h3><p>下面这个例子展示了在SecondActivity按下button后销毁SecondActivity，并向FirstActivity中返回数据。</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//FirstActivity.class</span></span><br><span class="line">button.setOnClickListener(<span class="hljs-keyword">new</span> View.OnClickListener()&#123;</span><br><span class="line">    <span class="hljs-meta">@override</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span><span class="hljs-params">(View view)</span></span>&#123;</span><br><span class="line">        Intent intent=<span class="hljs-keyword">new</span> Intent(FirstActivity.<span class="hljs-keyword">this</span>,SecondActivity.class);</span><br><span class="line">        startActivityForResult(intent,<span class="hljs-number">1</span>);<span class="hljs-comment">//第二个参数是请求码requestCode，唯一值即可</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//FirstActivity.class</span></span><br><span class="line"><span class="hljs-comment">//获取返回的数据</span></span><br><span class="line"><span class="hljs-meta">@override</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onActivityResult</span><span class="hljs-params">(<span class="hljs-keyword">int</span> requestCode,<span class="hljs-keyword">int</span> resultCode,Intent data)</span></span>&#123;</span><br><span class="line">    <span class="hljs-keyword">switch</span>(requestCode)&#123;</span><br><span class="line">        <span class="hljs-keyword">case</span> <span class="hljs-number">1</span>:</span><br><span class="line">        <span class="hljs-keyword">if</span>(resultCode==RESULT_OK)&#123;</span><br><span class="line">            String returnDta=data.getStringExtra(<span class="hljs-string">"return_data"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//SecondActivity.class</span></span><br><span class="line">button2.setOnClickListener(<span class="hljs-keyword">new</span> View.OnClickListener()&#123;</span><br><span class="line">    <span class="hljs-meta">@override</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span><span class="hljs-params">(View view)</span></span>&#123;</span><br><span class="line">        Intent intent=<span class="hljs-keyword">new</span> Intent();<span class="hljs-comment">//这个intent仅用于返回数据</span></span><br><span class="line">        String data=<span class="hljs-string">"This is retrun data"</span></span><br><span class="line">        intent.putExtra(<span class="hljs-string">"return_data"</span>,data);</span><br><span class="line">        setResult(RESULT_OK,intent);<span class="hljs-comment">//resultCode</span></span><br><span class="line">        finish()<span class="hljs-comment">//销毁当前活动</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="活动的生命周期"><a href="#活动的生命周期" class="headerlink" title="活动的生命周期"></a>活动的生命周期</h2><h3 id="返回栈"><a href="#返回栈" class="headerlink" title="返回栈"></a>返回栈</h3><p>android对于活动的管理是通过task来管理的，一个任务就是一个栈中的一组活动。这个栈就是返回栈。</p>
+<h3 id="活动的状态"><a href="#活动的状态" class="headerlink" title="活动的状态"></a>活动的状态</h3><ul>
+<li><p>运行状态：处于返回栈栈顶的活动</p>
+</li>
+<li><p>暂停状态：不处于返回栈栈顶，但仍然可见</p>
+</li>
+<li><p>停止状态：不处于返回栈栈顶，却不可见，可能内存被系统回收</p>
+</li>
+<li><p>销毁状态：活动从返回栈中移出，最有可能内存被系统回收</p>
+</li>
+</ul>
+<h3 id="活动的生命周期-1"><a href="#活动的生命周期-1" class="headerlink" title="活动的生命周期"></a>活动的生命周期</h3><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">graph TD</span><br><span class="line">启动活动 --&gt;B(&quot;onCreate()&quot;)</span><br><span class="line">B--&gt;C(&quot;onStart()&quot;)</span><br><span class="line">C--&gt;D(&quot;onResume()&quot;)</span><br><span class="line">D--&gt;H(&quot;活动运行中&quot;)</span><br><span class="line">H--&quot;另一个活动来到前台&quot;--&gt;E(&quot;onPause()&quot;)</span><br><span class="line">E--&quot;活动不再可见&quot;--&gt;F(&quot;onStop()&quot;)</span><br><span class="line">E--&quot;返回上一个活动&quot;--&gt;D</span><br><span class="line">F--&quot;活动被销毁&quot;--&gt;G(&quot;onDestroy()&quot;)</span><br><span class="line">F--&quot;返回上一个活动&quot;--&gt;K(&quot;onRestart()&quot;)</span><br><span class="line">K--&gt;C</span><br><span class="line">G--&gt;J(&quot;活动关闭&quot;)</span><br></pre></td></tr></table></figure>
+<h3 id="保存可能被回收的活动中的数据"><a href="#保存可能被回收的活动中的数据" class="headerlink" title="保存可能被回收的活动中的数据"></a>保存可能被回收的活动中的数据</h3><p>保存</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@override</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onSaveInstanceState</span><span class="hljs-params">(Bunble outState)</span></span>&#123;</span><br><span class="line">    String tempData=<span class="hljs-string">"something you want to save"</span></span><br><span class="line">    outState.putString(<span class="hljs-string">"data_key"</span>,tempData)</span><br><span class="line">    <span class="hljs-keyword">super</span>.onSaveInstanceState(outState);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>恢复</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">if</span>(savedInstanceState!=<span class="hljs-keyword">null</span>)&#123;</span><br><span class="line">    String tempData=saveInstanceState.getString(<span class="hljs-string">"data_key"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="活动的启动模式"><a href="#活动的启动模式" class="headerlink" title="活动的启动模式"></a>活动的启动模式</h2><h3 id="指定方法"><a href="#指定方法" class="headerlink" title="指定方法"></a>指定方法</h3><p>在AndroidManifest.xml的<code>&lt;activity&gt;</code>中添加<code>&lt;android:launchMode&gt;</code>属性</p>
+<figure class="highlight xml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">activity</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">".MainActivity"</span></span></span><br><span class="line"><span class="hljs-tag"><span class="hljs-attr">android:launchMode</span>=<span class="hljs-string">"standard"</span></span></span><br><span class="line"><span class="hljs-tag">&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">activity</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="四种启动模式"><a href="#四种启动模式" class="headerlink" title="四种启动模式"></a>四种启动模式</h3><ol>
+<li>standard</li>
+</ol>
+<p>默认的启动模式，不管当前返回栈的栈顶及栈中有没有被启动的活动，都会在返回栈的栈顶加入新活动。这意味着可能存在多个重复的活动。</p>
+<ol start="2">
+<li>singleTop</li>
+</ol>
+<p>创建活动时会检查当前返回栈的栈顶元素是否是待创建活动，若有，则直接使用栈顶活动，否则创建新活动。这种方式在栈顶活动之下的可能存在相同的活动。</p>
+<ol start="3">
+<li>singleTask</li>
+</ol>
+<p>创建活动时会检查当前返回栈所有元素是否是待创建活动，若有，则将这个活动之前的活动全部出栈，直接使用该活动，否则创建新活动。这种方式不会存在相同的活动。</p>
+<ol start="4">
+<li>singleInstance</li>
+</ol>
+<p>使用该启动模式的活动将单独使用一个返回栈。<br>举个例子，活动1，3启动模式是默认，活动2是singleInstance，在活动1中创建活动2，然后在活动2中创建活动3。在活动3中返回，回到活动2，再次返回，回到活动1。</p>
+<h2 id="使用活动中的小技巧"><a href="#使用活动中的小技巧" class="headerlink" title="使用活动中的小技巧"></a>使用活动中的小技巧</h2><h3 id="查看当前活动"><a href="#查看当前活动" class="headerlink" title="查看当前活动"></a>查看当前活动</h3><p>创建一个继承自AppCompatActivity的类BaseActivity，加入一个方法通过<code>getClass().getSimpleName()</code>输出当前类名，然后将要输出活动名的类继承于BaseActivity，就可以随时输出当前类名了。</p>
+<h3 id="直接退出程序"><a href="#直接退出程序" class="headerlink" title="直接退出程序"></a>直接退出程序</h3><p>活动管理器可以用于在一个活动中，按back键时直接退出程序，而不是返回上一活动。</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ActivityCollector</span></span>&#123;</span><br><span class="line">    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> List&lt;Activity&gt; activities=<span class="hljs-keyword">new</span> ArrayList&lt;Activity&gt;();</span><br><span class="line">    <span class="hljs-comment">//新增活动，在所有活动的onCreate中调用此方法</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">addActivity</span><span class="hljs-params">(Activity activity)</span></span>&#123;</span><br><span class="line">        activities.add(activity);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-comment">//删去活动，在所有活动的onDestory中调用此方法</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">removeActivity</span><span class="hljs-params">(Activity activity)</span></span>&#123;</span><br><span class="line">        activities.remove(activity);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-comment">//清空所有活动</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">finishAll</span><span class="hljs-params">()</span></span>&#123;</span><br><span class="line">        <span class="hljs-keyword">for</span>(Activity activity : activities)&#123;</span><br><span class="line">                <span class="hljs-keyword">if</span>(!activity.isFinishing())&#123;</span><br><span class="line">                    activity.finish();</span><br><span class="line">                &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="提供启动活动的接口"><a href="#提供启动活动的接口" class="headerlink" title="提供启动活动的接口"></a>提供启动活动的接口</h3><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//SecondActivity.class</span></span><br><span class="line"><span class="hljs-comment">//在FirstActivity中的调用方法：SecondActivity.actonStart(FirstActivity.this,"data1","data2");</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">actonStart</span><span class="hljs-params">(Context context,String data1,String data2)</span></span>&#123;</span><br><span class="line">    Intent intent=<span class="hljs-keyword">new</span> Intent(content,SecondActivity.class);</span><br><span class="line">    intent.putExtra(<span class="hljs-string">"para1"</span>,data1);</span><br><span class="line">    intent.putExtra(<span class="hljs-string">"para2"</span>,data2);</span><br><span class="line">    context.startActivity(intent);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/activity/">activity</a>, <a class="has-link-grey -link" href="/tags/android/">android</a>, <a class="has-link-grey -link" href="/tags/android第一行代码/">android第一行代码</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/09/26/Android/第一行代码/coolWeather/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">coolWeather</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/07/30/Android/第一行代码/ListView/">
+                <span class="level-item">ListView的用法</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc" style="position: sticky; top: 10px;">
+    <div class="card-content" style="padding: 1rem;">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#intent启动avtivity方式">
+        <!-- <span class="has-mr-6">1</span> -->
+        <span>intent启动avtivity方式</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#显式intent">
+        <!-- <span class="has-mr-6">1.1</span> -->
+        <span>显式intent</span>
+        </a></li><li>
+        <a class="is-flex" href="#隐式intent">
+        <!-- <span class="has-mr-6">1.2</span> -->
+        <span>隐式intent</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#intent之间的消息传递">
+        <!-- <span class="has-mr-6">2</span> -->
+        <span>intent之间的消息传递</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#向下传递数据">
+        <!-- <span class="has-mr-6">2.1</span> -->
+        <span>向下传递数据</span>
+        </a></li><li>
+        <a class="is-flex" href="#向上返回数据">
+        <!-- <span class="has-mr-6">2.2</span> -->
+        <span>向上返回数据</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#活动的生命周期">
+        <!-- <span class="has-mr-6">3</span> -->
+        <span>活动的生命周期</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#返回栈">
+        <!-- <span class="has-mr-6">3.1</span> -->
+        <span>返回栈</span>
+        </a></li><li>
+        <a class="is-flex" href="#活动的状态">
+        <!-- <span class="has-mr-6">3.2</span> -->
+        <span>活动的状态</span>
+        </a></li><li>
+        <a class="is-flex" href="#活动的生命周期-1">
+        <!-- <span class="has-mr-6">3.3</span> -->
+        <span>活动的生命周期</span>
+        </a></li><li>
+        <a class="is-flex" href="#保存可能被回收的活动中的数据">
+        <!-- <span class="has-mr-6">3.4</span> -->
+        <span>保存可能被回收的活动中的数据</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#活动的启动模式">
+        <!-- <span class="has-mr-6">4</span> -->
+        <span>活动的启动模式</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#指定方法">
+        <!-- <span class="has-mr-6">4.1</span> -->
+        <span>指定方法</span>
+        </a></li><li>
+        <a class="is-flex" href="#四种启动模式">
+        <!-- <span class="has-mr-6">4.2</span> -->
+        <span>四种启动模式</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#使用活动中的小技巧">
+        <!-- <span class="has-mr-6">5</span> -->
+        <span>使用活动中的小技巧</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#查看当前活动">
+        <!-- <span class="has-mr-6">5.1</span> -->
+        <span>查看当前活动</span>
+        </a></li><li>
+        <a class="is-flex" href="#直接退出程序">
+        <!-- <span class="has-mr-6">5.2</span> -->
+        <span>直接退出程序</span>
+        </a></li><li>
+        <a class="is-flex" href="#提供启动活动的接口">
+        <!-- <span class="has-mr-6">5.3</span> -->
+        <span>提供启动活动的接口</span>
+        </a></li></ul></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="activity" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

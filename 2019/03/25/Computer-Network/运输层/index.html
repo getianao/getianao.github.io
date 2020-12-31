@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>运输层 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="5.1 运输层协议概述运输层在协议栈中位置：运输层是面向通讯部分的最高层，也是用户功能中的最底层，它为上面的应用层提供逻辑通讯。 网络层和运输层的区别：网络层为主机之间提供逻辑通讯，运输层为应用进程之间提供端到端的逻辑通讯。">
+<meta name="keywords" content="计算机网络,运输层">
+<meta property="og:type" content="article">
+<meta property="og:title" content="运输层">
+<meta property="og:url" content="http://yoursite.com/2019/03/25/Computer-Network/运输层/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="5.1 运输层协议概述运输层在协议栈中位置：运输层是面向通讯部分的最高层，也是用户功能中的最底层，它为上面的应用层提供逻辑通讯。 网络层和运输层的区别：网络层为主机之间提供逻辑通讯，运输层为应用进程之间提供端到端的逻辑通讯。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2019/03/25/Computer-Network/运输层/1553606481146.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/25/Computer-Network/运输层/1553607009327.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/25/Computer-Network/运输层/1553691351312.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/25/Computer-Network/运输层/1553690278870.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/25/Computer-Network/运输层/1553690690059.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/25/Computer-Network/运输层/1553692645061.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/25/Computer-Network/运输层/1553731830204.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/25/Computer-Network/运输层/1553778551379.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/25/Computer-Network/运输层/1553780972500.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/25/Computer-Network/运输层/1553782418220.png">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.229Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="运输层">
+<meta name="twitter:description" content="5.1 运输层协议概述运输层在协议栈中位置：运输层是面向通讯部分的最高层，也是用户功能中的最底层，它为上面的应用层提供逻辑通讯。 网络层和运输层的区别：网络层为主机之间提供逻辑通讯，运输层为应用进程之间提供端到端的逻辑通讯。">
+<meta name="twitter:image" content="http://yoursite.com/2019/03/25/Computer-Network/运输层/1553606481146.png">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="运输层" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2019-03-25T16:00:00.000Z">2019-03-26</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.229Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/计算机网络/">计算机网络</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/运输层/">运输层</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    32 分钟 读完 (大约 4863 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                运输层
+            
+        </h1>
+        <div class="content">  
+            <h2 id="5-1-运输层协议概述"><a href="#5-1-运输层协议概述" class="headerlink" title="5.1 运输层协议概述"></a>5.1 运输层协议概述</h2><p>运输层在协议栈中位置：运输层是<strong>面向通讯部分的最高层</strong>，也是<strong>用户功能中的最底层</strong>，它为上面的应用层提供逻辑通讯。</p>
+<p>网络层和运输层的区别：网络层为主机之间提供逻辑通讯，运输层为应用进程之间提供端到端的逻辑通讯。</p>
+<a id="more"></a>
+<p>运输层的两个重要功能：<strong>复用</strong>是指发送方在不同应用进程中都可以使用同一个运输层协议传输数据；即应用层的所有应用进程可以通过运输层发送数据给网络层。<strong>分用</strong>是指接收方的运输层在剥去报文首部后能将这些数据正确的交付给应用进程；即运输层从网络层接收到数据之后能够正确的交付给应用进程。</p>
+<p>运输层的两个主要协议：TCP协议和UDP协议。</p>
+<p>端口port：端口是为了表示<strong>本计算机</strong>应用层的中的各个进程在和运输层交互时的层间接口，以便运输层将数据通过目的主机提供的功能来交付给应用进程。端口号可以分为两类：服务器端使用的端口号和客户端使用的端口号。</p>
+<h2 id="5-2-用户数据报协议UDP"><a href="#5-2-用户数据报协议UDP" class="headerlink" title="5.2 用户数据报协议UDP"></a>5.2 用户数据报协议UDP</h2><p>UDP（User Datagram Protocol）用户数据报协议</p>
+<h3 id="5-2-1-UDP的六个特点"><a href="#5-2-1-UDP的六个特点" class="headerlink" title="5.2.1 UDP的六个特点"></a>5.2.1 UDP的六个特点</h3><ol>
+<li>UDP是无连接的</li>
+<li>UDP尽最大努力交付，不保证可靠交付</li>
+<li>UDP是面向报文的；UDP对于应用层传递下来的报文，不管多长，加上头部之后就传递给网络层。</li>
+<li>UDP没有拥塞控制；源主机不考虑网络拥塞，以恒定的速率发送发送数据，仅在发生网络拥塞的时候丢弃掉一些数据，这符合一些<strong>实时</strong>应用的使用场景。</li>
+<li>UDP支持一对一、一对多、多对一、多对多的交互通讯。</li>
+<li>UDP的首部开销小，只占8个字节</li>
+</ol>
+<h3 id="5-2-2-UDP的首部格式"><a href="#5-2-2-UDP的首部格式" class="headerlink" title="5.2.2 UDP的首部格式"></a>5.2.2 UDP的首部格式</h3><p><img src="/2019/03/25/Computer-Network/运输层/1553606481146.png" alt="1553606481146"></p>
+<p>UDP的首部长度为<strong>8个字节</strong>，由四个部分组成，每个部分各占2个字节，分别是：源端口、目的端口、长度、检验和。</p>
+<h3 id="5-2-3-UDP检验和的计算方法"><a href="#5-2-3-UDP检验和的计算方法" class="headerlink" title="5.2.3 UDP检验和的计算方法"></a>5.2.3 UDP检验和的计算方法</h3><p>计算检验和的时候需要在UDP数据报的首部之前添加一个12个字节的伪首部。</p>
+<p>作为发送方，首先将全零填进检验和，然后将伪首部和整个UDP报文看作许多16位的字节的串，如果长度不是16位的倍数，则在末尾补零；将这些16位的串做二进制反码加法，将结果取反填到首部的检验和部分。</p>
+<p>而作为接收方在检验检验和的时候，用相同的方法甲酸二进制反码加法，如果得到的结果是1，则表示正确，反之表示出现了差错，直接丢弃或者向应用层发出差错警告。</p>
+<p><img src="/2019/03/25/Computer-Network/运输层/1553607009327.png" alt="1553607009327"></p>
+<h2 id="5-3-传输控制协议TCP"><a href="#5-3-传输控制协议TCP" class="headerlink" title="5.3 传输控制协议TCP"></a>5.3 传输控制协议TCP</h2><p>传输控制协议TCP（Transmission Control Protocol）</p>
+<h3 id="5-3-1-TCP的特点"><a href="#5-3-1-TCP的特点" class="headerlink" title="5.3.1 TCP的特点"></a>5.3.1 TCP的特点</h3><ol>
+<li>TCP是<strong>面向连接</strong>的运输层协议。</li>
+<li>TCP只能是一对一的</li>
+<li>TCP提供可靠交付的服务</li>
+<li>TCP 提供全双工通讯</li>
+<li>TCP是<strong>面向字节流</strong>的；应用程序和TCP的交互是一次一个数据块，TCP将应用程序交下来的数据块看成一连串无结构的字节流。</li>
+</ol>
+<h3 id="5-3-2-TCP的连接"><a href="#5-3-2-TCP的连接" class="headerlink" title="5.3.2 TCP的连接"></a>5.3.2 TCP的连接</h3><p>TCP是面向连接的，TCP连接的端口叫做套接字（socket），套接字是由IP地址和端口号组成的，即<br>$$<br>socket=(ip地址：端口号)<br>$$<br>而TCP连接有两个套接字组成，即<br>$$<br>TCP连接::=\left{ socket1,socket2\right}=\left{ (ip地址：端口号),(ip地址：端口号)\right}<br>$$</p>
+<h3 id="5-3-3-TCP报文的格式"><a href="#5-3-3-TCP报文的格式" class="headerlink" title="5.3.3 TCP报文的格式"></a>5.3.3 TCP报文的格式</h3><p>TCP报文由首部和数据部分组成；首部的长度不是固定的，前面20个字节是固定的，后面可以根据需要添加选项，长度为4n个字节。</p>
+<p><img src="/2019/03/25/Computer-Network/运输层/1553691351312.png" alt="1553691351312"></p>
+<p>其中<strong>确认号</strong>为N表示到需要N-1的所有数据全部收到。<strong>窗口</strong>值为N表示自己的接收缓存空间还可以接收N字节的数据，用于接收方设置发送窗口的依据。</p>
+<h3 id="5-3-4-TCP的可靠传输"><a href="#5-3-4-TCP的可靠传输" class="headerlink" title="5.3.4 TCP的可靠传输"></a>5.3.4 TCP的可靠传输</h3><p>网络层是尽最大努力交付的，而TCP提供可靠交付的服务，所以TCP就要解决差错的处理和网络的阻塞问题。</p>
+<ul>
+<li><p><strong>停止等待协议</strong>：</p>
+<p>发送方A将许多个分组发送给接收方B；A发送的策略是每间隔一段时间后就发送下一个分组，分组上有编号，B在接收到分组后就向A发送确认信息。同时每一个分组有一个超时计数器，当超时却仍没有收到分组的确认信息后，就需要进行<strong>超时重传</strong>。</p>
+<p><img src="/2019/03/25/Computer-Network/运输层/1553690278870.png" alt="1553690278870"></p>
+<p>A在发送了分组之后会暂时保存分组的副本，直到收到了分组的确认消息。</p>
+<p>可能出现一种情况，可能B发送的确认信息出现了丢失，B收到了重复的分组，此时B将重复的分组对丢弃，必能发送确认信息。</p>
+<p>这样的可靠传输协议称为<strong>自动重传请求</strong>ARQ(Automatic Repeat reQuest)。</p>
+<p>引入一个值：信道利用率<br>$$<br>U=\frac{T_D}{T_D+RTT+T_A}<br>$$</p>
+<p>其中U为信道利用率，T~D~为发送分组的时间，RTT为从发送分组到收到确认的时间，T~A~是接收确认的时间。</p>
+<p><img src="/2019/03/25/Computer-Network/运输层/1553690690059.png" alt="1553690690059"></p>
+<p>显然停止等待协议的信道利用率很低，如果可以采用流水线传输的方式可以提高信道利用率。</p>
+</li>
+<li><p>连续ARQ协议</p>
+<p>首先发送方收到B的确认报文，通过确认号和窗口大小设置自己的发送窗口的大小和位置：发送窗口的后沿可能不变或先前移动；不变是可能没有收到新的确认并且接收窗口不变，或者收到了新的窗口但是接收窗口缩小了。发送窗口的后沿可能向后、向前或不变。</p>
+<p>接收窗口的确认必须以按序收到的数据中的最高序号为准，并向后移动接收窗口。</p>
+<p>当发送窗口的在一定时间内没有收到新的确认消息之后，会重新发送发送窗口中的数据。</p>
+<p>发送窗口中的存在3个指针，除了标志前沿P~1~和后沿P~2~之外，还有一个是表示发送和未发送P~3~：P~1~之前表示已发送且已确认，P~1~到P~3~表示已发送但未确认（包括P~1~但不包括P~3~），P~3~到P~2~表示允许发送但未发送（包括P~3~但不包括P~2~），P~2~之后表示不允许发送。</p>
+<p>接收窗口与发送窗口相似，但不需要P~3~指针。</p>
+</li>
+</ul>
+<p>  <img src="/2019/03/25/Computer-Network/运输层/1553692645061.png" alt="1553692645061"></p>
+<ul>
+<li><p>超时重传时间的选择</p>
+<p>TCP通过一个自适应算法计算一个加权的平均往返时间RTT~s~：<br>$$<br>新的RTT_s=(1-α)<em>（旧的RTT_s）+α</em>（新的RTT）<br>$$<br>α一般取1/8，第一个RTT~s~就取RTT的值；</p>
+<p>超时重传时间RTO应该比RTT~s~略大：<br>$$<br>RTO=RTT_s+4<em>RTT_D<br>$$<br>RTT~D~是RTT偏差的加权平均值：<br>$$<br>新的RTT_D=(1-β)</em>（旧的RTT_D）+β*|RTT_S-新的RTT|<br>$$</p>
+<p>α一般取1/4，第一个RTT~D~就取RTT值的1/2；</p>
+<p>同时每重传一次，就将RTT~D~的值乘2。</p>
+</li>
+<li><p>选择确认SACK </p>
+<p>TCP允许接收方在发送确认报文时告知发送方不再发送部分已经接收的数据；需要在TCP首部中加上“允许SACK”的选项，并报告已接受字节块的边界信息。</p>
+</li>
+</ul>
+<h3 id="5-3-5-TCP的流量控制"><a href="#5-3-5-TCP的流量控制" class="headerlink" title="5.3.5 TCP的流量控制"></a>5.3.5 TCP的流量控制</h3><p>流量控制是指让发送方的发送速率不要太快，使接收方来得及接受。</p>
+<p>接收方通过窗口值告知发送方发送速率，一般发送窗口的大小不能超过接收窗口的大小。</p>
+<ul>
+<li><p>滑动窗口的流量控制</p>
+<p><img src="/2019/03/25/Computer-Network/运输层/1553731830204.png" alt="1553731830204"></p>
+<p>ACK是首部的确认位，值为1时表示确认字段有效；ack时确认字段的值，即之前的字节已经确认；rwnd时接受窗口值，当rwnd的值为0时，表示让发送方不会发送新的数据，知道有新的窗口值更新。</p>
+<p>可能存在这么一种<strong>死锁</strong>情况：当接收方发送了零窗口值的确认报文之后，接收方又发送了一个有新窗口值的报文，让发送方继续发送，但是这个报文丢失了，就造成了发送方等待新的确认报文，接收方等待数据的死锁情况。这时可以给发送方设置一个持续计数器，当发送方收到零窗口报文后开始计时，超时后发送零窗口探测报文，让接收方发送确认报文。</p>
+</li>
+<li><p>Nagle算法提高传输效率</p>
+<p>nagle算法提高了下面场景的传输效率：当主机连续发送只有少数字节的数据时，数据部分相对于首部很小，确认报文也是如此，导致传递效率不高。</p>
+<p>算法：当运输层收到的是一个一个字节的数据时，将它们依次送到缓存；当第一次收到数据时，将它立即发送，同时继续缓存应用进程发送的数据，当收到确认报文之后，在将这个过程中收到的数据合并成一个报文发送。同时当发送缓冲中的数据长度到达发送窗口的一半或者最大报文长度时，也立即和并发送。</p>
+</li>
+<li><p>糊涂窗口综合症</p>
+<p>有一种情景：接收方的窗口大小已满，并且每次只能从接受缓冲中取出一个字节；这样就让发送方每次只能发送1个字节的报文，从而大大降低传输效率。</p>
+<p>可以这么解决这个问题：延迟接收方的确认报文发送，知道接收缓存剩余空间可达到最大报文长度会或者一半的缓存空间，此时才让接收方发送确认报文；同时让发送方不要发送太短的报文。</p>
+</li>
+</ul>
+<h3 id="5-3-6-TCP的拥塞控制"><a href="#5-3-6-TCP的拥塞控制" class="headerlink" title="5.3.6 TCP的拥塞控制"></a>5.3.6 TCP的拥塞控制</h3><p>拥塞控制是指网络中对某一资源的需求量超过了该资源提供的可用部分。</p>
+<ul>
+<li><p>流量控制和拥塞控制的区别：</p>
+<p>拥塞控制更多的是全局上的控制，它防止过多的数据被注入到网络当中，使网络中的路由器和链路不会过载。而流量控制使端到端通讯量的控制，它抑制发送端的发送速率，使接收端来得及接受。</p>
+</li>
+<li><p>两类控制方法：开环控制和闭环控制</p>
+<p>开环设置是指在设计网络的时候就充分考虑可能发送拥塞的因素，力求在网络运行后不会发生拥塞，不会进行中途改正。</p>
+<p>闭环控制是基于反馈环路的概念，它会监控网络中的拥塞发生在何时何地，将拥塞发生的信息传递到可以处理它的地方，之后调整网络的运行来解决拥塞。</p>
+</li>
+<li><p>四种拥塞控制方法：慢开始、拥塞避免、快重传、快回复</p>
+<p>慢开始、拥塞避免的拥塞控制方法也叫做基于窗口的控制方法，发送方会维护一个拥塞窗口cwnd，并使发送窗口大小等于拥塞窗口，而拥塞窗口的大小取决于网络的拥塞程度。</p>
+<ol>
+<li><p>慢开始算法：</p>
+<p>传输开始时设置根据发送方最大报文段的数值SMSS设置cwnd的值，之后cwnd每次增加的量为$min(N,SMSS)​$，N是原本未确认，但现在刚收到确认报文段所确认的字节数。所以每次发送并收到确认之后，cwnd都会<strong>乘2</strong>；</p>
+</li>
+<li><p>拥塞避免算法：</p>
+<p>为了防止拥塞窗口增长的过快，设置了一个慢开始门限ssthresh状态变量，当cwnd的值大于ssthresh后，改用拥塞避免方法：每收到确认报文之后，cwnd加1个报文段。当报文出现超时时，认为此时网络出现了拥塞，将cwnd设为1，并将ssthresh变为原来的一半。</p>
+</li>
+<li><p>快重传算法：</p>
+<p>快重传算法是为了今早知道个别报文的丢失；它要求接收方在收到报文之后不是等待自己发送数据时再捎带确认的，而是立即发送确认报文，并且再收到失序的报文时仍然发送最大有序报文的确认。发送方在连续收到三个相同报文之后，会立即重传下一个分组；</p>
+</li>
+<li><p>快恢复算法：</p>
+<p>将cwnd和ssthresh设置为当前cwnd的一半。</p>
+</li>
+</ol>
+<p><img src="/2019/03/25/Computer-Network/运输层/1553778551379.png" alt="1553778551379"></p>
+<p>0和13传输轮次的时候开始慢开始算法，1、3记号开始使用拥塞避免算法，2记号时网络发生了拥塞，4记号处使用快重传算法，5记号时使用快恢复算法和拥塞避免算法。</p>
+<p>拥塞避免算法阶段，cwnd的值时线性增大的，称之为加法增大AI（Additive Increase）；在快恢复的时候，cwnd的值减半，称之为乘法减小MD（Multiplication Decrease），两者合称为AIMD。</p>
+</li>
+<li><p>主动队列管理AQM</p>
+</li>
+</ul>
+<h3 id="5-3-7-TCP的运输连接管理"><a href="#5-3-7-TCP的运输连接管理" class="headerlink" title="5.3.7 TCP的运输连接管理"></a>5.3.7 TCP的运输连接管理</h3><p>TCP的运输连接有三个阶段：连接建立、数据传送、连接释放。运输连接管理是指时运输连接的建立和释放都可以正常的进行。</p>
+<ul>
+<li><p>连接建立：</p>
+<p>TCP的连接建立也叫做握手，由于握手需要客户与服务器之间交换三个TCP报文段，所以也叫”三报文握手“。</p>
+<p><img src="/2019/03/25/Computer-Network/运输层/1553780972500.png" alt="1553780972500"></p>
+<ol>
+<li><p>主机A为客户端，主机B为服务器，都处于CLOSE（关闭）状态，它们都创建了创数控制块TCB，用于接收客户进程的连接请求，主机处于LISTEN（收听）状态。</p>
+</li>
+<li><p>主机A主动打开，它希望和B建立TCP连接，所以它向B发送连接请求报文段，此时A状态为SYN-SENT（同步已发送）状态；报文段：首部同步位SYN为1，选择一个初始序号seq=x，SYN报文段不携带数据，但消耗一个序号。</p>
+</li>
+<li><p>主机B在收到连接请求报文之后，若同意连接，发送确认报文，状态变为SYN-RCVD（同步收到）状态；报文段：首部同步位SYN和确认号ACK均为1，ack设为x+1，选择一个初始序号seq=y，SYN报文段不携带数据，但消耗一个序号。</p>
+<p>（这一步主机B也可以连续发送两次报文，确认报文（ACK=1，ack=x+1），同步报文（SYN=1，seq=y），此时变成四报文握手。）</p>
+</li>
+<li><p>主机A收到确认报文之后，再向B发送确认报文，状态变为ESTABLISHED（已建立连接）状态；报文段：首部确认号ACK为1，ack设为y+1，序号seq=x+1。</p>
+</li>
+<li><p>主机B收到确认报文之后，状态变为ESTABLISHED（已建立连接）状态。</p>
+</li>
+</ol>
+<p>主机A在收到确认报文后，仍要在发送一个确认报文是为了防止已失效的连接报文段突然又传到了B而导致错误的情况。</p>
+</li>
+</ul>
+<ul>
+<li><p>连接释放：</p>
+<p>连接释放的过程是四报文握手。</p>
+<p><img src="/2019/03/25/Computer-Network/运输层/1553782418220.png" alt="1553782418220"></p>
+<ol>
+<li><p>主机A为客户端，主机B为服务器，都处于ESTABLISHED（已建立连接）状态。</p>
+</li>
+<li><p>A决定关闭TCP连接，它先向B发送连接释放报文段，然后停止向B的数据传输，A进入FIN-WAIT-1（终止等待1）状态；报文段：首部终止控制符FIN为1，序号seq=u，u的值为A已传送数据最后一个字节的序号加1。</p>
+</li>
+<li><p>B在收到连接释放报文段后发送确认报文段，进入CLOSE-WAIT（关闭等待）状态；报文段：首部ACK=1，ack=u+1，seq为v，v的值为B已传送数据最后一个字节的序号加1。</p>
+<p>此时B不会再收到A发来的数据，但是可以继续向A发送数据，此时TCP连接处于半关闭状态。</p>
+</li>
+<li><p>A在收到B的确认报文段后，进入FIN-WAIT-2（终止等待2）状态，等待B发送连接释放报文段。</p>
+</li>
+<li><p>当B向A发送完数据之后，向A发送连接释放报文段，B进入LAST-ACK（最后确认）状态；报文段：首部终止控制符FIN为1，ACK为1，ack=u+1，序号seq=w，w的值为B已传送数据最后一个字节的序号加1。</p>
+</li>
+<li><p>A在收到连接释放报文段后发送确认报文段，进入TIME-WAIT（时间等待）状态；报文段：首部ACK=1，ack=w+1，seq为u+1。</p>
+</li>
+<li><p>B在收到确认报文段后进入CLOSE状态。</p>
+</li>
+<li><p>TCP在经过时间等待计数器设置的时间（2MSL）后，A进入CLOSE状态，MSL为最长报文寿命（Maximum Segment Lifetime），一般为2分钟。</p>
+</li>
+</ol>
+<p>设置时间等待计数器的原因有二：</p>
+<ol>
+<li>保证最后A发送给B的确认报文段能够到达B</li>
+<li>保证连接中不再出现已失效的连接请求报文段。</li>
+</ol>
+<p>TCP连接中还设置了时间保活器，用以当客户端失去连接时关闭连接，它在服务器收到客户端的报文时被重置，两小时没有收到客户端报文，服务器会发送探测报文段，发送10个仍未响应，就关闭连接。</p>
+</li>
+</ul>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/计算机网络/">计算机网络</a>, <a class="has-link-grey -link" href="/tags/运输层/">运输层</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/03/26/Other/由玩大富翁突然想到的/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">由玩大富翁突然想到的</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/03/25/Computer-Network/运输层习题/">
+                <span class="level-item">运输层课后习题</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc" style="position: sticky; top: 10px;">
+    <div class="card-content" style="padding: 1rem;">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#5-1-运输层协议概述">
+        <!-- <span class="has-mr-6">1</span> -->
+        <span>5.1 运输层协议概述</span>
+        </a></li><li>
+        <a class="is-flex" href="#5-2-用户数据报协议UDP">
+        <!-- <span class="has-mr-6">2</span> -->
+        <span>5.2 用户数据报协议UDP</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#5-2-1-UDP的六个特点">
+        <!-- <span class="has-mr-6">2.1</span> -->
+        <span>5.2.1 UDP的六个特点</span>
+        </a></li><li>
+        <a class="is-flex" href="#5-2-2-UDP的首部格式">
+        <!-- <span class="has-mr-6">2.2</span> -->
+        <span>5.2.2 UDP的首部格式</span>
+        </a></li><li>
+        <a class="is-flex" href="#5-2-3-UDP检验和的计算方法">
+        <!-- <span class="has-mr-6">2.3</span> -->
+        <span>5.2.3 UDP检验和的计算方法</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#5-3-传输控制协议TCP">
+        <!-- <span class="has-mr-6">3</span> -->
+        <span>5.3 传输控制协议TCP</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#5-3-1-TCP的特点">
+        <!-- <span class="has-mr-6">3.1</span> -->
+        <span>5.3.1 TCP的特点</span>
+        </a></li><li>
+        <a class="is-flex" href="#5-3-2-TCP的连接">
+        <!-- <span class="has-mr-6">3.2</span> -->
+        <span>5.3.2 TCP的连接</span>
+        </a></li><li>
+        <a class="is-flex" href="#5-3-3-TCP报文的格式">
+        <!-- <span class="has-mr-6">3.3</span> -->
+        <span>5.3.3 TCP报文的格式</span>
+        </a></li><li>
+        <a class="is-flex" href="#5-3-4-TCP的可靠传输">
+        <!-- <span class="has-mr-6">3.4</span> -->
+        <span>5.3.4 TCP的可靠传输</span>
+        </a></li><li>
+        <a class="is-flex" href="#5-3-5-TCP的流量控制">
+        <!-- <span class="has-mr-6">3.5</span> -->
+        <span>5.3.5 TCP的流量控制</span>
+        </a></li><li>
+        <a class="is-flex" href="#5-3-6-TCP的拥塞控制">
+        <!-- <span class="has-mr-6">3.6</span> -->
+        <span>5.3.6 TCP的拥塞控制</span>
+        </a></li><li>
+        <a class="is-flex" href="#5-3-7-TCP的运输连接管理">
+        <!-- <span class="has-mr-6">3.7</span> -->
+        <span>5.3.7 TCP的运输连接管理</span>
+        </a></li></ul></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="运输层" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

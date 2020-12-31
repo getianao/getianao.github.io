@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>LR(0)分析 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="一、基本概念 拓广文法： 对于文法 G = (VN, VT, P , S ) , 增加如下产生式：S’-&amp;gt;S ，其中， S’ ∈ VN∪ VT ， 得到 G 的拓广文法，G’ = (VN ’, VT, P ’ , S’ ) 其实就是增加了一条右部为开始符号的产生式，就变成了拓广文法  可归前缀： 采取归约过程前符号栈中的内容，称做可归前缀。这种前缀包含句柄且不包含句柄之后的任何符号；">
+<meta name="keywords" content="编译原理,语法分析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LR(0)分析">
+<meta property="og:url" content="http://yoursite.com/2018/12/27/Compiler-Principles/LR(0)分析/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="一、基本概念 拓广文法： 对于文法 G = (VN, VT, P , S ) , 增加如下产生式：S’-&amp;gt;S ，其中， S’ ∈ VN∪ VT ， 得到 G 的拓广文法，G’ = (VN ’, VT, P ’ , S’ ) 其实就是增加了一条右部为开始符号的产生式，就变成了拓广文法  可归前缀： 采取归约过程前符号栈中的内容，称做可归前缀。这种前缀包含句柄且不包含句柄之后的任何符号；">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/LR(0)分析/LR(0">
+<meta property="og:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/LR(0)分析/LR(0">
+<meta property="og:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/LR(0)分析/LR(0">
+<meta property="og:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/LR(0)分析/LR(0">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.185Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LR(0)分析">
+<meta name="twitter:description" content="一、基本概念 拓广文法： 对于文法 G = (VN, VT, P , S ) , 增加如下产生式：S’-&amp;gt;S ，其中， S’ ∈ VN∪ VT ， 得到 G 的拓广文法，G’ = (VN ’, VT, P ’ , S’ ) 其实就是增加了一条右部为开始符号的产生式，就变成了拓广文法  可归前缀： 采取归约过程前符号栈中的内容，称做可归前缀。这种前缀包含句柄且不包含句柄之后的任何符号；">
+<meta name="twitter:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/LR(0)分析/LR(0">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="LR(0)分析" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2018-12-27T16:00:00.000Z">2018-12-28</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.185Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/编译原理/">编译原理</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/语法分析/">语法分析</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    12 分钟 读完 (大约 1858 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                LR(0)分析
+            
+        </h1>
+        <div class="content">  
+            <h2 id="一、基本概念"><a href="#一、基本概念" class="headerlink" title="一、基本概念"></a>一、基本概念</h2><ol>
+<li><p><strong>拓广文法：</strong></p>
+<p>对于文法 G = (VN, VT, P , S ) , 增加如下产生式：S’-&gt;S ，其中， S’ ∈ VN∪ VT ， 得到 G 的拓广文法，G’ = (VN ’, VT, P ’ , S’ )</p>
+<p><strong>其实就是增加了一条右部为开始符号的产生式，就变成了拓广文法</strong></p>
+</li>
+<li><p><strong>可归前缀：</strong></p>
+<p>采取归约过程前符号栈中的内容，称做可归前缀。<br>这种前缀包含句柄且不包含句柄之后的任何符号； </p>
+<a id="more"></a>
+</li>
+<li><p><strong>活前缀</strong></p>
+<p>对于文法 G = (VN, VT, P , S ) , 设 S’ 是其拓广文法的开始符号（即有产生式 S’-&gt; S）， 且α,β∈(VN∪VT)<em> , ω∈VT/</em>。<br>若 S’ =/<em>=&gt;α A ω 且 A -&gt;β， 即 β 为句柄，则 αβ 的任何前缀 γ 都是文法 G 的活前缀。<br>注：由于 S’ =</em>=&gt;S’ 且 S’ -&gt; S， 故 S 是 G 的活前缀 。</p>
+<p><strong>也就是说可归前缀的所有前缀（包括可归前缀）都是活前缀。</strong></p>
+<blockquote>
+<p>例：文法 G[S] :<br>（1） S -&gt; AB<br>（2） A -&gt; aA<br>（3） A -&gt; ε<br>（4） B -&gt; b<br>（5） B -&gt; bB<br>句子 aaab 是一个句型，其唯一的句柄为：ε （aaaεb）； 活前缀有：ε，a，aa，aaa。</p>
+<p><strong>所以要找一个句型的活前缀，最重要的是找它的句柄。</strong> </p>
+</blockquote>
+<p>当前分析了的部分（符号栈中的符号）为规范句型的活前缀，表示当前分析了的部分是某规范句型的正确部分。</p>
+</li>
+<li><p><strong>LR(0)项目 :</strong></p>
+<p>在文法G中每个产生式的右部适当位置添加一个圆点构成项目。</p>
+<p><strong>每个项目的含义是：欲用改产生式归约时，圆点前面的部分为已经识别了的句柄部分，圆点后面的部分为期望的后缀部分。</strong></p>
+<p>分类：</p>
+<p><strong>移进项目: （• 后面是个终结符）</strong>形如 A -&gt;  α• aβ，对应移进状态，把a移进符号栈。</p>
+<p><strong>待约项目: （• 后面是个非终结符）</strong>形如 A  -&gt; α • Bβ，对应待约状态，需要等待分析完非终结符B的串再继续分析A的右部。</p>
+<p><strong>归约项目: （• 在产生式结尾）</strong>形如 A -&gt; α •，句柄已形成，可以归约。</p>
+<p><strong>接受项目: （• 拓广文法新产生式结尾）</strong>形如 S’ -&gt;  S •。</p>
+<p><strong>初始项目: （• 拓广文法新产生式开头）</strong>形如 S’  -&gt; • S。</p>
+<p>其中a∈VT , α,β∈(VN∪VT)*， A,B∈VT</p>
+<p>后继项目: 表示同属于一个产生式的项目，但是圆点的位置仅相差一个文法符号，则称后者为前者的后继项目。</p>
+<blockquote>
+<p>例：对于产生式S -&gt; aAcBe，它有6个项目：<br>S -&gt; ·aAcBe<br>S -&gt; a·AcBe<br>S -&gt; aA·cBe<br>S -&gt; aAc·Be<br>S -&gt; aAcB·e<br>S -&gt; aAcBe·</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="二、LR-0-有限状态机的构造方法"><a href="#二、LR-0-有限状态机的构造方法" class="headerlink" title="二、LR(0) 有限状态机的构造方法"></a>二、LR(0) 有限状态机的构造方法</h2><h3 id="1-用闭包函数（CLOSURE）来求DFA一个状态的项目集："><a href="#1-用闭包函数（CLOSURE）来求DFA一个状态的项目集：" class="headerlink" title="1.用闭包函数（CLOSURE）来求DFA一个状态的项目集："></a>1.用闭包函数（CLOSURE）来求DFA一个状态的项目集：</h3><p>CLOSURE(I)是这样定义的：<br>首先I的项目都属于CLOSURE(I)；<br>如果A-&gt;α• Bβ,则左部为B的每个产生式中的形如B-&gt;·γ项目，也属于CLOSURE(I)；</p>
+<blockquote>
+<p>例子：已知文法G[E]如下:<br>(1) E  -&gt; E+T<br>(2) E -&gt; T<br>(3) T -&gt;( E )<br>(4) T -&gt; d </p>
+<p>可以直到它的拓广文法G’ [E’]为 ：<br>(0) E’  -&gt;  E<br>(1) E  -&gt;  E+T<br>(2) E  -&gt;  T<br>(3) T  -&gt; ( E )<br>(4) T  -&gt;  d </p>
+<p>令I0 = CLOSURE({E’-&gt;.E}) </p>
+<p>则I0 = {<br>E’  -&gt;  • E，<br>E  -&gt;  • E+T，<br>E  -&gt;  • T，<br>T  -&gt;  •( E ),<br>T  -&gt;  • d<br>} </p>
+</blockquote>
+<h3 id="2-LR-0-FSM-的状态转移函数"><a href="#2-LR-0-FSM-的状态转移函数" class="headerlink" title="2.LR(0) FSM 的状态转移函数"></a>2.LR(0) FSM 的状态转移函数</h3><p>GO (I,X) = CLOSURE(J)<br>其中，I为LR(0) FSM 的状态（闭包的项目集），X为文法符号， J={ A -&gt; αX•β | A -&gt; α• Xβ∈I} ；<br>表示对于一个状态项目集中的一个项目A -&gt; α• Xβ，在下一个输入字符是X的情况下，一定到另一个新状态 A -&gt; αX•β。</p>
+<h3 id="3-LR-0-有限状态机的构造"><a href="#3-LR-0-有限状态机的构造" class="headerlink" title="3.LR(0) 有限状态机的构造"></a>3.LR(0) 有限状态机的构造</h3><p>从 LR(0) FSM 的初态出发 ，先求出初态项目集的闭包（CLOSURE({S’-&gt;.S})），然后应用上述转移函数，通过项目分析每种输入字符下的状态转移，若为新状态，则就求出新状态下的项目集的闭包，级可逐步构造出完整的 LR(0) FSM。</p>
+<blockquote>
+<p>LR(0) FSM 的构造举例<br>给定文法G[E]：<br>(1) E -&gt; E+T<br>(2) E -&gt; T<br>(3) T -&gt; ( E )<br>(4) T -&gt; d</p>
+<p>构造LR(0) FSM<br>① G[E]的拓广文法，得到G’ [E’]：<br>(0) E’ -&gt; E<br>(1) E  -&gt; E+T<br>(2) E  -&gt; T<br>(3) T  -&gt; ( E )<br>(4) T  -&gt; d </p>
+<p>②构造G’[E’] 的 LR(0) FSM<br><img src="/2018/12/27/Compiler-Principles/LR(0)分析/LR(0" alt="1544084554988">分析/1544084554988.png) </p>
+</blockquote>
+<h2 id="三、LR-0-分析法"><a href="#三、LR-0-分析法" class="headerlink" title="三、LR(0) 分析法"></a>三、LR(0) 分析法</h2><h3 id="1-LR-0-文法定义"><a href="#1-LR-0-文法定义" class="headerlink" title="1.LR(0) 文法定义"></a>1.LR(0) 文法定义</h3><p>文法 G 是 LR(0) 文法，当且仅当它的LR(0)FSM中的每个状态都满足：<br>①不同时含有<strong>移进项目</strong>和<strong>归约项目</strong>，即不存在移进-归约冲突。（移进时后面的是终结符，而不是非终结符）<br>②不含有两个以上归约项目，即不存在归约-归约冲突。  </p>
+<h3 id="2-LR-0-分析表的构造"><a href="#2-LR-0-分析表的构造" class="headerlink" title="2.LR(0)分析表的构造"></a>2.LR(0)分析表的构造</h3><p>ACTION 表项和 GOTO表项可按如下方法构造： </p>
+<ul>
+<li><p>若项目A -&gt;α • aβ属于 Ik 且 GO (Ik, a)= Ij, 期望字符a 为终结符，则置ACTION[k, a] =sj  (j表示新状态Ij);</p>
+</li>
+<li><p>若项目A -&gt;α • Aβ属于 Ik，且GO (Ik, A)= Ij,期望字符 A为非终结符，则置GOTO(k, A)=j (j表示文法中第j个产生式);</p>
+</li>
+<li><p>若项目A -&gt;α •属于Ik, 那么对任何终结符a, 置ACTION[k, a]=rj；其中，假定A-&gt;α为文法G 的第j个产生式；</p>
+</li>
+<li><p>若项目S’ -&gt;S • 属于Ik, 则置ACTION[k, #]为“acc”;</p>
+</li>
+<li><p>分析表中凡不能用上述规则填入信息的空白格均置上“出错标志” </p>
+<p><strong>翻译一下：</strong></p>
+<ol>
+<li><strong>如果圆点不在项目k最后且圆点后的期待字符a为终结符，则ACTION[k, a] =sj (j表示新状态Ij)；</strong></li>
+<li><strong>如果圆点不在项目k最后且圆点后的期待字符A为非终结符，则GOTO(k, A)=j (j表示文法中第j个产生式)；</strong></li>
+<li><strong>如果圆点在项目k最后且k不是S’ -&gt;S，那么对所有终结符a，ACTION[k, a]=rj (j表示文法中第j个产生式)；</strong></li>
+<li><strong>如果圆点在项目k最后且k是S’ -&gt;S，则ACTION[k, #]为“acc”;</strong></li>
+</ol>
+</li>
+</ul>
+<blockquote>
+<p>例子：</p>
+<p>考虑文法G[S] :<br>S → （S） | a<br>相应的LR(0) FSM如下，构造其LR(0)分析表。 </p>
+<p><img src="/2018/12/27/Compiler-Principles/LR(0)分析/LR(0" alt="1544085407310">分析/1544085407310.png)</p>
+<p>从I0看，S‘-&gt;·S,期望字符是非终结符S，根据上面的规则2，得到GOTO(0,S)=1；<br>S‘-&gt;·(S),期望字符是终结符(，根据上面的规则1，得到ACTION(0,()=S2；<br>从I3看，S-&gt;a·，根据规则3，置ACTION[3, a]为r2;<br>从I1看，S‘-&gt;S·，根据规则4，置ACTION[1, #]为“acc”;</p>
+<p><img src="/2018/12/27/Compiler-Principles/LR(0)分析/LR(0" alt="1544085604787">分析/1544085604787.png)</p>
+</blockquote>
+<h3 id="3-LR-0-分析流程"><a href="#3-LR-0-分析流程" class="headerlink" title="3.LR(0) 分析流程"></a>3.LR(0) 分析流程</h3><p>设输入串为w，ip指向输入串w的首符号a，i指向符号栈顶；状态栈的初始栈顶为0，符号栈初始栈顶为#。</p>
+<p>算法流程图为：    </p>
+<p><img src="/2018/12/27/Compiler-Principles/LR(0)分析/LR(0" alt="1544084609209">分析/1544084609209.png) </p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/编译原理/">编译原理</a>, <a class="has-link-grey -link" href="/tags/语法分析/">语法分析</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/12/27/Compiler-Principles/简单优先分析法/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">简单优先分析法</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/12/27/Compiler-Principles/词法分析/">
+                <span class="level-item">词法分析</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="LR(0)分析" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

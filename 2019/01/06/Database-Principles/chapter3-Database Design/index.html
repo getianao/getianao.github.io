@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>chapter3-Database Design - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="1. Relational Model Terminology 关系是表的一种特殊情况，所有的关系都是表，但表不一定是关系。 A relation is a special case of a table. This means that all relations are tables, but not all tables are relations.">
+<meta name="keywords" content="数据库原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="chapter3-Database Design">
+<meta property="og:url" content="http://yoursite.com/2019/01/06/Database-Principles/chapter3-Database Design/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="1. Relational Model Terminology 关系是表的一种特殊情况，所有的关系都是表，但表不一定是关系。 A relation is a special case of a table. This means that all relations are tables, but not all tables are relations.">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2019/01/06/Database-Principles/chapter3-Database%20Design/1546325027168.png">
+<meta property="og:image" content="http://yoursite.com/2019/01/06/Database-Principles/chapter3-Database%20Design/1546566362618.png">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.245Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="chapter3-Database Design">
+<meta name="twitter:description" content="1. Relational Model Terminology 关系是表的一种特殊情况，所有的关系都是表，但表不一定是关系。 A relation is a special case of a table. This means that all relations are tables, but not all tables are relations.">
+<meta name="twitter:image" content="http://yoursite.com/2019/01/06/Database-Principles/chapter3-Database%20Design/1546325027168.png">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="chapter3-Database Design" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2019-01-06T16:00:00.000Z">2019-01-07</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.245Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/数据库原理/">数据库原理</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    17 分钟 读完 (大约 2482 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                chapter3-Database Design
+            
+        </h1>
+        <div class="content">  
+            <h2 id="1-Relational-Model-Terminology"><a href="#1-Relational-Model-Terminology" class="headerlink" title="1. Relational Model Terminology"></a>1. Relational Model Terminology</h2><ul>
+<li><p>关系是表的一种特殊情况，所有的关系都是表，但表不一定是关系。</p>
+<p>A relation is a special case of a table. This means that all relations are tables, but not all tables are relations. </p>
+<a id="more"></a>
+<p><img src="/2019/01/06/Database-Principles/chapter3-Database Design/1546325027168.png" alt="1546325027168"></p>
+</li>
+<li><p>关系的列被叫做属性，关系的行被叫做元组。大多数从业者不会选择这样听起来专业的词汇，而是直接称之为行或列。即使一个表不是一个关系，大多数从也者也是将关系称之为表。因此再大多数时候关系和表是同义的。</p>
+<p>有一些从业者还将表、列、行称为文件、域和记录。</p>
+<p>The columns of a relation are called attributes, and the rows of a relation are<br>called tuples (rhymes with “couples”).Most practitioners, however, do not use these academic-sounding terms and instead use the terms column and row. Also, even though a table is not necessarily a relation, most practitioners mean relation when they say table. Thus, in most conversations the terms relation and table are synonymous. In fact, for the rest of this book table and relation will be used synonymously.</p>
+<p>Some practitioners use the terms file, field, and record for the terms table, column, and row, respectively. </p>
+<p><img src="/2019/01/06/Database-Principles/chapter3-Database Design/1546566362618.png" alt="1546566362618"></p>
+</li>
+<li><p>函数依赖是数据库设计的核心。</p>
+<p>Functional dependencies are the heart of the database design process, </p>
+</li>
+<li><p>函数依赖的例子1：假设一盒饼干是5＄，那么你可以根据下面的关系式计算出你需要值付的金额<br>$$<br>CookieCost  = NumberOfBoxes ×$5<br>$$<br>这样一个表示方法告诉了我们CookieCost和NumberOfBoxes之间的关系，我们可以说“CookieCost依赖于NumberOfBoxes”。更一般的，这样的称述表示成下面的样子：<br>$$<br>NumberOfBoxes →CookieCost<br>$$<br> 它被读作“NumberOfBoxes决定了CookieCost”</p>
+<p>Suppose you are buying boxes of cookies and someone tells you that each box costs $5.00. With this fact, you can compute the cost of several boxes with the formula: </p>
+<p>​                              CookieCost  = NumberOfBoxes ×$5 </p>
+<p>A more general way to express the relationship between CookieCost and NumberOfBoxes is to say that CookieCost depends on NumberOfBoxes. Such a statement tells us the character of the relationship between CookieCost and NumberOfBoxes, even though it doesn’t give us the formula. More formally, we can say that CookieCost is functionally dependent on NumberOfBoxes. Such a statement can be written as: </p>
+<p>​                               NumberOfBoxes →CookieCost </p>
+<p>This expression can be read as “NumberOfBoxes determines CookieCost.” The variable on the left, here NumberOfBoxes, is called the determinant.</p>
+</li>
+<li><p>函数依赖的例子2：价格、单价和数量的关系可以被表示为<br>$$<br>ExtendedPrice  = Quantity  × UnitPrice<br>$$<br>我们可以说“价钱函数依赖于数量和单价”，我们也可以复合的表述为：<br>$$<br>(Quantity, UnitPrice) → ExtendedPrice<br>$$<br>Using another formula, we can compute the extended price of a part order by multiplying the quantity of the item times its unit price, or: </p>
+<p>ExtendedPrice  = Quantity  × UnitPrice </p>
+<p>In this case, we say that ExtendedPrice is functionally dependent on Quantity and UnitPrice, or: </p>
+<p>(Quantity, UnitPrice) → ExtendedPrice </p>
+<p>Here, the determinant is the composite (Quantity, UnitPrice). </p>
+</li>
+<li><p>当一个或多个属性的值决定了另一个属性的值的时候，表示一个函数依赖存在。许多时候函数关系存在但等式不存在。</p>
+<p>a functional dependency exists when the value of one or more attributes<br>determines the value of another attribute. Many functional dependencies exist<br>that do not involve equations. </p>
+</li>
+<li><p>存在关系的唯一原因是储存了函数依赖的实例。</p>
+<p>The only reason for having relations is to store instances of functional dependencies.</p>
+</li>
+<li><p>函数依赖的决定因素可以是一个或多个属性，在这种情况下，这种决定因素被叫做符合因素。</p>
+<p>The determinant of a functional dependency can consist of more than one  attribute. For example, a grade in a class is determined by both the student and the class, or: (StudentNumber, ClassNumber) →Grade. In this case, the determinant is called a composite determinant.</p>
+</li>
+<li><p>总的来说，键是用来确定关系中的一行数据的一列或多列的组合。含有多列的键称之为联合主键。</p>
+<p>In general, a key is a combination of one or more columns that is used to identify particular rows in a relation. Keys that have two columns or more are called composite keys.</p>
+</li>
+<li><p>候选码是可以决定关系中其他所有列的因素。候选码决定了关系中唯一的一行。在给出候选码值的情况下，我们能且只能找到关系中的一行。</p>
+<p>A candidate key is a determinant that determines all of the other columns in a relation. Candidate keys identify a unique row in a relation. Given the value of a candidate key, we can find one and only one row in the relation that has that value. </p>
+</li>
+<li><p>当设计数据库时，其中的一个候选码被选择成为主键。主键被定义在DBMS中，DBMS将会使用它来寻找表中的一行。一张表只能有一个主键，这个主键只能是表中的一列或者是复合的。</p>
+<p>When designing a database, one of the candidate keys is selected to be the primary key. This term is used because this key will be defined to the DBMS, and the DBMS will use it as its primary means for finding rows in a table. A table has only one primary key. The primary key can have one column or it can be a composite. </p>
+</li>
+<li><p>如果一个表中没有候选码，在这种情况下，将主键定义为所有列的集合。</p>
+</li>
+<li><p>What do you do if a table has no candidate keys? In that case, define the  primary key as the collection of all of the columns in the table. Because<br> there are no duplicate rows in a stored relation, the combination of all of the columns of  the table will always be unique. Again, although tables generated by SQL manipulation may have duplicate rows, the tables that you design to store data should never be constructed to have data duplication. Thus, the combination of all columns is always a candidate key. </p>
+</li>
+<li><p>代理键是新增在表中作为主键的可选的一列。当一个记录被创建的术后，DBMS指定一个唯一的值给这个代理键，并且这个值永远不会变化。代理键在主键很大、很笨重的时候使用。</p>
+<p>A surrogate key is an artificial column that is added to a table to serve as the<br>primary key. The DBMS assigns a unique value to a surrogate key when the row is created. The assigned value never changes. Surrogate keys are used when the primary key is large and unwieldy.</p>
+</li>
+<li></li>
+</ul>
+<ul>
+<li><p>外键是一列或者列的组合，它是除本表之外的表的主键。外键表达了两张表之间的联系。</p>
+<p>A foreign key is a column or composite of columns that is the primary key of a table other than the one in which it appears. The term arises because it is a key of a table foreign to the one in which it appears. Foreign keys express relationships between rows of tables. </p>
+</li>
+<li><p>有时候外键是主键的一部分，但是有时候不是。</p>
+<p>Notice that ORDER_ITEM.SKU is both a foreign key and also part of the primary key of ORDER_ITEM. This condition sometimes occurs, but it is not required. In the example above, EMPLOYEE.DepartmentName is a foreign key, but it is not part of the EMPLOYEE primary key. </p>
+</li>
+<li><p>在大多数情况下，我们必须保证外键的值必须可以在另一张表中找到对应的主键的值。为了达到这个要求，我们要创建一个引用完整性约束，它是一个限制了外键值的称述。</p>
+<p>In most cases, we need to ensure that the values of a foreign key match a valid<br>value of a primary key. To accomplish this, we create a referential integrity constraint, which is a statement that limits the values of the foreign key. In this case, we create the constraint:SKU in ORDER_ITEM must exist in<br>SKU in SKU_DATA</p>
+</li>
+</ul>
+<h2 id="2、Normal-Forms"><a href="#2、Normal-Forms" class="headerlink" title="2、Normal Forms"></a>2、Normal Forms</h2><ul>
+<li><p>第一范式应该符合下面的要求：①每个数据都要是单独的值，不能是重复的组或数组；②所有列的值必须都是一种类型，每列必须有应该唯一的列名，列名的顺序不重要；③每两行不能是重复的，但行的顺序不重要；</p>
+<p>即<strong>每个表应该有唯一标识每一行的主键。</strong>。</p>
+<p>Any table that meets the definition of a relation in Figure 3-4 is defined as being in 1NF. This means that the following must hold: The cells of a table must be a single value, and neither repeating groups nor arrays are allowed as values; all entries in a column must be of the same data type; each column  must have a unique name, but the order of the columns in the table is not significant; no two rows in a table may be identical, but the order of the rows is not significant. </p>
+</li>
+<li><p>关系是第二范式当且仅当它是第一范式，且<strong>非码属性的值只能被整个主键的值确定</strong>；这意味着如果主键是复合的，主键中的一个属性是不能决定其他非码属性的，称之为<strong>主键的部分依赖</strong>；所以主键是单属性的关系是第二范式。</p>
+<p>即<strong>在复合主键的情况下，非主键部分不应该依赖于部分主键</strong>。</p>
+<p>A relation is 2NF if and only if it is in 1NF and all non-key attributes are  determined by the entire primary key. This means that if the  primary key is a composite  primary key, then no non-key attribute can be  determined by an attribute or set of attrib-utes that make up only part of the key. Thus, if you have a relation R (A, B, N, O, P) with the composite key (A, B), then none of the non-key attributes N, O, or P can be determined by just A or just B. </p>
+</li>
+<li><p>关系是第三范式当且仅当它是第二范式，且<strong>任何一个非码属性不能确定其他非码属性</strong>。任何一个非码属性确定其他非码属性的术语叫做<strong>非主键的传递依赖</strong>。</p>
+<p>即<strong>非主键之间不应该有依赖关系</strong>。</p>
+<p>A relation is in 3NF if and only if it is in 2NF and there are no non-key attributes determined by another non-key attribute. The technical name for a non-key attribute determined by another non-key attribute is transitive dependency.  We can therefore restate the definition of 3NF: A relation is in 3NF if and only if it is in 2NF and it has no transitive dependencies. Thus, in order for our relation R (A, B, N, O, P) to be in 3NF, none of the non-key attributes N, O, or P can be determined by N, O, or P.</p>
+</li>
+<li><p>一个关系是BC范式当却仅当它是第三范式，且每一个因素都是候选码，即如果不存在任何字段对任一候选关键字段的传递函数依赖。<strong>即不允许主键的一部分被另一部分或其它部分决定</strong>。</p>
+<p>A relation is in BCNF if and only if it is in 3NF and every determinant is a candidate key.</p>
+</li>
+<li><p>第四范式：已经是BC范式，并且不包含多值依赖关系</p>
+</li>
+</ul>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/数据库原理/">数据库原理</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/01/08/Big-Data/2-hbase/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">汇编开发环境个使用</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/01/04/Database-Principles/chapter2-Introduction to SQL/">
+                <span class="level-item">chapter2-Introduction to SQL</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="chapter3-Database Design" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

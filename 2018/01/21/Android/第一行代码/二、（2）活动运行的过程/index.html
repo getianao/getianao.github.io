@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>Android活动运行的过程 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="2.2.1 活动的生命周期 在Android中是用任务(Task)来管理活动的，任务是一组存放在栈里的活动的集合，这个栈就叫做返回栈(Back Stack)，系统总是把栈顶的活动显示给用户。 活动的生命周期中拥有四种状态：运行，暂停，停止，销毁。 活动中定义了7种回调方法，覆盖了活动的每一个时期：">
+<meta name="keywords" content="android,android第一行代码,activity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android活动运行的过程">
+<meta property="og:url" content="http://yoursite.com/2018/01/21/Android/第一行代码/二、（2）活动运行的过程/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="2.2.1 活动的生命周期 在Android中是用任务(Task)来管理活动的，任务是一组存放在栈里的活动的集合，这个栈就叫做返回栈(Back Stack)，系统总是把栈顶的活动显示给用户。 活动的生命周期中拥有四种状态：运行，暂停，停止，销毁。 活动中定义了7种回调方法，覆盖了活动的每一个时期：">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2018/01/21/Android/第一行代码/二、（2）活动运行的过程/SouthEast">
+<meta property="og:image" content="http://yoursite.com/2018/01/21/Android/第一行代码/二、（2）活动运行的过程/SouthEast">
+<meta property="og:image" content="http://yoursite.com/2018/01/21/Android/第一行代码/二、（2）活动运行的过程/SouthEast">
+<meta property="og:image" content="http://yoursite.com/2018/01/21/Android/第一行代码/二、（2）活动运行的过程/SouthEast">
+<meta property="og:image" content="http://yoursite.com/2018/01/21/Android/第一行代码/二、（2）活动运行的过程/SouthEast">
+<meta property="og:image" content="http://yoursite.com/2018/01/21/Android/第一行代码/二、（2）活动运行的过程/SouthEast">
+<meta property="og:image" content="http://yoursite.com/2018/01/21/Android/第一行代码/二、（2）活动运行的过程/SouthEast">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.177Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android活动运行的过程">
+<meta name="twitter:description" content="2.2.1 活动的生命周期 在Android中是用任务(Task)来管理活动的，任务是一组存放在栈里的活动的集合，这个栈就叫做返回栈(Back Stack)，系统总是把栈顶的活动显示给用户。 活动的生命周期中拥有四种状态：运行，暂停，停止，销毁。 活动中定义了7种回调方法，覆盖了活动的每一个时期：">
+<meta name="twitter:image" content="http://yoursite.com/2018/01/21/Android/第一行代码/二、（2）活动运行的过程/SouthEast">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="Android活动运行的过程" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2018-01-21T16:00:00.000Z">2018-01-22</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.177Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/activity/">activity</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/android/">android</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/android第一行代码/">android第一行代码</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    11 分钟 读完 (大约 1598 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Android活动运行的过程
+            
+        </h1>
+        <div class="content">  
+            <h2 id="2-2-1-活动的生命周期"><a href="#2-2-1-活动的生命周期" class="headerlink" title="2.2.1 活动的生命周期"></a>2.2.1 活动的生命周期</h2><p><ol start="1."></ol></p>
+<p><li>在Android中是用任务(<strong>Task</strong>)来管理活动的，<strong>任务是一组存放在栈里的活动的集合</strong>，这个栈就叫做返回栈(<strong>Back Stack</strong>)，系统总是把栈顶的活动显示给用户。<br><img src="/2018/01/21/Android/第一行代码/二、（2）活动运行的过程/SouthEast" alt="这里写图片描述"></li></p><p></p>
+<p><li><br>活动的生命周期中拥有四种状态：<strong>运行，暂停，停止，销毁。</strong><br></li></p>
+<p><li>活动中定义了7种回调方法，覆盖了活动的每一个时期：</li><br></p>
+<a id="more"></a>
+<ul>
+<li>onCreate()`：活动的初始化操作。<ul>
+<li><code>onStart()</code>：活动由不可见变为可见。</li>
+<li><code>onResume()</code>：活动处于栈顶且运行的状态，准备与用户进行交互。</li>
+<li><code>onPause()</code>：启动或恢复另一活动，如启动一对话框活动。</li>
+<li><code>onStap()</code>：活动完全不可见时。</li>
+<li><code>onDestroy()</code>：销毁活动。</li>
+<li><code>onRestart</code>：由停止变为运行状态。</li>
+</ul>
+</li>
+</ul>
+<p><ol start="4."></ol></p>
+<p><li>通过上面几种方法，可以为活动定义几种时期：</li></p>
+<ul>
+<li>完整生存期：onCreate() 到 onDestroy()；</li>
+<li>可见生存区：onStart() 到 onStap()；</li>
+<li>前台生存区：onResume() 到 onDestroy()；</li>
+</ul>
+<p><img src="/2018/01/21/Android/第一行代码/二、（2）活动运行的过程/SouthEast" alt="这里写图片描述"><br></p>
+<li>
+
+<p>体验活动的生命周期<br>下面只贴上主活动的代码<br></p></li><br><p></p>
+<pre><code>package com.example.getia.activitylifecircletest;
+
+import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+
+public class MainActivity extends AppCompatActivity {
+
+    public static final String TAG=&quot;MainActivity&quot;;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Button startNormalActivity=(Button) findViewById(R.id.start_normal_activity);
+        Button startDialogActivity=(Button) findViewById(R.id.start_dialog_activity);
+        Log.d(TAG,&quot;onCreate&quot;);
+        startNormalActivity.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this,NormalActivity.class);
+                startActivity(intent);
+            }
+        });
+        startDialogActivity.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this,DialogActivity.class);
+                startActivity(intent);
+            }
+        });
+
+    }
+    @Override
+    protected  void onStart()
+    {
+        super.onStart();
+        Log.d(TAG,&quot;onStart&quot;);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG,&quot;onResume&quot;);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG,&quot;onPause&quot;);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG,&quot;onStop&quot;);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG,&quot;onRestart&quot;);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,&quot;onDestroy&quot;);
+    }
+}
+</code></pre><p>依次点击两个按键并返回，结果如下：<br><img src="/2018/01/21/Android/第一行代码/二、（2）活动运行的过程/SouthEast" alt="这里写图片描述"></p>
+<p>说明了：<br><strong>打开主程序时会依次执行  onCreate，onStart，onResume()；</strong></p>
+<p><strong>当打开一个活动使当前活动完全不可见时，会调用  onPause ， onStop，返回时调用 onRestart，onStart，onResume()；</strong></p>
+<p><strong>当打开一个活动而当前活动不是完全不可见时，会调用  onPause ，返回时调用onResume()；</strong></p>
+<p><strong>退出此活动时调用  onPause ， onStop，onDestroy。</strong></p>
+<p>6.保存临时数据<br>一个处于停止状态的活动在系统内存不足时可能被销毁。那么当用户再回到这个活动的时候会重新创建一个新的活动，这意味着之前的活动中没保存的信息可能会丢失，例如文本输入框中的文字。<br>重写下面的函数可以保证在活动被回收之前一定会被调用，利用这个方法可以保存临时数据。</p>
+<pre><code>@Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        String tempData=&quot;something you just type&quot;;//你想要保存的数据
+        outState.putString(&quot;data_tamp&quot;,tempData);
+    }
+</code></pre><p>重写onCreate方法</p>
+<pre><code>protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        if(savedInstanceState!=null)
+        {
+            String tempData=savedInstanceState.getString(&quot;data_tamp&quot;);//提取信息
+            Log.d(TAG,tempData);
+        }
+        ...
+  }
+</code></pre><h2 id="2-2-2-活动的启动模式"><a href="#2-2-2-活动的启动模式" class="headerlink" title="2.2.2 活动的启动模式"></a>2.2.2 活动的启动模式</h2><p>活动的启动模式共有四种：<strong>standard、singleTop、singleTask、singleInstance</strong>。</p>
+<p>使用方法：<br>在AndroidManifest 中修改，例如</p>
+<pre><code>&lt;activity android:name=&quot;.MainActivity&quot;
+          android:launchMode=&quot;singleTop&quot;&gt; &lt;!--选择启动模式 --&gt;
+          &lt;intent-filter&gt;
+              &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;
+              &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;
+          &lt;/intent-filter&gt;
+      &lt;/activity&gt;
+</code></pre><p><ol start="1."></ol></p>
+<p><li>standard： 活动的默认启动模式；每启动一个活动，都会将活动从栈顶压入栈中，而不会在乎这个活动是否在栈中已经存在，即可以启动多个一样的活动。<br><img src="/2018/01/21/Android/第一行代码/二、（2）活动运行的过程/SouthEast" alt="这里写图片描述"><br></li></p>
+<li>
+
+<p>singleTop：使用这种方法启动活动时，系统会检查返回栈的栈顶元素是否为当前活动，若是，则不会启动新的活动，而是直接使用当前活动；若不是，则会启动该活动。<br><img src="/2018/01/21/Android/第一行代码/二、（2）活动运行的过程/SouthEast" alt="这里写图片描述"><br></p></li><p></p>
+<li>
+
+<p>singleTask：它会检查当前返回栈中所有的活动是否存在该活动，若存在就直接使用这个存在的活动，处于这个活动之前的其他活动将被销毁；若不存在，则启动活动。<br><img src="/2018/01/21/Android/第一行代码/二、（2）活动运行的过程/SouthEast" alt="这里写图片描述"><br></p></li><p></p>
+<p><li>singleInstance：使用该模式启动的活动将会存在于一个单独的返回栈中。<br><img src="/2018/01/21/Android/第一行代码/二、（2）活动运行的过程/SouthEast" alt="这里写图片描述"></li><br></p>
+<h2 id="2-2-3-有关活动的实践用法"><a href="#2-2-3-有关活动的实践用法" class="headerlink" title="2.2.3 有关活动的实践用法"></a>2.2.3 有关活动的实践用法</h2><p></p><p>1.<strong>查看当前活动</strong>：<br> 新建一个class BaseActivity ，然后将活动的父类由之前的AppCompatActivity改为BaseActivity；这样在启动一个活动时就会打印活动的名字。</p>
+<pre><code>package com.example.getia.activitytest;
+import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+public class BaseActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(&quot;BaseActivity&quot;,getClass().getSimpleName());
+    }
+}
+</code></pre><p>2.<strong>随时关闭程序</strong><br> 当一个程序打开了多个活动时，你需要多次按Back键才能退出程序，而有一种方法可以一次退出程序：<br> 新建一个集合类，来对所有活动进行管理</p>
+<pre><code>public class ActivityCollector {
+    public static List&lt;Activity&gt; activities=new ArrayList&lt;&gt;();
+    public static void addActivity(Activity activity)
+    {
+        activities.add(activity);
+    }
+    public static void removeActivity(Activity activity)
+    {
+        activities.remove(activity);
+    }
+    public void finishAll()
+    {
+        for(Activity activity:activities)
+        {
+            if(!activity.isFinishing())
+                activity.finish();
+        }
+        activities.clear();
+    }
+}
+</code></pre><p>修改BaseActivity 类</p>
+<pre><code>public class BaseActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(&quot;BaseActivity&quot;,getClass().getSimpleName());
+        ActivityCollector.addActivity(this);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityCollector.removeActivity(this);
+    }
+}
+</code></pre><p>最后只要在你设置的退出键上事件响应中添加<code>ActivityCollector.finishAll();</code>即可；</p>
+<p>还可以在销毁所有活动之后，加上销毁当前活动的代码，来保证程序完全退出。<br><code>android.os.Process.killProcess(android.os.Process.myPid());</code></p>
+<p>3.<strong>启动活动的最佳方法</strong><br>由于有些活动在启动时需要传入参数，而如何知道我启动的活动参数是怎么规定的，我们可以把参数传入intent和直接启动intent的过程改为函数，方便其他人调用；<br>例如我们在SecondAvtivity中新建一个函数来启动SecondAvtivity</p>
+<pre><code>public void actionStart(Context context,String string1,String string2)
+   {
+   Intent intent=new Intent(context,SecondAvtivity.class);
+       intent.putExtra(&quot;param1&quot;,string1);
+       intent.putExtra(&quot;param2&quot;,string2);
+       context.startActivity(intent);
+   }
+</code></pre><p>如果我们要在FirstActivity中启动SecondAvtivity，只需在事件响应中添加下面代码即可：</p>
+<pre><code>SecondAvtivity.actionStart(FirstActivity.this,&quot;data1&quot;,&quot;data2&quot;);
+</code></pre>
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/activity/">activity</a>, <a class="has-link-grey -link" href="/tags/android/">android</a>, <a class="has-link-grey -link" href="/tags/android第一行代码/">android第一行代码</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/01/23/Android/第一行代码/三、（1）简单UI/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Android简单UI</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/01/21/Android/第一行代码/二、(1)活动的使用/">
+                <span class="level-item">Android活动的使用</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc" style="position: sticky; top: 10px;">
+    <div class="card-content" style="padding: 1rem;">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#2-2-1-活动的生命周期">
+        <!-- <span class="has-mr-6">1</span> -->
+        <span>2.2.1 活动的生命周期</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-2-2-活动的启动模式">
+        <!-- <span class="has-mr-6">2</span> -->
+        <span>2.2.2 活动的启动模式</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-2-3-有关活动的实践用法">
+        <!-- <span class="has-mr-6">3</span> -->
+        <span>2.2.3 有关活动的实践用法</span>
+        </a></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="Android活动运行的过程" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

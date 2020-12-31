@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>汇编开发环境个使用 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="一、计算机运行汇编语言的步骤1、 用编辑程序建立 ASM 源文件，以 ASM 作为扩展名2、 用汇编程序把 ASM 文件转换成 OBJ 文件3、 用连接程序把 OBJ 文件转换成可执行文件4、 在 DOS 提示符下直接键入可执行文件名即可执行该程序">
+<meta name="keywords" content="汇编,汇编实验">
+<meta property="og:type" content="article">
+<meta property="og:title" content="汇编开发环境个使用">
+<meta property="og:url" content="http://yoursite.com/2018/12/10/Assembly/汇编语言开发环境及使用（DOSBOX和MASM32）/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="一、计算机运行汇编语言的步骤1、 用编辑程序建立 ASM 源文件，以 ASM 作为扩展名2、 用汇编程序把 ASM 文件转换成 OBJ 文件3、 用连接程序把 OBJ 文件转换成可执行文件4、 在 DOS 提示符下直接键入可执行文件名即可执行该程序">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2018/12/10/Assembly/汇编语言开发环境及使用（DOSBOX和MASM32）/%E6%9C%AA%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6-2.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/10/Assembly/汇编语言开发环境及使用（DOSBOX和MASM32）/%E6%8D%95%E8%8E%B7.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/10/Assembly/汇编语言开发环境及使用（DOSBOX和MASM32）/%E6%8D%95%E8%8E%B7-3.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/10/Assembly/汇编语言开发环境及使用（DOSBOX和MASM32）/%E6%8D%95%E8%8E%B7-4.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/10/Assembly/汇编语言开发环境及使用（DOSBOX和MASM32）/%E6%8D%95%E8%8E%B7-5.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/10/Assembly/汇编语言开发环境及使用（DOSBOX和MASM32）/%E6%8D%95%E8%8E%B7-6.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/10/Assembly/汇编语言开发环境及使用（DOSBOX和MASM32）/%E6%8D%95%E8%8E%B7-11.png">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.181Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="汇编开发环境个使用">
+<meta name="twitter:description" content="一、计算机运行汇编语言的步骤1、 用编辑程序建立 ASM 源文件，以 ASM 作为扩展名2、 用汇编程序把 ASM 文件转换成 OBJ 文件3、 用连接程序把 OBJ 文件转换成可执行文件4、 在 DOS 提示符下直接键入可执行文件名即可执行该程序">
+<meta name="twitter:image" content="http://yoursite.com/2018/12/10/Assembly/汇编语言开发环境及使用（DOSBOX和MASM32）/%E6%9C%AA%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6-2.png">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="汇编开发环境个使用" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2018-12-10T16:00:00.000Z">2018-12-11</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.181Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/汇编/">汇编</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/汇编实验/">汇编实验</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    17 分钟 读完 (大约 2548 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                汇编开发环境个使用
+            
+        </h1>
+        <div class="content">  
+            <h2 id="一、计算机运行汇编语言的步骤"><a href="#一、计算机运行汇编语言的步骤" class="headerlink" title="一、计算机运行汇编语言的步骤"></a>一、计算机运行汇编语言的步骤</h2><p>1、 用编辑程序建立 ASM 源文件，以 ASM 作为扩展名<br>2、 用汇编程序把 ASM 文件转换成 OBJ 文件<br>3、 用连接程序把 OBJ 文件转换成可执行文件<br>4、 在 DOS 提示符下直接键入可执行文件名即可执行该程序</p>
+<a id="more"></a>
+<p><img src="/2018/12/10/Assembly/汇编语言开发环境及使用（DOSBOX和MASM32）/%E6%9C%AA%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6-2.png" alt></p>
+<h2 id="二、从建立ASM文件开始"><a href="#二、从建立ASM文件开始" class="headerlink" title="二、从建立ASM文件开始"></a>二、从建立ASM文件开始</h2><p>启动编辑程序 edit.exe，输入<code>edit</code>或<code>edit 文件名.asm</code><br><strong>ASM格式一</strong>：</p>
+<pre><code>；定义数据段，如果需要的话，其中 segment 和 ends 是一对伪操作，表示段的开始和结束
+data segment ；数据段开始
+；定义数据段的主体，如定义变量
+data ends ；数据段结束
+；定义附加段，如果需要的话
+extra segment ；附加段开始
+；定义附加段的主体，如定义变量
+extra ends ；附加段结束
+；定义代码段，必须的
+code segment ；代码段开始
+main proc far；程序的主体部分， proc 和 endp 这一对伪操作表示一个程序模块的开始和结束
+assume ds:data, es:extra, cs:code ； assume 伪操作指定某个段分配给哪个段寄存器
+start: ；程序的入口地址
+push ds ；保存原数据段2
+sub ax,ax ； ax 寄存器清零，作为数据段 0 偏移地址
+push ax ；数据段 0 偏移地址压入堆栈中
+mov ax,data
+mov ds,ax ；把数据段地址装入数据段寄存器 ds
+mov ax,extra
+mov es,ax ；把附加段地址装入附加段寄存器 es
+；自己所要实现的功能源代码在此添加
+ret ；程序结束后返回 DOS
+main endp ；程序的主体部分结束
+code ends ；代码段结束
+end start ；汇编程序的结束，程序在 start 处开始执行
+</code></pre><p><strong>ASM格式二</strong>：</p>
+<pre><code>ASM 源文件的格式 2：
+；定义数据段，如果需要的话，其中 segment 和 ends 是一对伪操作，表示段的开始和结束
+data segment ；数据段开始
+；定义数据段的主体，如定义变量
+data ends ；数据段结束
+；定义附加段，如果需要的话
+extra segment ；附加段开始
+；定义附加段的主体，如定义变量
+extra ends ；附加段结束
+；定义代码段，必须的
+code segment ；代码段开始
+main proc far；程序的主体部分， proc 和 endp 这一对伪操作表示一个程序模块的开始和结束
+assume ds:data, es:extra, cs:code ； assume 伪操作指定某个段分配给哪个段寄存器
+start: ；程序的入口地址
+mov ax,data
+mov ds,ax ；把数据段地址装入数据段寄存器 ds
+mov ax,extra
+mov es,ax ；把附加段地址装入附加段寄存器 es
+；自己所要实现的功能源代码在此添加
+mov ax,4c00h ；程序结束后返回 DOS
+int 21h
+main endp ；程序的主体部分结束
+code ends ；代码段结束
+end start ；汇编程序的结束，程序在 start 处开始执行
+</code></pre><h2 id="三、利用-MASM-程序产生-OBJ-文件"><a href="#三、利用-MASM-程序产生-OBJ-文件" class="headerlink" title="三、利用 MASM 程序产生 OBJ 文件"></a>三、利用 MASM 程序产生 OBJ 文件</h2><p>输入命令：<code>MASM 文件名.asm</code>，生成目标文件文件名.OBJ（生成过程中可以修改目标文件名，直接回车可保持默认目标文件名）。</p>
+<h2 id="四、-用-LINK-程序产生-EXE-文件"><a href="#四、-用-LINK-程序产生-EXE-文件" class="headerlink" title="四、 用 LINK 程序产生 EXE 文件"></a>四、 用 LINK 程序产生 EXE 文件</h2><p>输入命令：<code>LINK 文件名.OBJ</code>，链接生成可执行文件文件名.EXE。</p>
+<h2 id="五、执行exe文件"><a href="#五、执行exe文件" class="headerlink" title="五、执行exe文件"></a>五、执行exe文件</h2><p>在 DOS 提示符下直接键入可执行的文件名即可，具体的操作如下：<br><code>D:\&gt;ex</code></p>
+<h2 id="六、代码的调试"><a href="#六、代码的调试" class="headerlink" title="六、代码的调试"></a>六、代码的调试</h2><p>我们用一个例子来演示调试的过程<br>下面的源代码完成的功能：把数据段中的串 string1 传送到附加段的 string2 中</p>
+<pre><code>data segment ；定义数据段
+string1 db &apos;assembly language&apos; 
+data ends
+extra segment ；定义附加段
+string2 db 17 dup(?)
+extra segment
+code segment ；定义代码段
+main proc far
+assume cs:code,ds:data,es:extra
+start:
+push ds
+xor ax,ax ； ax 寄存器清零，作用同 sub ax,ax 一样
+push ax
+mov ax,data ；把数据段地址装入 ds 寄存器
+mov ds,ax
+mov ax,extra ；把附加段地址装入 es 寄存器
+mov es,ax
+lea si,string1 ；把源串首址装入 si 寄存器
+lea di,string2 ；把目的串首址装入 di 寄存器
+mov cx,17 ；把string1字符串长度装入 cx 寄存器 
+cld ；清方向标志，在串处理时，地址自动增加
+rep movsb ；重复串传送操作，重复次数放在 cx 中
+ret
+main endp
+code ends
+end start
+</code></pre><p><img src="/2018/12/10/Assembly/汇编语言开发环境及使用（DOSBOX和MASM32）/%E6%8D%95%E8%8E%B7.png" alt></p>
+<p><em>在这里我遇到一个小问题，就是在对asm文件进行汇编时出现错误，提示<code>out of memory</code>，经检查是在asm文件中使用了中文符号。</em></p>
+<p><ol start="1."></ol></p>
+<p><li>在 DOS 提示符下键入 debug 命令。<br><code>c:\&gt;debug string.exe</code><br>这时候就显示提示符－，就可在这个短线后输入 debug 命令。</li></p><p></p>
+<p><li>反汇编命令<br>u 反汇编命令<br>【格式】<code>－u [起始地址 终止地址]</code><br>【说明】这里方括号里的内容是可选的。<br>【功能】<strong>将机器代码反汇编成汇编指令</strong><br>【结果】键入 u 后显示信息如下：</li></p><br><p></p>
+<p><img src="/2018/12/10/Assembly/汇编语言开发环境及使用（DOSBOX和MASM32）/%E6%8D%95%E8%8E%B7-3.png" alt></p>
+<p>最左边给出的程序的段地址：偏移地址，即 CS:IP 值，右边是汇编语言指令，中间是汇编语言指令对应的机器语言指令。注意：调试程序默认的数制是十六进制</p>
+<p>&lt;</p>
+<p>ol start=”3.”&gt;</p>
+<p><li>g 设置断点命令<br>【格式】<code>－g 断点地址</code><br>【说明】<strong>启动程序，设置断点</strong><br>【结果】假如我们把断点设在 CS:IP=141D:0004。在 debug 提示符－下键入 g4（g和4之间可以有空格，也可以没有空格）结果如下：<br><img src="/2018/12/10/Assembly/汇编语言开发环境及使用（DOSBOX和MASM32）/%E6%8D%95%E8%8E%B7-4.png" alt><br>程序停在断点处，并显示出所有寄存器以及各标志位的当前值，最后一行给出下一条将要执行指令的地址、机器语言指令及汇编语言 MOV AX,0772。我们可以从显示的寄存器的内容来了解程序运行是否正确。从图中可以看出各个的 16 位段基地址值，<br>如（DS） =0762H，（ES） =0762H，（SS） =0771H，（CS） =0776H。</li></p>
+<p></p>
+<li>
+
+<p>t 单步执行命令<br>g 命令设置了断点之后，从这个断点开始，每键入一次 t 命令，就按顺序执行一条指令，这样我们就可以跟踪程序的运行。通过查看寄存器和存储单元的内容，有利于查找程序中的算法错误或逻辑错误。<br>【格式】<code>t</code><br><img src="/2018/12/10/Assembly/汇编语言开发环境及使用（DOSBOX和MASM32）/%E6%8D%95%E8%8E%B7-5.png" alt><br>键入单步调试命令，运行结果如下：<br>可以看出， AX 寄存器中原来的数 0000 已经被新的数 0072 替换了。下一条即将执行的指令是 MOV DS,AX，我们继续执行步调试命令。继续执行单步调试命令：可以看出， DS 寄存器中原来的数 1409 已经被新的数 0772 替换了。我们继续执行单步<br>调试命令，程序就可以一步一步地往下执行。</p>
+<p></p></li><p></p>
+<li>
+
+<p>d 显示存储单元的内容命令<br>对于我们这个程序，由于它是要求把存储器数据段中的一串字符传送到附加段中，所以单从寄存器或在 DOS 提示符下键入可执行文件名是看不到运行结果的，因而需要<br>用 d 命令分别查看数据段和附加段的有关区域的内容。<br>【格式】<code>－d 段基址：偏移地址</code><br>【结果】<br><img src="/2018/12/10/Assembly/汇编语言开发环境及使用（DOSBOX和MASM32）/%E6%8D%95%E8%8E%B7-6.png" alt><br>如果我们要查看数据段内 0 偏移地址开始的存储单元的内容，可以键入如下的命令（假设程序已运行到 RET 指令处， 即 CS:IP=141D:001C ）最左边是数据段基地址：偏移量，中间是存储单元的内容，每行为 16 个字节，为一个小段（Paragraph），最右边为对应的 ASCII 码，不能显示的 ASCII 字符以点号显示。</p>
+<p></p></li><br><p></p>
+<p>可以看出，我们定义的字符串已显示在数据段开始的存储单元中，字符串的首地址就是位于数据段 0 偏移处。该图显示的是串操作结束之后的结果。从图的右边我们还可以看出，在数据段偏移地址 0020H 处又存放着同样的字符串，我们在数据段中只定义了一次，为什么在这里却显示了两次呢？原来 1419:0020 的地址恰恰就是附加段的首地址， 1419:0020 转换成物理地址是 0772×10＋0020＝07740H，而附加段的首地址是 0774:0000 二者相等，从这里也可以看出，经过串移动操作后，数据段中的串已成功的移到了附加段中，这还可以从下面看出。</p>
+<p><ol start="6."></ol></p>
+<p><li>r 显示寄存器内容命令</li><br></p>
+<p>【格式】<code>r [寄存器名]</code><br>方括号中寄存器名是可选的，如果没有键入寄存器名，则显示所有寄存器的内容。<br>【结果】</p>
+<p>（1） 显示全部寄存器的内容，可键入如下命令：<br><code>r</code><br>（2） 显示 ax 寄存器的内容，可键入如下命令：<br><code>r ax</code><br>最后一行的冒号提示以新的值替换 ax 中原有的值。如果输入 1234 后 ax 的内容变为 1234H，</p>
+<p><img src="/2018/12/10/Assembly/汇编语言开发环境及使用（DOSBOX和MASM32）/%E6%8D%95%E8%8E%B7-11.png" alt></p>
+<p><ol start="7."></ol></p>
+<p><li>q 退出命令<br>【格式】 <code>q</code><br>【结果】结束 debug 运行环境，回到 DOS 提示符。</li><br></p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/汇编/">汇编</a>, <a class="has-link-grey -link" href="/tags/汇编实验/">汇编实验</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/12/10/Android/自动化构建工具/自动化构建工具是什么/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">自动化构建工具与gradle</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/10/01/Android/第一行代码/fragment/">
+                <span class="level-item">碎片的用法</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="汇编开发环境个使用" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

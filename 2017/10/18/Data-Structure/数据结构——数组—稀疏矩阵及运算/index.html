@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>数组—稀疏矩阵及运算 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="对于稀疏矩阵，我们可以用三元组顺序表来储存它。 当需要将矩阵转置时，需要添加一个数组，记录每行的非零元素在转置后的三元组表中的位置，这样就可以按照原三元组表中的顺序将非零元素吗，依次放入转置后三元组表中相应的位置，然后交换行列即可；">
+<meta name="keywords" content="数据结构,算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数组—稀疏矩阵及运算">
+<meta property="og:url" content="http://yoursite.com/2017/10/18/Data-Structure/数据结构——数组—稀疏矩阵及运算/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="对于稀疏矩阵，我们可以用三元组顺序表来储存它。 当需要将矩阵转置时，需要添加一个数组，记录每行的非零元素在转置后的三元组表中的位置，这样就可以按照原三元组表中的顺序将非零元素吗，依次放入转置后三元组表中相应的位置，然后交换行列即可；">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.245Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数组—稀疏矩阵及运算">
+<meta name="twitter:description" content="对于稀疏矩阵，我们可以用三元组顺序表来储存它。 当需要将矩阵转置时，需要添加一个数组，记录每行的非零元素在转置后的三元组表中的位置，这样就可以按照原三元组表中的顺序将非零元素吗，依次放入转置后三元组表中相应的位置，然后交换行列即可；">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="数组—稀疏矩阵及运算" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2017-10-18T16:00:00.000Z">2017-10-19</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.245Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/数据结构/">数据结构</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/算法/">算法</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    6 分钟 读完 (大约 859 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                数组—稀疏矩阵及运算
+            
+        </h1>
+        <div class="content">  
+            <p>对于稀疏矩阵，我们可以用三元组顺序表来储存它。</p>
+<p>当需要将矩阵转置时，需要添加一个数组，记录每行的非零元素在转置后的三元组表中的位置，这样就可以按照原三元组表中的顺序将非零元素吗，依次放入转置后三元组表中相应的位置，然后交换行列即可；</p>
+<a id="more"></a>
+<p>当计算两个稀疏矩阵相乘时，需要建立记录每列非零元素在三元组表中位置的数组，对于被乘矩阵a的每一行的每个元素，在乘矩阵b中找到与a元素列数相同的行，该行每个元素与之相乘然后相加，当a的一行遍历完之后，保存至以a的行数为行，b的列数为列的数组中去，以此类推。</p>
+<p>[cpp]<br>/<em><br>用三元组表表示稀疏矩阵  
+</em>/  </p>
+<p>#include<iostream><br>using namespace std;<br>class triple<br>{<br>public :<br>    int i, j;//i:行,j:列<br>    int v;<br>};<br>class TSMatrix<br>{<br>public:<br>    triple data[101];<br>    int cpot[101] = { 0 } ;//每列第一个元素在转置后三元表中的位置<br>    int rpot[101] = { 0 };//每行第一个元素在当前三元表中的位置<br>    int cnum[101] = {0};//每列的非零元素的个数<br>    int rnum[101] = { 0 };//每行的非零元素的个数<br>    int mu, nu, tu=0;//数组的行，列，非零元素个数、  </iostream></p>
+<pre><code>    void iniMatrix()//数组初始化  
+{  
+    cout &lt;&lt; &quot;请输入数组行数:&quot;;  
+    cin &gt;&gt; mu;  
+    cout &lt;&lt; &quot;请输入数组列数:&quot;;  
+    cin &gt;&gt; nu;  
+    cout &lt;&lt; &quot;请输入非零元素个数:&quot;;  
+    cin &gt;&gt; tu;  
+    for (int n = 1; n &lt;= tu; n++)  
+    {  
+        cout &lt;&lt; &quot;请输入第&quot; &lt;&lt; n &lt;&lt; &quot;个元素的所在行：&quot;;  
+        cin &gt;&gt; data[n].i;  
+        cout &lt;&lt; &quot;请输入第&quot; &lt;&lt; n &lt;&lt; &quot;个元素的所在列：&quot;;  
+        cin &gt;&gt; data[n].j;  
+        cout &lt;&lt; &quot;请输入第&quot; &lt;&lt; n &lt;&lt; &quot;个元素的值：&quot;;  
+        cin &gt;&gt; data[n].v;  
+        cnum[data[n].j]++;  
+        rnum[data[n].i]++;  
+    }  
+    cpot[1] = 1;  
+    for (int n = 2; n &lt;= nu; n++)  
+    {  
+        cpot[n] = cpot[n - 1] + cnum[n - 1];  
+    }  
+    rpot[1] = 1;  
+    for (int n = 2; n &lt;= mu; n++)  
+    {  
+        rpot[n] = rpot[n - 1] + rnum[n - 1];  
+    }  
+}  
+    void printMatrix()//打印数组  
+    {  
+        int index = 1;  
+        for (int m = 1; m &lt;= mu; m++)  
+        {  
+            for (int n = 1; n &lt;= nu; n++)  
+            {  
+                if (m == data[index].i&amp;&amp;n == data[index].j)  
+                    cout &lt;&lt; data[index++].v &lt;&lt; &quot; &quot;;  
+                else  
+                    cout &lt;&lt; &quot;0 &quot;;  
+            }  
+            cout &lt;&lt; endl;  
+        }  
+    }  
+    TSMatrix fastTransposeSMatrix()//快速转置  
+    {  
+        TSMatrix Tmatrix;  
+        Tmatrix.mu =nu;  
+        Tmatrix.nu = mu;  
+        Tmatrix.tu = tu;  
+        for (int n = 1; n &lt;= tu; n++)  
+        {  
+            int col,q;  
+            col = data[n].j;//元素的列数  
+            q = cpot[col];//在转置后三元表的位置  
+            Tmatrix.data[q].i = data[n].j;  
+            Tmatrix.data[q].j = data[n].i;  
+            Tmatrix.data[q].v = data[n].v;  
+            cpot[col] ++;  
+        }  
+        return Tmatrix;  
+    }  
+</code></pre><p>};<br>int multSMatrix(TSMatrix a, TSMatrix b, TSMatrix &amp;q)<br>{<br>    if (a.nu != b.mu)<br>    {<br>        cout &lt;&lt; “数组规格不符合” &lt;&lt; endl;<br>        return 0;<br>    }<br>    q.mu = a.mu;<br>    q.nu = b.nu;<br>    q.tu = 0;<br>    if (a.tu*b.tu != 0)<br>    {<br>        for (int arow = 1; arow &lt;= a.mu; arow++)//对于a的每一行<br>        {<br>            int tp,brow,t,qq, ccol;<br>            int ctemp[100] = {0};<br>            q.rpot[arow] = q.tu + 1;//q中每一行第一个非零元素是第几个非零元素<br>            if (arow &lt; a.mu)<br>                tp = a.rpot[arow + 1];//tp:a中下一行第一个非零元的位置<br>            else<br>                tp = a.tu + 1;<br>            for (int p = a.rpot[arow]; p &lt; tp; p++)//p:对于当前行的的每一个非零元<br>            {  </p>
+<pre><code>            brow = a.data[p].j;//找到b中相乘的对应元的行号即a中元素的列号  
+            if (brow &lt; b.mu)  
+                t = b.rpot[brow + 1];//t：b中对应元素下一行的第一个非零元的位置  
+            else  
+                t = b.tu + 1;  
+            for(qq=b.rpot[brow];qq&lt;t;qq++)//qq:b中对应元素所在行的每一个元素  
+                {  
+                if (qq == 0) break;  
+                ccol = b.data[qq].j;  
+                ctemp[ccol] += a.data[p].v*b.data[qq].v;  
+            }  
+        }  
+        for (ccol = 1; ccol &lt;= b.nu; ccol++)  
+        {  
+            if (ctemp[ccol])  
+            {  
+                if (++q.tu &gt; 100)  
+                    return -1;  
+                q.data[q.tu].i = arow;  
+                q.data[q.tu].j = ccol;  
+                q.data[q.tu].v = ctemp[ccol];  
+            }  
+        }  
+    }  
+}  
+
+return 1;  
+</code></pre><p> }<br>int main()<br>{  </p>
+<pre><code>TSMatrix matrix,Tmatrix;  
+matrix.iniMatrix();  
+matrix.printMatrix();  
+Tmatrix = matrix.fastTransposeSMatrix();  
+cout &lt;&lt; &quot;转置后&quot; &lt;&lt; endl;  
+Tmatrix.printMatrix();  
+
+TSMatrix matrixOne, matrixTwo, matrixThr;  
+matrixOne.iniMatrix();  
+matrixOne.printMatrix();  
+matrixTwo.iniMatrix();  
+matrixTwo.printMatrix();  
+if(multSMatrix(matrixOne, matrixTwo, matrixThr)!=-1)  
+    matrixThr.printMatrix();  
+return 0;  
+</code></pre><p>}<br>[/cpp]</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/数据结构/">数据结构</a>, <a class="has-link-grey -link" href="/tags/算法/">算法</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/10/22/Data-Structure/数据结构——数组-有序矩阵查找算法/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">数组-有序矩阵查找算法</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/10/13/Data-Structure/数据结构——链表—一元多项式的表示及相加/">
+                <span class="level-item">链表—一元多项式的表示及相加</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc" style="position: sticky; top: 10px;">
+    <div class="card-content" style="padding: 1rem;">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            
+        </div>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="数组—稀疏矩阵及运算" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

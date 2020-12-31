@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>理解第一段ARM64汇编代码-HelloWorld - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="粗略看完了ARM手册，但是感觉只是了解了指令的使用方法，这篇文章通过解读实际的helloworld汇编代码，来理解一个完整的汇编程序是怎么运行的，">
+<meta name="keywords" content="汇编,ARM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="理解第一段ARM64汇编代码-HelloWorld">
+<meta property="og:url" content="http://yoursite.com/2020/12/06/Assembly/aarch64-helloworld/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="粗略看完了ARM手册，但是感觉只是了解了指令的使用方法，这篇文章通过解读实际的helloworld汇编代码，来理解一个完整的汇编程序是怎么运行的，">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/endlessbuffer/ImageHosting/master/img/20201206104831.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/endlessbuffer/ImageHosting/master/img/20201206112904.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/endlessbuffer/ImageHosting/master/img/20201206113051.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/endlessbuffer/ImageHosting/master/img/20201206113120.png">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.181Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="理解第一段ARM64汇编代码-HelloWorld">
+<meta name="twitter:description" content="粗略看完了ARM手册，但是感觉只是了解了指令的使用方法，这篇文章通过解读实际的helloworld汇编代码，来理解一个完整的汇编程序是怎么运行的，">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/endlessbuffer/ImageHosting/master/img/20201206104831.png">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="理解第一段ARM64汇编代码-HelloWorld" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2020-12-06T16:00:00.000Z">2020-12-07</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.181Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/ARM/">ARM</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/汇编/">汇编</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    16 分钟 读完 (大约 2369 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                理解第一段ARM64汇编代码-HelloWorld
+            
+        </h1>
+        <div class="content">  
+            <p>粗略看完了ARM手册，但是感觉只是了解了指令的使用方法，这篇文章通过解读实际的helloworld汇编代码，来理解一个完整的汇编程序是怎么运行的，</p>
+<a id="more"></a>
+<p>我们可以通过下面helloworld来基本了解arm汇编文件的结构。</p>
+<p>我们的helloworld.c文件代码如下：</p>
+<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">    <span class="hljs-keyword">int</span> a, b;</span><br><span class="line">    a=<span class="hljs-number">0</span>;</span><br><span class="line">    b=<span class="hljs-number">1</span>;</span><br><span class="line">    a=a+b;</span><br><span class="line">    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"hello!%d\n"</span>,a);</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用如下命令编译成汇编代码：</p>
+<figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ aarch64-linux-gnu-gcc --version</span><br><span class="line">	aarch64-linux-gnu-gcc (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0</span><br><span class="line">  Copyright (C) 2019 Free Software Foundation, Inc.</span><br><span class="line">  This is free software; see the <span class="hljs-built_in">source</span> <span class="hljs-keyword">for</span> copying conditions.  There is NO</span><br><span class="line">  warranty; not even <span class="hljs-keyword">for</span> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span><br><span class="line">$ aarch64-linux-gnu-gcc -o ./helloworld.s -S ./helloworld.c</span><br></pre></td></tr></table></figure>
+<p>得到的汇编文件如下：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">    .arch armv8-a</span><br><span class="line">   .file  &quot;helloworld.c&quot;</span><br><span class="line">   .text</span><br><span class="line">   .section   .rodata</span><br><span class="line">   .align 3</span><br><span class="line">.LC0:</span><br><span class="line">   .string    &quot;hello!%d\n&quot;</span><br><span class="line">   .text</span><br><span class="line">   .align 2</span><br><span class="line">   .global    main</span><br><span class="line">   .type  main, %function</span><br><span class="line">main:</span><br><span class="line">.LFB0:</span><br><span class="line">   .cfi_startproc</span><br><span class="line">   stp    x29, x30, [sp, -32]!</span><br><span class="line">   .cfi_def_cfa_offset 32</span><br><span class="line">   .cfi_offset 29, -32</span><br><span class="line">   .cfi_offset 30, -24</span><br><span class="line">   mov    x29, sp</span><br><span class="line">   str    wzr, [sp, 24]</span><br><span class="line">   mov    w0, 1</span><br><span class="line">   str    w0, [sp, 28]</span><br><span class="line">   ldr    w1, [sp, 24]</span><br><span class="line">   ldr    w0, [sp, 28]</span><br><span class="line">   add    w0, w1, w0</span><br><span class="line">   str    w0, [sp, 24]</span><br><span class="line">   ldr    w1, [sp, 24]</span><br><span class="line">   adrp   x0, .LC0</span><br><span class="line">   add    x0, x0, :lo12:.LC0</span><br><span class="line">   bl printf</span><br><span class="line">   mov    w0, 0</span><br><span class="line">   ldp    x29, x30, [sp], 32</span><br><span class="line">   .cfi_restore 30</span><br><span class="line">   .cfi_restore 29</span><br><span class="line">   .cfi_def_cfa_offset 0</span><br><span class="line">   ret</span><br><span class="line">   .cfi_endproc</span><br><span class="line">.LFE0:</span><br><span class="line">   .size  main, .-main</span><br><span class="line">   .ident &quot;GCC: (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0&quot;</span><br><span class="line">   .section   .note.GNU-stack,&quot;&quot;,@progbits</span><br></pre></td></tr></table></figure>
+<h2 id="main函数的开头和结尾"><a href="#main函数的开头和结尾" class="headerlink" title="main函数的开头和结尾"></a>main函数的开头和结尾</h2><p>这里我们先忽略所有<code>.cfi</code>开头的伪指令，从main函数的开头和结尾开始看。15行将sp-32后保存x29和x30到sp，19行将x29赋值为sp；32行从sp读两个64位到x29和x30，然后将sp+32。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> stp    x29, x30, [sp, -32]!</span><br><span class="line"> mov    x29, sp</span><br><span class="line">...</span><br><span class="line"> ldp    x29, x30, [sp], 32</span><br></pre></td></tr></table></figure>
+<h3 id="栈帧"><a href="#栈帧" class="headerlink" title="栈帧"></a>栈帧</h3><p>在理解这三句代码之前。我们先需要了解arm中栈帧的概念：<strong>进程中的各个函数也会维护自己本身的一个栈的区域，用于存放局部变量、函数参数、返回值等，这个区域就是栈帧</strong>。在ARM上，函数的栈帧是由SP寄存器和FP寄存器来界定的：</p>
+<ul>
+<li>栈是从高地址到低地址的， 栈底是高地址，栈顶是低地址。</li>
+<li><code>fp</code>也就是x29，指向当前frame的栈底，也就是高地址。</li>
+<li><code>lr</code>也就是x30，它保存的是当前方法以后一条指令的下一行</li>
+<li><code>sp</code>始终指向当前栈顶，也就是低地址。</li>
+</ul>
+<p>网上经常用下面这张图来解释堆栈，描述的是main函数调用func1函数的栈帧情况，从图可知，当main函数调用func1函数时，func1函数会先将PC、LR、SP、FP四个寄存器压到栈上边，其中SP和FP的值分别指向main函数栈帧的两个边界，LR的值保存的是func1调用结束之后的返回值，PC值表示的是当前执行到的指令地址，放置的是进入func1后的指令地址。紧接着就会在栈上分配一片区域，用于放置局部变量等。</p>
+<p><img src="https://raw.githubusercontent.com/endlessbuffer/ImageHosting/master/img/20201206104831.png" alt="image-20201206104831153" style="zoom: 33%;"></p>
+<p>从我们的程序上来看，过程似乎要简单一些。开头处两条指令实际上就是调用函数时记录之前执行位置的过程。假如我们从funcA调用funcB，之前栈内的情况是这样的：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">｜  funcA  ｜ -&gt; fp</span><br><span class="line">｜  funcA  ｜</span><br><span class="line">｜  funcA  ｜</span><br><span class="line">｜  funcA  ｜</span><br><span class="line">｜  funcA  ｜</span><br><span class="line">｜  funcA  ｜ -&gt; sp</span><br></pre></td></tr></table></figure>
+<p>此时funcA调用funcB，funB会执行类似上面开头两个语句的操作，先sp-32，将fp和lr存到sp处(图中一格表示64位)，然后将当前sp设置为现在的fp</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">｜  funcA  ｜ -&gt; fp_A</span><br><span class="line">｜  funcA  ｜</span><br><span class="line">｜  funcA  ｜</span><br><span class="line">｜  funcA  ｜</span><br><span class="line">｜  funcA  ｜</span><br><span class="line">｜  funcA  ｜-&gt; sp+32, -&gt;fp_A </span><br><span class="line">...</span><br><span class="line">｜  lr_A   | -&gt; sp+8</span><br><span class="line">｜  fp_A   | -&gt; sp,  -&gt;fp_B </span><br><span class="line">｜         ｜</span><br></pre></td></tr></table></figure>
+<p>当funB执行完成，funcB会调用类似上面结尾语句的操作，从sp指向的地址中读取 2个64位，分别存入fp,lr，然后sp+32，此时fp重新指向fp_A，lr指向_funcA的返回地址。 sp指向了sp_A，也就恢复到了funcA 的环境。</p>
+<p>综上所述，main函数的开头结尾的三个语句的作用是保存上一层调用函数的位置、变量，跳转至main函数，最后恢复到上一层函数的环境。</p>
+<h2 id="main函数的主体"><a href="#main函数的主体" class="headerlink" title="main函数的主体"></a>main函数的主体</h2> <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">str    wzr, [sp, 24]</span><br><span class="line">mov    w0, 1</span><br><span class="line">str    w0, [sp, 28]</span><br><span class="line">ldr    w1, [sp, 24]</span><br><span class="line">ldr    w0, [sp, 28]</span><br><span class="line">add    w0, w1, w0</span><br><span class="line">str    w0, [sp, 24]</span><br><span class="line">ldr    w1, [sp, 24]</span><br><span class="line">adrp   x0, .LC0</span><br><span class="line">add    x0, x0, :lo12:.LC0</span><br><span class="line">bl printf</span><br><span class="line">mov    w0, 0</span><br></pre></td></tr></table></figure>
+<p>首先将sp+24存为0，可见sp+24存的是a的变量；然后将w0设为1，将w0保存到sp+28，可见sp+28存的是b。然后分别从sp+24、sp+28读到w1、w0，将w1和w0相加之后存到w0，将w0保存到sp+24之后，再从sp+24读到w1。这几句指令完成变量a、b的赋值和相加，最后保存到a的过程。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">｜  funcA  ｜ -&gt; fp_A</span><br><span class="line">｜  funcA  ｜</span><br><span class="line">｜  funcA  ｜</span><br><span class="line">｜  funcA  ｜</span><br><span class="line">｜  funcA  ｜</span><br><span class="line">｜  funcA  ｜-&gt; sp+32, -&gt;fp_A </span><br><span class="line">｜   a，b  | -&gt; sp+24</span><br><span class="line">｜         | -&gt; sp+16</span><br><span class="line">｜  lr_A   | -&gt; sp+8</span><br><span class="line">｜  fp_A   | -&gt; sp,  -&gt;fp_B </span><br><span class="line">｜         ｜</span><br></pre></td></tr></table></figure>
+<h3 id="adrp指令"><a href="#adrp指令" class="headerlink" title="adrp指令"></a>adrp指令</h3><p>然后我们了解下第9行的adrp指令。但是首先要从adrp的妈adr讲起。<code>adr &lt;xd&gt;, &lt;label&gt;</code>.我们知道pc当前指令的下条指令地址。adr用于形成pc相对地址，并把相对地址load到寄存器中，具体的过程是：计算当前指令到label的偏移 offset_to_label 并加上PC的值，然后将结果赋值给xd。offset_to_label可以是个负数，实际在执行过程中会将offse_to_label扩展成64为有符号数。但是ARM指令的长度是固定为32bit，offset_to_label最多只能为21位，也即可以寻PC +/-1MB的范围。</p>
+<p>而adrp是在armv8中首次提出，以页为单位的大范围的地址读取指令，可以减少指令条数以及访存的次数。<code>adrp &lt;Rd&gt;, &lt;label&gt;</code>。adrp就是address page 的简写，这里的page指的是大小为4KB的连续内存，和操作系统中的页不是一回事。该指令的作用是将label所在页且<strong>4KB对齐的页基地</strong>址放入寄存器Xd中。Label表示的地址肯定在这个页基地址确定的页内。要想彻底搞懂这个指令的作用，还需要从指令汇编的过程和译码的过程进行分析。也就是将这个指令变成二进制机器码的过程，根据ARM文档，adrp指令的二进制格式为：</p>
+<p><img src="https://raw.githubusercontent.com/endlessbuffer/ImageHosting/master/img/20201206112904.png" alt="image-20201206112904915" style="zoom:50%;"></p>
+<p>32bit中的21bit immhi和immlo是由lable的地址(L)和当前指令所在的地址计算来的，第一步获取label和当前指令所在页的页基地址，两者相减得到差值；第二步将差值右移12位，再取低21位作为immhi:immlo。在进行指令汇编的时候，数据和指令在最终的二进制文件中的位置都确定了，当然也可以确定当前指令在所在的页基地址和lable所在的页基地址。</p>
+<p><img src="https://raw.githubusercontent.com/endlessbuffer/ImageHosting/master/img/20201206113051.png" alt="image-20201206113051126" style="zoom: 40%;"></p>
+<p>如上图所示，在汇编时 immhi:immlo=(pageoffset_to_label&gt;&gt;12)&amp;0x1FFFFF，Rd也是确定的，就可以形成一条二进制机器码指令。</p>
+<p>在cpu执行adrp 机器码指令时，可以根据PC和机器码指令中的immhi:immlo找到label所在页的基地址。在adrp指令发明后，对二进制文件的映射提出了一个要求，即二进制文件映射的虚拟地址必须4K对齐。在CPU执行adrp的机器码时，PC时已知的，根据PC就可以计算出label所在页的基地址:Rd=(PC &amp; 0xFFFFFFFFFFFF0000) + (immhi:immlo &lt;&lt; 12).</p>
+<p><img src="https://raw.githubusercontent.com/endlessbuffer/ImageHosting/master/img/20201206113120.png" alt="image-20201206113120714" style="zoom:40%;"></p>
+<p>到这里adrp指令的前前后后基本上也就介绍完了，还值得一提的是，获取label所在页的基地址本身没有什么用，所以一般在adrp指令的后面都会在跟一条add指令：<code>add Rd, Rd,offset_inpage</code>, label所在的地址就在寄存器Rd中了，就可以使用load指令加载label处的数据了；或者直接使用<code>ldr Rd, [Rd, #offset_inpage]</code>加载label处的数据。</p>
+<p>adrp的优势是什么？ ARM是RISC指令集，每个指令都是等长的32bit，这32bit能容下的东西很有限，一个寻址指令除去本身的操作码，留给地址的bit位就没几个了，而有了adrp指令，相对寻址能力大大提升，可以寻址距离PC 4GB远的数据，既可以寻址PC前的4GB范围，也可以寻址PC后的4GB范围，因为immhi:immlo是21bit，offset_inpage是12bit，21+12=33。</p>
+<p>回到我们的代码，adrp将.LC0所在页的基地址读到x0中，然后将x0加上.LC0的偏移地址，调用c库中的printf（x0指定字符串，x1指定参数）。最后将w0清零。</p>
+<p>❓:lo12: Relocation specifiers的用法</p>
+<h3 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h3><blockquote>
+<p>帧栈相关：</p>
+<ul>
+<li><a href="https://blog.51cto.com/iamokay/2155957" target="_blank" rel="noopener">X86-64和ARM64用户栈的结构 (3) —_start到__libc_start_main</a></li>
+</ul>
+<p>Relocation相关：</p>
+<ul>
+<li><p><a href="https://developer.arm.com/documentation/100067/0611/armclang-Integrated-Assembler/Assembly-expressions" target="_blank" rel="noopener">Arm Compiler armclang Reference Guide</a></p>
+</li>
+<li><p><a href="https://sourceware.org/binutils/docs/as/AArch64_002dRelocations.html#AArch64_002dRelocations" target="_blank" rel="noopener">AArch64-Relocations (Using as)</a></p>
+</li>
+<li><p><a href="https://stackoverflow.com/questions/38570495/aarch64-relocation-prefixes" target="_blank" rel="noopener">assembly - AArch64 relocation prefixes - Stack Overflow</a></p>
+</li>
+</ul>
+</blockquote>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/ARM/">ARM</a>, <a class="has-link-grey -link" href="/tags/汇编/">汇编</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/12/19/Assembly/gcc中的大数/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">GAS中大数存取的源码解析</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/01/10/Other/2019我的年终总结/">
+                <span class="level-item">我的年终总结：2019，变化巨大的一年</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc" style="position: sticky; top: 10px;">
+    <div class="card-content" style="padding: 1rem;">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#main函数的开头和结尾">
+        <!-- <span class="has-mr-6">1</span> -->
+        <span>main函数的开头和结尾</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#栈帧">
+        <!-- <span class="has-mr-6">1.1</span> -->
+        <span>栈帧</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#main函数的主体">
+        <!-- <span class="has-mr-6">2</span> -->
+        <span>main函数的主体</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#adrp指令">
+        <!-- <span class="has-mr-6">2.1</span> -->
+        <span>adrp指令</span>
+        </a></li><li>
+        <a class="is-flex" href="#参考文档">
+        <!-- <span class="has-mr-6">2.2</span> -->
+        <span>参考文档</span>
+        </a></li></ul></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="理解第一段ARM64汇编代码-HelloWorld" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

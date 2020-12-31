@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>分治法-最近对问题 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="问题描述设p1=(x1, y1), p2=(x2, y2), …, pn=(xn, yn)是平面上n个点构成的集合S，设计算法找出集合S中距离最近的点对。">
+<meta name="keywords" content="数据结构,算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分治法-最近对问题">
+<meta property="og:url" content="http://yoursite.com/2018/04/09/Data-Structure/分治法-最近对问题/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="问题描述设p1=(x1, y1), p2=(x2, y2), …, pn=(xn, yn)是平面上n个点构成的集合S，设计算法找出集合S中距离最近的点对。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.245Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="分治法-最近对问题">
+<meta name="twitter:description" content="问题描述设p1=(x1, y1), p2=(x2, y2), …, pn=(xn, yn)是平面上n个点构成的集合S，设计算法找出集合S中距离最近的点对。">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="分治法-最近对问题" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2018-04-09T16:00:00.000Z">2018-04-10</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.245Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/数据结构/">数据结构</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/算法/">算法</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    15 分钟 读完 (大约 2294 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                分治法-最近对问题
+            
+        </h1>
+        <div class="content">  
+            <ul>
+<li><p><strong>问题描述</strong><br>设p1=(x1, y1), p2=(x2, y2), …, pn=(xn, yn)是平面上n个点构成的集合S，设计算法找出集合S中距离最近的点对。</p>
+<a id="more"></a>
+</li>
+<li><p><strong>数据输入</strong><br>由文件input.txt提供点的个数及各个点的坐标信息。</p>
+<p>输入文件示例<br>*input.txt<br>4（数量）<br>(2,5)<br>(6,3)<br>(4,7)<br>(1,1)<br>(4,7)</p><p></p>
+</li>
+<li><p><strong>结果输出</strong><br>程序运行结束时，将距离最近的点对坐标输出到文件output.txt中。</p>
+<p>输出文件示例<br><em>output.txt<br>(2,5)</em></p><p></p>
+</li>
+</ul>
+<p><ol start="2."></ol></p>
+<li><strong>算法：</strong><br>输入：按x坐标升序排列的n个点的集合S={(x1,y1),(x2,y2),…,(xn,yn)}</li><br><br><br>输出：最近点对的距离<br><br>递归结束：如果n等于2，则返回（x1,y1）和(x2,y2)之间的距离，算法结束；<br><br>递归过程：<br>计算出m=S中各点x坐标的中位数，用这个点把区域划分为两个区域；<br>先计算分别在两个区域内的点的最近距离：<br>d1=计算={(x1,y1),…,(xm,ym)}的最近对距离<br>d2=计算={(xm,ym),…,(xn,yn)}的最近对距离<br>d=min{d1,d2};<br>下面检查是否存在有跨越两个区域的两个点可以构成最短区域：<br>只用考虑距离小于d的两点，这两个点必然存在分界线两端，依次考察集合S中的点p(x,y)，如果x&lt;=xm并且x&gt;=xm-d，则将点p放入集合p1中；如果x&gt;xm并且x&lt;=xm+d，则将点p放入集合p2中；<br>对集合p1和p2中的每个点p(x,y)，由鸽舍原理，在y坐标区间[y,y+d]内<code>最多</code>取出6个候选点，计算与点p的最近距离d3；<br>返回min{d,d3};<br><br>&lt;<br><br>ol start=”3.”&gt;<br><li><strong>遇到的困难</strong><br><br><em>   首先是在对点的排序方面，其实不用自己去写排序函数，直接调用sort库函数就好了，方法十分简单，今天写的时候又复习了一下<br>&gt;1、sort函数可以三个参数也可以两个参数，必须的头文件<strong><code>#include &lt; algorithm&gt;</code></strong>和using namespace std;<br>2、它使用的排序方法是类似于快排的方法，时间复杂度为**`n</em>log2(n)<code>**
+3、Sort函数有三个参数：（第三个参数可不写）
+（1）第一个是要排序的数组的起始地址。
+（2）第二个是结束的地址（最后一位要排序的地址）**</code>(排序到结束地址指向元素的前一个元素)`**<br>（3）第三个参数是排序的方法，可以是从大到小也可是从小到大，还可以不写第三个参数，此时默认的排序方法是从小到大排序。<br><br></li>
+
+<pre><code>#include &lt;iostream&gt;
+#include &lt;algorithm&gt;
+int main()
+{
+ int a[20]={2,4,1,23,5,76,0,43,24,65},i;
+ for(i=0;i&lt;20;i++)
+  cout&lt;&lt;a[i]&lt;&lt;endl;
+ sort(a,a+20);
+ for(i=0;i&lt;20;i++)
+ cout&lt;&lt;a[i]&lt;&lt;endl;
+ return 0;
+}
+
+#include&lt;iostream&gt;
+  #include&lt;algorithm&gt;
+  using namespace std;
+  bool complare(int a,int b)
+  {
+       return a&gt;b;
+  }
+  int main()
+  {
+      int a[10]={9,6,3,8,5,2,7,4,1,0};
+      for(int i=0;i&lt;10;i++)
+      cout&lt;&lt;a[i]&lt;&lt;endl;
+      sort(a,a+10,complare);//在这里就不需要对complare函数传入参数了，//这是规则
+      for(int i=0;i&lt;10;i++)
+         cout&lt;&lt;a[i]&lt;&lt;endl;
+      return 0;
+ }
+</code></pre><p>&lt;</p>
+<p>ul&gt;</p>
+<li>由于要显示最近两点的信息，并且它要在递归函数中传递并修改，我创建了一个结构体，来储存当前区域的最近两点的点序号和距离。<br><br></li><br><li><br><br>在oj上做这道题，一直超出内存限制，可能是递归层数太多的原因。后来我在对两个区域的划分方面做了改动，先开始我的做法是找到x坐标中位数的那个点后，递归时，当点的个数为奇数时，左边区域划分为左边界到中位数的点，右边区域划分为中位数的点到右边界，当点的个数为<strong>偶数</strong>时，左边区域划分为左边界到<strong>中位数的较小的点</strong>，右边区域划分为<strong>中位数较小的点</strong>到右边界。我更改后是：递归时，当点的个数为奇数时，左边区域划分为左边界到中位数的点，右边区域划分为中位数的点到右边界，当点的个数为<strong>偶数</strong>时，左边区域划分为左边界到<strong>中位数的较小的点</strong>，右边区域划分为<strong>中位数较大的点</strong>到右边界；就是这么一个我没有注意的瑕疵，让程序的运行效率大大降低。<br><br></li>
+
+<p><li><strong>代码</strong></li></p>
+<pre><code>#include&lt;iostream&gt;
+#include &lt;iomanip&gt;
+#include&lt;cmath&gt;
+#include&lt;algorithm&gt;
+#include &lt;fstream&gt;
+using namespace std;
+
+&lt;p&gt;/*
+补充用例
+10
+1 1
+5 7
+12 3
+33 8
+8 56
+9 57
+23 5
+0 4
+18 1
+90 3
+
+0
+输出：
+0.71
+*/
+
+int pointa, pointb;//用于记录最近点对的序号
+class ToyPoint
+{
+public:
+    double x, y;//玩具坐标
+};
+
+//建立结构体便于迭代函数的结果信息传递
+class ReturnPoint
+{
+public:
+    int x, y;//当前最近点对的序号
+    double dis;//当前最近点对的距离
+    ReturnPoint(int a, int b, double c)//构造函数
+    {
+        x = a;
+        y = b;
+        dis = c;
+    }
+};
+
+bool cmp(ToyPoint a, ToyPoint b)
+{
+    return a.x &lt; b.x;
+}
+
+/**
+*求点集中的最近点距离
+*@param m 点集区间左端点
+*@param n 点集区间右端点
+*@return 最短距离
+*/
+ReturnPoint theClosestDis(int m, int n, ToyPoint *toy)
+{
+    //递归退出条件
+    if (n == m + 1)
+    {
+        return ReturnPoint(m,n,sqrt(pow((toy[m].x - toy[n].x), 2) + pow((toy[m].y - toy[n].y), 2)));
+    }
+
+double d1, d2, d;//储存左右子集的字段最短距离
+int midx;//中位数x坐标的点序号
+
+if ((n - m) % 2 == 0)
+{
+    midx = (m + n) / 2;
+    //递归求出左右子集最小距离
+    ReturnPoint a = theClosestDis(m, midx, toy);
+    ReturnPoint b = theClosestDis(midx, n, toy);
+    d1 =a.dis;
+    d2 = b.dis;
+    d = d1 &lt; d2 ? d1 : d2;//选取两个子集最短距离的较小者
+    if (d == d1)
+    {
+        pointa = a.x;
+        pointb = a.y;
+    }
+    else
+    {
+        pointa = b.x;
+        pointb = b.y;
+    }
+}
+else
+{
+    midx = (m + n) / 2;
+    ReturnPoint a = theClosestDis(m, midx, toy);
+    ReturnPoint b = theClosestDis(midx+1, n, toy);
+    d1 = a.dis;
+    d2 = b.dis;//偶数个点时的划分方法与奇数个时不同，可减少递归次数
+    d = d1 &lt; d2 ? d1 : d2;
+    if (d == d1)
+    {
+        pointa = a.x;
+        pointb = a.y;
+    }
+    else
+    {
+        pointa = b.x;
+        pointb = b.y;
+    }
+}
+
+//提前退出
+if (d == 0)
+    return ReturnPoint(pointa, pointb, 0);
+
+//求左右子集交接处最小距离
+int xm;//中位坐标向左d范围内的最小x坐标点的序号 xm...midx
+for (xm = m; xm &lt; midx; xm++)
+{
+    if (toy[midx].x &gt;= toy[midx].x - d)//进入范围
+        break;
+}
+
+int xn;//中位坐标向左d范围内的最小x坐标点的序号  midx...mn
+for (xn = midx; xn &lt; n; xn++)
+{
+    if (toy[xn + 1].x &gt;= toy[midx].x + d)//超出范围  
+        break;
+}
+
+double d3;
+
+for (int i = xm; i &lt;= xn; i++)//对于两边集合里的每个点
+{
+    int flag = 0;
+    for (int j = xm; j &lt;= xn; j++) //在它上方d范围内的点
+    {
+        if ((toy[j].y - toy[i].y) &gt; d&apos;&apos; (toy[j].y - toy[i].y) &lt; 0)
+            continue;
+        if (j == i)
+            continue;
+        if (flag &gt; 6)//flagj&gt;6时右边区间遍历完成
+            break;
+        flag++;
+        d3 = sqrt(pow((toy[i].x - toy[j].x), 2) + pow((toy[i].y - toy[j].y), 2));//检查交界处是否出现最小距离
+
+        if (d3 &lt; d)
+        {
+            d = d3;
+            pointa = i;
+            pointb = j;
+        }
+    }
+
+}
+
+return ReturnPoint(pointa, pointb, d);
+
+}
+int main()
+{
+    ifstream fin(&quot;input.txt&quot;);
+    ofstream fout(&quot;output.txt&quot;);
+    int num;//点的数量
+
+     //ToyPoint toy[100000] ;//这里vs会报错，内存溢出
+while (fin&gt;&gt;num &amp;&amp; num != 0)
+{
+    //输入坐标信息
+    ToyPoint *toy = new ToyPoint[num];
+    for (int i = 0; i &lt; num; i++)
+    {
+        char a, b, c;
+        fin &gt;&gt;a&gt;&gt;toy[i].x &gt;&gt;b&gt;&gt;toy[i].y&gt;&gt;c;
+    }
+    //点的坐标均按x坐标升序 
+    sort(toy, toy + num, cmp);
+    fout.setf(ios::fixed);
+    ReturnPoint result = theClosestDis(0, num - 1, toy);
+    fout&lt;&lt;&quot;最近对距离为&quot;&quot;&lt;&lt;setprecision(2) &lt;&lt; result.dis&lt;&lt;endl;
+
+     fout&lt;&lt; toy[result.x].x &lt;&lt;toy[result.x].y &lt;&lt;endl;
+     fout&lt;&lt;toy[result.y].x &lt;&lt;toy[result.y].y &lt;&lt; endl&lt;&lt;endl;
+    delete[] toy;
+}
+fout.close();
+return 0;
+
+}
+</code></pre><p><li><strong>oj相关题目</strong><br><a href="http://acm.hdu.edu.cn/showproblem.php?pid=1007" title="HDUOJ1007 Quoit Design" target="_blank" rel="noopener">HDUOJ1007 Quoit Design</a></li></p>
+<pre><code>#include&lt;iostream&gt;
+#include &lt;iomanip&gt;
+#include&lt;cmath&gt;
+#include&lt;algorithm&gt;
+using namespace std;
+
+/*
+补充用例
+0
+1 1
+5 7
+12 3
+33 8
+8 56
+9 57
+23 5
+0 4
+18 1
+90 3
+
+0
+输出：
+0.71
+*/
+class ToyPoint
+{
+public:
+    double x, y;//玩具坐标
+};
+
+bool cmp(ToyPoint a, ToyPoint b)
+{
+    return a.x &lt; b.x;
+}
+
+/**
+*求点集中的最近点距离
+*@param m 点集区间左端点
+*@param n 点集区间右端点
+*@return 最短距离
+*/
+double theClosestDis(int m, int n, ToyPoint *toy)
+{
+    //递归退出条件
+    if(n==m+1)
+        return sqrt(pow((toy[m].x - toy[n].x), 2) + pow((toy[m].y - toy[n].y), 2));
+
+double d1, d2, d;//储存左右子集的字段最短距离
+int midx;//中位数x坐标的点序号
+
+if ((n - m) % 2 == 0)
+{
+    midx = (m + n) / 2;
+    //递归求出左右子集最小距离
+    d1 = theClosestDis(m, midx, toy);
+    d2 = theClosestDis(midx, n, toy);
+    d = d1 &lt; d2 ? d1 : d2;//选取两个子集最短距离的较小者
+}
+else
+{
+    midx = (m + n) / 2;
+    d1 = theClosestDis(m, midx, toy);
+    d2 = theClosestDis(midx+1, n, toy);//偶数个点时的划分方法与奇数个时不同，可减少递归次数
+    d = d1 &lt; d2 ? d1 : d2 ;
+}
+
+//提前退出
+if (d == 0)
+    return 0;
+
+//求左右子集交接处最小距离
+int xm;//中位坐标向左d范围内的最小x坐标点的序号 xm...midx
+for (xm = m; xm &lt; midx; xm++)
+{
+    if (toy[midx].x &gt;= toy[midx].x-d)//进入范围
+        break;
+}
+
+int xn;//中位坐标向左d范围内的最小x坐标点的序号  midx...mn
+for (xn = midx; xn &lt; n; xn++)
+{
+    if (toy[xn+1].x &gt;= toy[midx].x + d)//超出范围  
+        break;
+}
+
+double d3;
+int flagi = 0;
+for (int i = xm; i &lt;= midx; i++)//对于左边集合里的每个点
+{ 
+    int flagj = 0;
+    if (flagi &gt; 6)//flagi&gt;6时左边区间遍历完成
+        break;
+    flagi++;
+    for (int j = midx + 1; j &lt;= xn; j++)//对于右边集合里的每个点
+    {
+        if (flagj &gt; 6)//flagj&gt;6时右边区间遍历完成
+            break;
+        flagj++;
+        d3 = sqrt(pow((toy[i].x - toy[j].x), 2) + pow((toy[i].y - toy[j].y), 2));//检查交界处是否出现最小距离
+
+        if (d3 &lt; d)
+            d = d3;
+    }
+
+}
+
+return d;
+
+}
+
+int main()
+{
+    int num;//点的数量
+
+//ToyPoint toy[100000] ;//这里vs会报错，内存溢出
+while (cin &gt;&gt; num &amp;&amp; num != 0)
+{
+//输入坐标信息
+ToyPoint *toy = new ToyPoint[num];
+for (int i = 0; i &lt; num; i++)
+{
+    cin &gt;&gt; toy[i].x &gt;&gt; toy[i].y;
+}
+//点的坐标均按x坐标升序 
+sort(toy, toy+num , cmp);
+cout.setf(ios::fixed); 
+cout &lt;&lt; setprecision(2) &lt;&lt; theClosestDis(0, num - 1, toy)/2.0 &lt;&lt; endl;
+delete[] toy;
+}
+
+return 0;
+
+}
+</code></pre><p>​    </p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/数据结构/">数据结构</a>, <a class="has-link-grey -link" href="/tags/算法/">算法</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/04/13/Software-Engineering/用例建模/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">用例建模</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/04/06/Other/第一篇博文/">
+                <span class="level-item">第一篇博文</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc" style="position: sticky; top: 10px;">
+    <div class="card-content" style="padding: 1rem;">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            
+        </div>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="分治法-最近对问题" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

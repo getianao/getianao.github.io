@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>图——哈夫曼编码 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="[cpp]//// Created by getianao on 17-11-15.//   #include    #include   #include using namespace std;class codeInfo//字符原始数据{public:    char value;    int weight = 0;};class huffmanTreeNode//哈弗曼编码逻辑结构{p">
+<meta name="keywords" content="数据结构,算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图——哈夫曼编码">
+<meta property="og:url" content="http://yoursite.com/2017/11/20/Data-Structure/数据结构—图—哈夫曼编码/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="[cpp]//// Created by getianao on 17-11-15.//   #include    #include   #include using namespace std;class codeInfo//字符原始数据{public:    char value;    int weight = 0;};class huffmanTreeNode//哈弗曼编码逻辑结构{p">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.245Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="图——哈夫曼编码">
+<meta name="twitter:description" content="[cpp]//// Created by getianao on 17-11-15.//   #include    #include   #include using namespace std;class codeInfo//字符原始数据{public:    char value;    int weight = 0;};class huffmanTreeNode//哈弗曼编码逻辑结构{p">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="图——哈夫曼编码" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2017-11-20T16:00:00.000Z">2017-11-21</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.245Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/数据结构/">数据结构</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/算法/">算法</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    2 分钟 读完 (大约 363 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                图——哈夫曼编码
+            
+        </h1>
+        <div class="content">  
+            <a id="more"></a>
+<p>[cpp]<br>//<br>// Created by getianao on 17-11-15.<br>//  </p>
+<p>#include <string>  </string></p>
+<p>#include<iostream>  </iostream></p>
+<p>#include <cstring><br>using namespace std;<br>class codeInfo//字符原始数据<br>{<br>public:<br>    char value;<br>    int weight = 0;<br>};<br>class huffmanTreeNode//哈弗曼编码逻辑结构<br>{<br>public:<br>    int flag = 0;<br>    int weight;<br>    int parent, lChild, rChild;<br>};<br>class huffmanCode//哈弗曼编码<br>{<br>public:<br>    char value;<br>    char<em> code;<br>    int start;//记录编码开始位<br>};<br>//找出未连接节点的哈弗曼节点的最小值和次小值<br>void select(huffmanTreeNode </em>ht, int index, int &amp;s1, int &amp;s2)<br>{<br>    s1 = 23767;<br>    s2 = 23767;<br>    int s1w = 23767;<br>    int s2w = 23767;<br>    for (int i = 1; i &lt;= index; i++)<br>    {<br>        if (ht[i].parent == 0)<br>        {<br>            if (ht[i].weight&lt;s1w)<br>            {<br>                s2 = s1;<br>                s2w = s1w;<br>                s1w = ht[i].weight;<br>                s1 = i;<br>            }<br>            else<br>                if (ht[i].weight&lt;s2w)<br>                {<br>                    s2w = ht[i].weight;<br>                    s2 = i;<br>                }<br>        }  </cstring></p>
+<pre><code>}  
+</code></pre><p>}<br>//生成哈弗曼编码<br>void huffmanCoding(huffmanTreeNode <em>ht, huffmanCode </em>hc, codeInfo* w, int n)<br>{  </p>
+<pre><code>if (n &lt;= 1)  
+    return;  
+int m = 2 * n;//包括权值相加产生的结点  
+
+for (int i = 1; i&lt;m; i++)//将权值按顺序放进哈夫曼数组中，关系均初始化为0  
+{  
+    if (i &lt;= n)  
+    {  
+        ht[i].weight = w[i].weight;  
+    }  
+    else  
+    {  
+        ht[i].weight = 0;  
+    }  
+    ht[i].parent = 0;  
+    ht[i].lChild = 0;  
+    ht[i].rChild = 0;  
+}  
+//建立哈夫曼树  
+for (int i = n + 1; i&lt;m; i++)  
+{  
+    int s1, s2;//权值中最小者和次小者的序号  
+    select(ht, i - 1, s1, s2);//在前i-1个权值中查找  
+    ht[s1].parent = i;  
+    ht[s2].parent = i;  
+    ht[i].lChild = s1;  
+    ht[i].rChild = s2;  
+    ht[i].weight = ht[s1].weight + ht[s2].weight;  
+}  
+/* 
+//从下到上遍历建立哈夫曼编码 
+for (int i = 1; i &lt;= n; i++) 
+{ 
+hc[i].value = w[i].value; 
+hc[i].code = new char[n]; 
+int start = n - 1; 
+hc[i].code[n - 1] = &apos;&amp;#92;&amp;#48;&apos;; 
+//对于每一个元素查找他的哈夫曼编码；找他的双亲结点，如果他是双亲结点的左节点，当前位时0，否则是1 
+for (int j = i, p = ht[i].parent; p != 0; j = p, p = ht[p].parent)//父节点存在，向上找 
+{ 
+
+if (ht[p].lChild == j) 
+hc[i].code[--start] = &apos;0&apos;; 
+else 
+hc[i].code[--start] = &apos;1&apos;; 
+} 
+hc[i].start = start; 
+} 
+*/  
+//无栈非递归遍历哈弗曼树建立哈弗曼编码  
+int cdlen = 0;  
+char* cd = new char[n];  
+int p = m - 1;//最后一个节点是哈弗曼节点的根节点  
+while (p)  
+{  
+    if (ht[p].flag == 0)//向左遍历  
+    {  
+        ht[p].flag = 1;  
+        if (ht[p].lChild != 0)//左孩子存在  
+        {  
+            p = ht[p].lChild;  
+            cd[cdlen++] = &apos;0&apos;;  
+        }  
+        else if (ht[p].rChild == 0)//左右孩子皆不存在  
+        {  
+            hc[p].value = w[p].value;  
+            hc[p].code = new char[n];  
+            cd[cdlen] = &apos;&amp;#92;&amp;#48;&apos;;  
+            for (int i = 0; i &lt;= cdlen; i++)  
+            {  
+                hc[p].code[i] = cd[i];  
+            }  
+        }  
+    }  
+    else if (ht[p].flag == 1)//向右遍历  
+    {  
+        ht[p].flag = 2;  
+        if (ht[p].rChild != 0)  
+        {  
+            p = ht[p].rChild;  
+            cd[cdlen++] = &apos;1&apos;;  
+        }  
+    }  
+    else  
+    {  
+        ht[p].flag = 0;  
+        p = ht[p].parent;  
+        cdlen--;  
+    }  
+}  
+</code></pre><p>}  </p>
+<p>void outputHuffmanCode(huffmanCode *hc, int n)<br>{<br>    for (int i = 1; i &lt;= n; i++)<br>    {<br>        cout &lt;&lt; “字符：” &lt;&lt; hc[i].value &lt;&lt; “对应编码：”;<br>        cout &lt;&lt; hc[i].code;<br>        // int j = hc[i].start;<br>        // for (; j &lt; n - 1; j++)<br>        // {<br>        //     cout &lt;&lt; hc[i].code[j];<br>        // }<br>        cout &lt;&lt; endl;<br>    }<br>}  </p>
+<p>codeInfo<em>  input(int n)//手动输入字符频率<br>{<br>    codeInfo</em> w = new codeInfo[n + 1];<br>    for (int i = 1; i &lt;= n; i++)<br>    {<br>        cout &lt;&lt; “请输入字符：”;<br>        cin &gt;&gt; w[i].value;<br>        cout &lt;&lt; “请输入权重：”;<br>        cin &gt;&gt; w[i].weight;<br>    }<br>    return w;  </p>
+<p>}  </p>
+<p>codeInfo<em>  stringScanInput(string str, int &amp;n)//输入字符串自动统计字符频率<br>                                              //理论上支持标准ASCII码及扩展ASCII码范围的字符<br>{<br>    codeInfo</em> w = new codeInfo[256];<br>    n = 0;  </p>
+<pre><code>char* buffer = new char[str.size() + 1];  
+strcpy_s(buffer, str.size() + 1, str.c_str());  
+codeInfo* m = new codeInfo[256];  
+for (int i = 0; i&lt;str.size(); i++)  
+{  
+    m[(int)buffer[i]].value = buffer[i];  
+    m[(int)buffer[i]].weight++;  
+}  
+for (int i = 0; i&lt;256; i++)  
+{  
+    if (m[i].weight)  
+    {  
+        n++;  
+        w[n].value = m[i].value;  
+        w[n].weight = m[i].weight;  
+    }  
+}  
+return w;  
+</code></pre><p>}  </p>
+<p>//解哈夫曼码返回元素序号<br>void deHuffmanCode(huffmanTreeNode <em>ht, huffmanCode </em>hc, const char <em>code, int n)<br>{<br>    int p = 2 </em> n - 1;<br>    int i = 0;<br>    while (code[i] != ‘&#92;&#48;’)<br>    {  </p>
+<pre><code>    if (code[i] == &apos;0&apos;)  
+        p = ht[p].lChild;  
+    else  
+        p = ht[p].rChild;  
+    if (ht[p].lChild == 0 &amp;&amp; ht[p].rChild == 0)  
+    {  
+        cout &lt;&lt; hc[p].value;  
+        i++;  
+        p = 2 * n - 1;  
+        continue;  
+    }  
+    i++;  
+
+}  
+</code></pre><p>}  </p>
+<p>int main()<br>{  </p>
+<pre><code>int n;  
+codeInfo* w = NULL;  
+huffmanTreeNode *ht;  
+huffmanCode *hc;  
+string str, huffmanCodeString;  
+int index;  
+cout &lt;&lt; &quot;请输入输入方式（1/2）：&quot; &lt;&lt; endl;  
+cout &lt;&lt; &quot;1.手动输入字符频率&quot; &lt;&lt; endl;  
+cout &lt;&lt; &quot;2.输入字符串自动统计字符频率&quot; &lt;&lt; endl;  
+cin &gt;&gt; index;  
+cout &lt;&lt; &quot;*************************&quot; &lt;&lt; endl;  
+switch (index)  
+{  
+case 1:  
+    cout &lt;&lt; &quot;请输入字符个数&quot;;  
+    cin &gt;&gt; n;  
+    w = input(n);  
+    cout &lt;&lt; &quot;请输入原始字符串：&quot;;  
+    cin &gt;&gt; str;  
+    break;  
+case 2:  
+    cout &lt;&lt; &quot;请输入原始字符串：&quot;;  
+    cin &gt;&gt; str;  
+    w = stringScanInput(str, n);//同时返回n：字符种类数量  
+    break;  
+}  
+ht = new huffmanTreeNode[2 * n];  
+hc = new huffmanCode[n + 1];  
+huffmanCoding(ht, hc, w, n);  
+outputHuffmanCode(hc, n);//打印哈弗曼编码对应关系  
+char* buffer = new char[str.size() + 1];  
+strcpy_s(buffer, str.size() + 1, str.c_str());  
+cout &lt;&lt; &quot;编码后&quot;;  
+
+for (int i = 0; i &lt;= str.size(); i++)  
+{  
+    for (int j = 0; j &lt;= n; j++)  
+    {  
+        if (hc[j].value == buffer[i])  
+        {  
+            cout &lt;&lt; hc[j].code;  
+            break;  
+        }  
+    }  
+}  
+cout &lt;&lt; endl;  
+cout &lt;&lt; &quot;请输入待解码赫夫曼编码字符串：&quot; &lt;&lt; endl;  
+cin &gt;&gt; huffmanCodeString;  
+deHuffmanCode(ht, hc, huffmanCodeString.c_str(), n);  
+cout &lt;&lt; endl;  
+return 0;  
+</code></pre><p>}<br>[/cpp]</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/数据结构/">数据结构</a>, <a class="has-link-grey -link" href="/tags/算法/">算法</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/01/08/Big-Data/RDD编程/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">RDD编程</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/11/20/Data-Structure/数据结构—图—所有顶点之间的最短路径问题-弗洛伊德算法/">
+                <span class="level-item">图——基于哈夫曼编码的压缩</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc" style="position: sticky; top: 10px;">
+    <div class="card-content" style="padding: 1rem;">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            
+        </div>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="图——哈夫曼编码" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

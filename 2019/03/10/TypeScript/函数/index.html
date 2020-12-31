@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>函数 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="1.函数的两种类型typescript中的函数和javascrip中的一样，有两种类型：有名字的函数和匿名函数。">
+<meta name="keywords" content="typescript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="函数">
+<meta property="og:url" content="http://yoursite.com/2019/03/10/TypeScript/函数/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="1.函数的两种类型typescript中的函数和javascrip中的一样，有两种类型：有名字的函数和匿名函数。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.341Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="函数">
+<meta name="twitter:description" content="1.函数的两种类型typescript中的函数和javascrip中的一样，有两种类型：有名字的函数和匿名函数。">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="函数" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2019-03-10T16:00:00.000Z">2019-03-11</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.341Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/typescript/">typescript</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    10 分钟 读完 (大约 1428 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                函数
+            
+        </h1>
+        <div class="content">  
+            <h2 id="1-函数的两种类型"><a href="#1-函数的两种类型" class="headerlink" title="1.函数的两种类型"></a>1.函数的两种类型</h2><p>typescript中的函数和javascrip中的一样，有两种类型：有名字的函数和匿名函数。</p>
+<a id="more"></a>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// Named function</span></span><br><span class="line"><span class="hljs-keyword">let</span> z = <span class="hljs-number">100</span>;</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addToZ</span>(<span class="hljs-params">x, y</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> x + y + z;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// Anonymous function</span></span><br><span class="line"><span class="hljs-keyword">let</span> myAdd = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">x, y</span>) </span>&#123; <span class="hljs-keyword">return</span> x + y; &#125;;</span><br></pre></td></tr></table></figure>
+<p>在函数中可以使用函数外的变量，我们称之为“<strong>捕获</strong>”了这些变量，这些变量属于函数的隐藏变量，而不属于函数的api。</p>
+<h2 id="2-函数中的类型"><a href="#2-函数中的类型" class="headerlink" title="2.函数中的类型"></a>2.函数中的类型</h2><p>为函数中的变量加上类型，以便类型检查；值得说明的是一般返回值的类型是可以省略的，因为typescript可以自动推断出返回值的类型。</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">add</span>(<span class="hljs-params">x: <span class="hljs-built_in">number</span>, y: <span class="hljs-built_in">number</span></span>): <span class="hljs-title">number</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> x + y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> myAdd = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">x: <span class="hljs-built_in">number</span>, y: <span class="hljs-built_in">number</span></span>): <span class="hljs-title">number</span> </span>&#123; <span class="hljs-keyword">return</span> x + y; &#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>完整的函数类型：</p>
+<p>在赋值语句的左边为变量指明完整的函数类型。在不指明的时候typescript是自动识别数类型的，也是”类型推断“中的一种，叫做”按上下文归类“。</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> myAdd: <span class="hljs-function">(<span class="hljs-params">baseValue: <span class="hljs-built_in">number</span>, increment: <span class="hljs-built_in">number</span></span>) =&gt;</span> <span class="hljs-built_in">number</span> =</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">x: <span class="hljs-built_in">number</span>, y: <span class="hljs-built_in">number</span></span>): <span class="hljs-title">number</span> </span>&#123; <span class="hljs-keyword">return</span> x + y; &#125;;</span><br></pre></td></tr></table></figure>
+<p>这里用紧跟<code>=&gt;</code>表示返回值的类型，而这时是不能省略返回值的类型的，即使返回值是空，也要指明为<code>void</code>。</p>
+</li>
+</ul>
+<h2 id="3-函数参数"><a href="#3-函数参数" class="headerlink" title="3.函数参数"></a>3.函数参数</h2><ul>
+<li><p>可选参数：</p>
+<p>javascript向函数传参数可以<strong>小于等于</strong>参数·数量的，后面没有被传参的参数就变成了可选参数。但是typescript中必须传入完整的参数，但可以是<code>undefined</code>或<code>null</code>，除非声明为可选参数或默认参数。</p>
+<p>在参数名后加上<code>?</code>声明为可选参数，可选参数必须在所有参数的最后面。</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">buildName</span>(<span class="hljs-params">firstName: <span class="hljs-built_in">string</span>, lastName?: <span class="hljs-built_in">string</span></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (lastName)</span><br><span class="line">        <span class="hljs-keyword">return</span> firstName + <span class="hljs-string">" "</span> + lastName;</span><br><span class="line">    <span class="hljs-keyword">else</span></span><br><span class="line">        <span class="hljs-keyword">return</span> firstName;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> result1 = buildName(<span class="hljs-string">"Bob"</span>);  <span class="hljs-comment">// works correctly now</span></span><br><span class="line"><span class="hljs-keyword">let</span> result2 = buildName(<span class="hljs-string">"Bob"</span>, <span class="hljs-string">"Adams"</span>, <span class="hljs-string">"Sr."</span>);  <span class="hljs-comment">// error, too many parameters</span></span><br><span class="line"><span class="hljs-keyword">let</span> result3 = buildName(<span class="hljs-string">"Bob"</span>, <span class="hljs-string">"Adams"</span>);  <span class="hljs-comment">// ah, just right</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>默认参数：</p>
+<p>为参数加上默认值，直接为参数加上赋值即可；在用户没有传入这个参数或或传入的是<code>undefined</code>时，将默认是赋给此参数。</p>
+<p>值得说明的是默认参数是属于可选参数的，也就是说下面例子中和上例中的函数类型均为<code>(firstName:string,lastName?:string)=&gt;string</code>。但是默认参数与可选参数不同的是带默认值的参数不需要放在必须参数的后面，当这种情况出现是，必须为前面的带默认值的参数传入<code>undefined</code>来让它获得默认值。</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">buildName</span>(<span class="hljs-params">firstName: <span class="hljs-built_in">string</span>, lastName = "Smith"</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> firstName + <span class="hljs-string">" "</span> + lastName;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> result1 = buildName(<span class="hljs-string">"Bob"</span>);                  <span class="hljs-comment">// works correctly now, returns "Bob Smith"</span></span><br><span class="line"><span class="hljs-keyword">let</span> result2 = buildName(<span class="hljs-string">"Bob"</span>, <span class="hljs-literal">undefined</span>);       <span class="hljs-comment">// still works, also returns "Bob Smith"</span></span><br><span class="line"><span class="hljs-keyword">let</span> result3 = buildName(<span class="hljs-string">"Bob"</span>, <span class="hljs-string">"Adams"</span>, <span class="hljs-string">"Sr."</span>);  <span class="hljs-comment">// error, too many parameters</span></span><br><span class="line"><span class="hljs-keyword">let</span> result4 = buildName(<span class="hljs-string">"Bob"</span>, <span class="hljs-string">"Adams"</span>);         <span class="hljs-comment">// ah, just right</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>剩余参数：</p>
+<p>当不知道剩余多个参数的类型时可以使用剩余参数来操作多个参数。剩余参数表示为一个数组的参数，并在参数前面加上<code>...</code>。</p>
+<p>剩余参数可以被当作个数不限的可选参数：可以没有，也可以有多个。<code>...</code>在类型中被包括，但是在函数内部使用剩余参数数组时是不用加上<code>...</code>的。</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">buildName</span>(<span class="hljs-params">firstName: <span class="hljs-built_in">string</span>, ...restOfName: <span class="hljs-built_in">string</span>[]</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> firstName + <span class="hljs-string">" "</span> + restOfName.join(<span class="hljs-string">" "</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> employeeName = buildName(<span class="hljs-string">"Joseph"</span>, <span class="hljs-string">"Samuel"</span>, <span class="hljs-string">"Lucas"</span>, <span class="hljs-string">"MacKinzie"</span>);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="4-this"><a href="#4-this" class="headerlink" title="4.this"></a>4.this</h2><p>先看下面这个例子：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> deck= &#123;</span><br><span class="line">    suits: [<span class="hljs-string">"hearts"</span>, <span class="hljs-string">"spades"</span>, <span class="hljs-string">"clubs"</span>, <span class="hljs-string">"diamonds"</span>],</span><br><span class="line">    cards: <span class="hljs-built_in">Array</span>(<span class="hljs-number">52</span>),</span><br><span class="line">    createCardPicker: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">            <span class="hljs-keyword">let</span> pickedCard = <span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">Math</span>.random() * <span class="hljs-number">52</span>);</span><br><span class="line">            <span class="hljs-keyword">let</span> pickedSuit = <span class="hljs-built_in">Math</span>.floor(pickedCard / <span class="hljs-number">13</span>);</span><br><span class="line"></span><br><span class="line">            <span class="hljs-keyword">return</span> &#123;suit: <span class="hljs-keyword">this</span>.suits[pickedSuit], card: pickedCard % <span class="hljs-number">13</span>&#125;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> cardPicker = deck.createCardPicker();</span><br><span class="line"><span class="hljs-keyword">let</span> pickedCard = cardPicker();</span><br><span class="line"></span><br><span class="line">alert(<span class="hljs-string">"card: "</span> + pickedCard.card + <span class="hljs-string">" of "</span> + pickedCard.suit);</span><br></pre></td></tr></table></figure>
+<p>首先定义了deck这个对象，它有三个属性：一个字符串数组类型的suits属性，一个Array数组类型的cards属性，一个函数类型的createCardPicker属性；注意这个函数类型的属性，这个函数的返回值仍然是个函数，里面的函数返回了一个两个属性的对象。</p>
+<p>然后cardPicker变量被赋值了deck的函数类型的属性的返回值，说明cardPicker就是那个内部的函数。在这个函数的返回值赋给了pickedCard。</p>
+<p>但是这个程序在运行的时候会报错，错误指向cardPicker中<code>this</code>指向的是<code>windows</code>而不是<code>deck</code>。顶级的非方法式调用会将 <code>this</code>视为<code>window</code>。</p>
+<p>这时需要使用ECMAScript 6箭头语法，箭头语法能够保存函数创建时的<code>this</code>的值，而不是调用时的值；然后提供一个显式的 <code>this</code>参数； <code>this</code>参数是个<strong>假的参数</strong>，它出现在参数列表的最前面。</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">interface</span> Card &#123;</span><br><span class="line">    suit: <span class="hljs-built_in">string</span>;</span><br><span class="line">    card: <span class="hljs-built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-keyword">interface</span> Deck &#123;</span><br><span class="line">    suits: <span class="hljs-built_in">string</span>[];</span><br><span class="line">    cards: <span class="hljs-built_in">number</span>[];</span><br><span class="line">    createCardPicker(<span class="hljs-keyword">this</span>: Deck): <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> Card;</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-keyword">let</span> deck: Deck = &#123;</span><br><span class="line">    suits: [<span class="hljs-string">"hearts"</span>, <span class="hljs-string">"spades"</span>, <span class="hljs-string">"clubs"</span>, <span class="hljs-string">"diamonds"</span>],</span><br><span class="line">    cards: <span class="hljs-built_in">Array</span>(<span class="hljs-number">52</span>),</span><br><span class="line">    <span class="hljs-comment">// <span class="hljs-doctag">NOTE:</span> The function now explicitly specifies that its callee must be of type Deck</span></span><br><span class="line">    createCardPicker: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"><span class="hljs-keyword">this</span>: Deck</span>) </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="hljs-keyword">let</span> pickedCard = <span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">Math</span>.random() * <span class="hljs-number">52</span>);</span><br><span class="line">            <span class="hljs-keyword">let</span> pickedSuit = <span class="hljs-built_in">Math</span>.floor(pickedCard / <span class="hljs-number">13</span>);</span><br><span class="line"></span><br><span class="line">            <span class="hljs-keyword">return</span> &#123;suit: <span class="hljs-keyword">this</span>.suits[pickedSuit], card: pickedCard % <span class="hljs-number">13</span>&#125;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> cardPicker = deck.createCardPicker();</span><br><span class="line"><span class="hljs-keyword">let</span> pickedCard = cardPicker();</span><br><span class="line"></span><br><span class="line">alert(<span class="hljs-string">"card: "</span> + pickedCard.card + <span class="hljs-string">" of "</span> + pickedCard.suit);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>回调函数中的<code>this</code>：</li>
+</ul>
+<h2 id="5-函数重载"><a href="#5-函数重载" class="headerlink" title="5.函数重载"></a>5.函数重载</h2><figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> suits = [<span class="hljs-string">"hearts"</span>, <span class="hljs-string">"spades"</span>, <span class="hljs-string">"clubs"</span>, <span class="hljs-string">"diamonds"</span>];</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">pickCard</span>(<span class="hljs-params">x: &#123;suit: <span class="hljs-built_in">string</span>; card: <span class="hljs-built_in">number</span>; &#125;[]</span>): <span class="hljs-title">number</span></span>;</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">pickCard</span>(<span class="hljs-params">x: <span class="hljs-built_in">number</span></span>): </span>&#123;suit: <span class="hljs-built_in">string</span>; card: <span class="hljs-built_in">number</span>; &#125;;</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">pickCard</span>(<span class="hljs-params">x</span>): <span class="hljs-title">any</span> </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// Check to see if we're working with an object/array</span></span><br><span class="line">    <span class="hljs-comment">// if so, they gave us the deck and we'll pick the card</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> x == <span class="hljs-string">"object"</span>) &#123;</span><br><span class="line">        <span class="hljs-keyword">let</span> pickedCard = <span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">Math</span>.random() * x.length);</span><br><span class="line">        <span class="hljs-keyword">return</span> pickedCard;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-comment">// Otherwise just let them pick the card</span></span><br><span class="line">    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> x == <span class="hljs-string">"number"</span>) &#123;</span><br><span class="line">        <span class="hljs-keyword">let</span> pickedSuit = <span class="hljs-built_in">Math</span>.floor(x / <span class="hljs-number">13</span>);</span><br><span class="line">        <span class="hljs-keyword">return</span> &#123; suit: suits[pickedSuit], card: x % <span class="hljs-number">13</span> &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> myDeck = [&#123; suit: <span class="hljs-string">"diamonds"</span>, card: <span class="hljs-number">2</span> &#125;, &#123; suit: <span class="hljs-string">"spades"</span>, card: <span class="hljs-number">10</span> &#125;, &#123; suit: <span class="hljs-string">"hearts"</span>, card: <span class="hljs-number">4</span> &#125;];</span><br><span class="line"><span class="hljs-keyword">let</span> pickedCard1 = myDeck[pickCard(myDeck)];</span><br><span class="line">alert(<span class="hljs-string">"card: "</span> + pickedCard1.card + <span class="hljs-string">" of "</span> + pickedCard1.suit);</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> pickedCard2 = pickCard(<span class="hljs-number">15</span>);</span><br><span class="line">alert(<span class="hljs-string">"card: "</span> + pickedCard2.card + <span class="hljs-string">" of "</span> + pickedCard2.suit);</span><br></pre></td></tr></table></figure>
+<p>typescript将自动从前往后建立重载列表，查找时也是从前往后查找。注意这里<code>pickCard(x): any</code>不属于重载列表。</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/typescript/">typescript</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/03/11/TypeScript/枚举/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">枚举</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/03/09/TypeScript/类/">
+                <span class="level-item">接口</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="函数" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

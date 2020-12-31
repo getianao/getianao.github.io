@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>自动化构建工具与gradle - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="一、定义我们在学习c语言的时候都知道，c语言源程序从源程序到二进制程序，经过了预处理(Preprocessing), 编译(Compilation), 汇编(Assemble), 链接(Linking)的过程，在使用gcc进行编译时只需要gcc test.c -o test就可以生成，或者复杂点，一步步生成中间代码：">
+<meta name="keywords" content="Android,gradle,自动化构建工具">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自动化构建工具与gradle">
+<meta property="og:url" content="http://yoursite.com/2018/12/10/Android/自动化构建工具/自动化构建工具是什么/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="一、定义我们在学习c语言的时候都知道，c语言源程序从源程序到二进制程序，经过了预处理(Preprocessing), 编译(Compilation), 汇编(Assemble), 链接(Linking)的过程，在使用gcc进行编译时只需要gcc test.c -o test就可以生成，或者复杂点，一步步生成中间代码：">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2018/12/10/Android/自动化构建工具/自动化构建工具是什么/1544012742103.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/10/Android/自动化构建工具/自动化构建工具是什么/1544065534130.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/10/Android/自动化构建工具/自动化构建工具是什么/1544066117729.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/10/Android/自动化构建工具/自动化构建工具是什么/1544067283474.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/10/Android/自动化构建工具/自动化构建工具是什么/自动化构建工具是什么./1544068285699.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/10/Android/自动化构建工具/自动化构建工具是什么/1544069072925.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/10/Android/自动化构建工具/自动化构建工具是什么/1544179544125.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/10/Android/自动化构建工具/自动化构建工具是什么/1544179993327.png">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.177Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="自动化构建工具与gradle">
+<meta name="twitter:description" content="一、定义我们在学习c语言的时候都知道，c语言源程序从源程序到二进制程序，经过了预处理(Preprocessing), 编译(Compilation), 汇编(Assemble), 链接(Linking)的过程，在使用gcc进行编译时只需要gcc test.c -o test就可以生成，或者复杂点，一步步生成中间代码：">
+<meta name="twitter:image" content="http://yoursite.com/2018/12/10/Android/自动化构建工具/自动化构建工具是什么/1544012742103.png">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="自动化构建工具与gradle" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2018-12-10T16:00:00.000Z">2018-12-11</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.177Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/Android/">Android</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/gradle/">gradle</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/自动化构建工具/">自动化构建工具</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    15 分钟 读完 (大约 2213 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                自动化构建工具与gradle
+            
+        </h1>
+        <div class="content">  
+            <h2 id="一、定义"><a href="#一、定义" class="headerlink" title="一、定义"></a>一、定义</h2><p>我们在学习c语言的时候都知道，c语言源程序从源程序到二进制程序，经过了预处理(Preprocessing), 编译(Compilation), 汇编(Assemble), 链接(Linking)的过程，在使用gcc进行编译时只需要<code>gcc test.c -o test</code>就可以生成，或者复杂点，一步步生成中间代码：</p>
+<a id="more"></a>
+<figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">gcc -e test.c -o test.i</span><br><span class="line">gcc -s test.i -o test.s</span><br><span class="line">gcc  -c test.s -o test.o</span><br><span class="line">gcc test.o -o <span class="hljs-built_in">test</span></span><br></pre></td></tr></table></figure>
+<p>那么复杂一些的工程呢，里面有各种数不胜数的源程序、头文件，都按模块、功能分好了类，总不能手工一个个编译吧，你可能会说：“那就用makefile啊”，没错，makefile可以帮助你按照顺序编译程序或者执行一些功能，它其实就是一种自动化构建工具（Build Automation）。</p>
+<blockquote>
+<p>Build tools are programs that automate the creation of executable applications from source code. Building incorporates compiling, linking and packaging the code into a usable or executable form. In small projects, developers will often manually invoke the build process. This is not practical for larger projects, where it is very hard to keep track of what needs to be built, in what sequence and what dependencies there are in the building process. Using an automation tool allows the build process to be more consistent.</p>
+</blockquote>
+<p><strong>自动化构建工具就是自动将源码生成为可执行文件的工具。</strong></p>
+<p>常用的组建自动化工具就有Make、Rake、Cake、MS build、<a href="https://zh.wikipedia.org/wiki/Apache_Ant" target="_blank" rel="noopener">Ant</a>、<a href="https://zh.wikipedia.org/wiki/Gradle" target="_blank" rel="noopener">Gradle</a>等。</p>
+<p>原来我一直在用自动化构建工具啊。</p>
+<h2 id="二、它们能干什么"><a href="#二、它们能干什么" class="headerlink" title="二、它们能干什么"></a>二、它们能干什么</h2><p>一般自动化构建工具有如下的feature：</p>
+<ul>
+<li>丰富的插件库</li>
+<li>编译管理工具</li>
+<li>源码管理工具</li>
+<li>各种可用的UI</li>
+<li>和主流IDE兼容</li>
+<li>并行测试或编译</li>
+<li>依赖管理</li>
+<li>版本冲突解决</li>
+<li>协同调试工具</li>
+<li>增量编译</li>
+<li>最小化重新编译</li>
+<li>自动事件/编译</li>
+<li>框架的自动初始化</li>
+<li>代码和资源的及时更新</li>
+<li>构建缓存、可缓存任务</li>
+<li>构建指标、性能跟踪</li>
+</ul>
+<h3 id="三、常用自动化构建工具"><a href="#三、常用自动化构建工具" class="headerlink" title="三、常用自动化构建工具"></a>三、常用自动化构建工具</h3><ul>
+<li>评价最高的自动化构建工具包括: Gradle, Codeship, TeamCity, and Travis CI.</li>
+<li><p>其他的自动化构建工具包括:  Jenkins, CircleCI, Bamboo, and Apache Maven.</p>
+<p><img src="/2018/12/10/Android/自动化构建工具/自动化构建工具是什么/1544012742103.png" alt="评价最高的自动化构建工具"> </p>
+</li>
+</ul>
+<h2 id="四、关于Gradle"><a href="#四、关于Gradle" class="headerlink" title="四、关于Gradle"></a>四、关于Gradle</h2><p>在写安卓app时，经常因为要引入第三方库或者修改一些系统信息而修改gradle，有时候build gradle的需要很长时间，这个过程中Gradle干了写什么？</p>
+<blockquote>
+<p>这一部分主要翻译自Łukasz Wasylkowski的文章《Understanding Android Gradle build files》，链接见文末</p>
+</blockquote>
+<h3 id="1-gradle是什么"><a href="#1-gradle是什么" class="headerlink" title="1.gradle是什么"></a>1.gradle是什么</h3><blockquote>
+<p>Gradle是一个基于Apache Ant和Apache Maven概念的项目自动化建构工具。它使用一种基于Groovy的特定领域语言(DSL)来声明项目设置，抛弃了基于XML的各种繁琐配置。 面向Java应用为主。当前其支持的语言限于Java、Groovy和Scala，计划未来将支持更多的语言。</p>
+</blockquote>
+<h3 id="2-Groovy"><a href="#2-Groovy" class="headerlink" title="2.Groovy"></a>2.Groovy</h3><ol>
+<li><p><strong>语法</strong></p>
+<p>gradle文件使用groovy脚本语言编写的，它的语法很容易理解，但需要注意以下几点：</p>
+<ul>
+<li><p>调用函数时有一个或多个参数不需要括号。</p>
+<figure class="highlight groovy hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">def</span> printAge(String name, <span class="hljs-keyword">int</span> age) &#123;</span><br><span class="line">    print(<span class="hljs-string">"$name is $age years old"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">def</span> printEmptyLine() &#123;</span><br><span class="line">    println()</span><br><span class="line">&#125;</span><br><span class="line">printAge <span class="hljs-string">"John"</span>, <span class="hljs-number">24</span> <span class="hljs-comment">// Will print "John is 24 years old"</span></span><br><span class="line">printEmptyLine() <span class="hljs-comment">// Will print empty line</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>最后一个参数是closure时（lambda）,可以写在括号外面。</p>
+<figure class="highlight groovy hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">def</span> callWithParam(String param, Closure&lt;String&gt; closure) &#123;</span><br><span class="line">    closure(param)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">callWithParam(<span class="hljs-string">"param"</span>, &#123; println it &#125;) <span class="hljs-comment">// Will print "param"</span></span><br><span class="line">callWithParam(<span class="hljs-string">"param"</span>) &#123; println it &#125; <span class="hljs-comment">// Will print "param"</span></span><br><span class="line">callWithParam <span class="hljs-string">"param"</span>, &#123; println it &#125; <span class="hljs-comment">// Will print "param"</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>当参数中有定义map的元素时，它们将会被转化为一个map作为第一个元素，其他参数排在map参数之后。</p>
+<figure class="highlight groovy hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">def</span> printPersonInfo(Map&lt;String, Object&gt; person) &#123;</span><br><span class="line">    println(<span class="hljs-string">"$&#123;person.name&#125; is $&#123;person.age&#125; years old"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">def</span> printJobInfo(Map&lt;String, Object&gt; job, String employeeName) &#123;</span><br><span class="line">    println(<span class="hljs-string">"$employeeName works as $&#123;job.title&#125; at $&#123;job.company&#125;"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">printPersonInfo <span class="hljs-string">name:</span> <span class="hljs-string">"John"</span>, <span class="hljs-string">age:</span> <span class="hljs-number">24</span></span><br><span class="line">printJobInfo <span class="hljs-string">"John"</span>, <span class="hljs-string">title:</span> <span class="hljs-string">"Android developer"</span>, <span class="hljs-string">company:</span> <span class="hljs-string">"Tooploox"</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p><strong>closures</strong></p>
+<p>闭包是开放的、匿名的、可以执行的代码块，它们有参数、返回值，它们可以被分配给某个对象。</p>
+<figure class="highlight groovy hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">WriterOne</span> &#123;</span></span><br><span class="line">    <span class="hljs-keyword">def</span> printText(str) &#123;</span><br><span class="line">        println <span class="hljs-string">"Printed in One: $str"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">WriterTwo</span> &#123;</span></span><br><span class="line">    <span class="hljs-keyword">def</span> printText(str) &#123;</span><br><span class="line">        println <span class="hljs-string">"Printed in Two: $str"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">def</span> printClosure = &#123;</span><br><span class="line">    printText <span class="hljs-string">"I come from a closure"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">printClosure.delegate = <span class="hljs-keyword">new</span> WriterOne()</span><br><span class="line">printClosure() <span class="hljs-comment">// will print "Printed in One: I come from a closure</span></span><br><span class="line">printClosure.delegate = <span class="hljs-keyword">new</span> WriterTwo()</span><br><span class="line">printClosure() <span class="hljs-comment">// will print "Printed in Two: I come from a closure</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="3-关于gradle"><a href="#3-关于gradle" class="headerlink" title="3.关于gradle"></a>3.关于gradle</h2><ol>
+<li><p><strong>脚本文件</strong></p>
+<p>Gradle主要用到三个脚本文件：</p>
+<ul>
+<li><code>build.gradle</code>文件中的<em>build</em> 脚本 . 它们针对<code>Project</code>对象执行;</li>
+<li><code>settings.gradle</code> 文件中的<em>settings</em> 脚本, 针对<code>Settings</code>对象执行;</li>
+<li><em>init</em> 脚本 用于全局设置(针对 <code>Gradle</code>实例执行)</li>
+</ul>
+</li>
+<li><p><strong>projects</strong></p>
+<p>gradle中含有一个或多个project，project有task组成，至少存在一个root project，它的里面可能还有subproject。按照惯例，root project主要提供了project布局、通用设置、插件路径。</p>
+</li>
+</ol>
+<h2 id="4-创建一个基于gradle的Android工程项目"><a href="#4-创建一个基于gradle的Android工程项目" class="headerlink" title="4.创建一个基于gradle的Android工程项目"></a>4.创建一个基于gradle的Android工程项目</h2><p>一般的安卓目录如下：</p>
+<blockquote>
+<p>├── settings.gradle # [1]<br>├── build.gradle # [2]<br>├── gradle<br>│   └── wrapper<br>└── app<br>  ├── gradle.properties # [3]<br>  ├── build.gradle # [4]<br>  └── src</p>
+</blockquote>
+<p> [1]这是root project的设置文件，针对setting对象执行</p>
+<p> [2]<em>Root project</em>的build设置</p>
+<p> [3]<em>App</em> project的的配置文件，针对<em>app</em>的 <code>Settings</code></p>
+<p> [4]<em>App</em> project’的build设置</p>
+<h3 id="1-创建一个gradle项目"><a href="#1-创建一个gradle项目" class="headerlink" title="1.创建一个gradle项目"></a>1.创建一个gradle项目</h3><p>新建一个example文件夹，cd到其目录，然后执行<code>gradle projects</code>，就会发现已经新建好一个gradle project了。</p>
+<p><img src="/2018/12/10/Android/自动化构建工具/自动化构建工具是什么/1544065534130.png" alt="1544065534130"></p>
+<h3 id="2-设置projects层次结构"><a href="#2-设置projects层次结构" class="headerlink" title="2.设置projects层次结构"></a>2.设置projects层次结构</h3><p>如果我们想要一个和默认的安卓项目相似的结构，我们需要一个<code>setting.gradle</code>文件，它配置了实例和<code>project</code>实例的层次。</p>
+<p> <code>setting.gradle</code>文件中使用 <code>void include(String[] projectPaths)</code> 方法可以添加一个project，我们用它来添加一个<code>app</code>的subproject。</p>
+<figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">echo</span> <span class="hljs-string">"include ':app'"</span> &gt; settings.gradle</span><br><span class="line">gradle projects</span><br></pre></td></tr></table></figure>
+<p><img src="/2018/12/10/Android/自动化构建工具/自动化构建工具是什么/1544066117729.png" alt="1544066117729"></p>
+<h3 id="3构建Android-subproject"><a href="#3构建Android-subproject" class="headerlink" title="3构建Android subproject"></a>3构建Android subproject</h3><p>现在我们将设置root project的<code>build.gradle</code>文件。</p>
+<p>我们可以通过<code>apply</code>方法将<code>com.android.application</code>导入到<code>app</code>project中。</p>
+<blockquote>
+<p>void apply(Closure closure)<br>void apply(Map&lt;String, ?&gt; options)<br>void apply(Action&lt;? super ObjectConfigurationAction&gt; action)</p>
+</blockquote>
+<figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir app</span><br><span class="line"><span class="hljs-built_in">echo</span> apply plugin: <span class="hljs-string">'com.android.application'</span> &gt; app/build.gradle</span><br><span class="line">gradle app:tasks</span><br></pre></td></tr></table></figure>
+<p>但是输出了错误信息：</p>
+<p><img src="/2018/12/10/Android/自动化构建工具/自动化构建工具是什么/1544067283474.png" alt="1544067283474"></p>
+<p>错误之处找不到’com.android.application’的位置，这很容易理解，因为我们没有为它指定路径，我们在root或subproject的<code>build.gradle</code>中通过添加<code>buildscript</code>来设置路径。</p>
+<figure class="highlight groovy hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">buildscript &#123;</span><br><span class="line">    repositories &#123;</span><br><span class="line">        jcenter()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    dependencies &#123;</span><br><span class="line">        classpath <span class="hljs-string">'com.android.tools.build:gradle:2.3.3'</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/2018/12/10/Android/自动化构建工具/自动化构建工具是什么/自动化构建工具是什么./1544068285699.png" alt="1544068285699"></p>
+<p>继续出错，没有指定buildToolsVersion版本，在app的<code>build.gradle</code>添加如下代码，然后运行:</p>
+<figure class="highlight groovy hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">   buildToolsVersion <span class="hljs-string">"25.0.1"</span></span><br><span class="line">   compileSdkVersion <span class="hljs-number">25</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>android</code>方法定义了<code>buildToolsVersion</code> and <code>compileSdkVersion</code> 两个方法。</p>
+<p><img src="/2018/12/10/Android/自动化构建工具/自动化构建工具是什么/1544069072925.png" alt="1544069072925"></p>
+<p>又有报错了，提示找不到Android SDK,需要在<code>local.properties</code>中定义或者添加环境变量。 </p>
+<p>我们就在root下新建一个<code>local.properties</code>并写入SDK的路径，然后运行：</p>
+<figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">echo</span> sdk.dir=C\:\\Users\\getia\\AppData\\Local\\Android\\Sdk&gt; local.properties</span><br><span class="line">gradle app:tasks</span><br></pre></td></tr></table></figure>
+<p><img src="/2018/12/10/Android/自动化构建工具/自动化构建工具是什么/1544179544125.png" alt="1544179544125"></p>
+<p>又又报错了，这次是<code>AndroidManifest.xml</code>,我们在app/src/main目录下新建<code>AndroidManifest.xml</code>文件并向其中添加以下语句，再次运行：</p>
+<figure class="highlight xml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir app\src</span><br><span class="line">mkdir app\src\main</span><br><span class="line">echo apply plugin: 'com.android.application' &gt; app/src/main/AndroidManifest.xml;</span><br><span class="line">gradle app:tasks</span><br></pre></td></tr></table></figure>
+<p><img src="/2018/12/10/Android/自动化构建工具/自动化构建工具是什么/1544179993327.png" alt="1544179993327"></p>
+<p>终于成功了，我流下了没有技术的眼泪。</p>
+<h2 id="4-添加依赖-Dependencies"><a href="#4-添加依赖-Dependencies" class="headerlink" title="4.添加依赖(Dependencies)"></a>4.添加依赖(Dependencies)</h2><figure class="highlight groovy hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    compile <span class="hljs-string">'io.reactivex.rxjava2:rxjava:2.0.4'</span></span><br><span class="line">    testCompile <span class="hljs-string">'junit:junit:4.12'</span></span><br><span class="line">    annotationProcessor <span class="hljs-string">'org.parceler:parceler:1.1.6'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Dependencies是一个特殊的代码块，如果你查看Dependencies的文档<a href="https://docs.gradle.org/current/dsl/org.gradle.api.artifacts.dsl.DependencyHandler.html#N162FA" target="_blank" rel="noopener">DependencyHandler</a> ，你会发现根本就没有<code>compile</code> 或者<code>testCompile</code>方法。因为它使用了groovy语言的另一种特性<a href="http://www.groovy-lang.org/metaprogramming.html#_methodmissing" target="_blank" rel="noopener"><em>methodMissing</em></a>，它在没有找到对应方法名或参数表时调用：当调用了一个没有定义的方法，如果它的参数大于1个并且这个名字的方法被配置（*）过，那么就根据它的参数数目和类型，调用<code>doAdd</code>方法。</p>
+<blockquote>
+<p>(*) 每一个插件都可以给 dependencies handler添加配置. 比如 <code>java</code> 插件 定义列 <code>compile</code>, <code>compileClasspath</code>, <code>testCompile</code> 和一些其他配置。Android 插件<code>annotationProcessor</code> <code>&lt;variant&gt;Compile</code>, <code>&lt;variant&gt;TestCompile</code> 等配置。</p>
+</blockquote>
+<p> <code>doAdd</code> 方法是私有的, i它可以被 公有方法<code>add</code>调用。 所以我们可以这么来重写Dependencies代码块(*) ：</p>
+<figure class="highlight groovy hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>(*) 一般情况下不要这么做</p>
+</blockquote>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><a href="https://www.techopedia.com/definition/16359/build-tool" target="_blank" rel="noopener">https://www.techopedia.com/definition/16359/build-tool</a></p>
+<p><a href="https://www.trustradius.com/build-automation" target="_blank" rel="noopener">https://www.trustradius.com/build-automation</a></p>
+<p><a href="https://medium.com/@wasyl/understanding-android-gradle-build-files-e4b45b73cc4c" target="_blank" rel="noopener">https://medium.com/@wasyl/understanding-android-gradle-build-files-e4b45b73cc4c</a></p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Android/">Android</a>, <a class="has-link-grey -link" href="/tags/gradle/">gradle</a>, <a class="has-link-grey -link" href="/tags/自动化构建工具/">自动化构建工具</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/12/10/Assembly/汇编语言上机实验/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">自动化构建工具与gradle</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/12/10/Assembly/汇编语言开发环境及使用（DOSBOX和MASM32）/">
+                <span class="level-item">汇编开发环境个使用</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc" style="position: sticky; top: 10px;">
+    <div class="card-content" style="padding: 1rem;">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#一、定义">
+        <!-- <span class="has-mr-6">1</span> -->
+        <span>一、定义</span>
+        </a></li><li>
+        <a class="is-flex" href="#二、它们能干什么">
+        <!-- <span class="has-mr-6">2</span> -->
+        <span>二、它们能干什么</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#三、常用自动化构建工具">
+        <!-- <span class="has-mr-6">2.1</span> -->
+        <span>三、常用自动化构建工具</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#四、关于Gradle">
+        <!-- <span class="has-mr-6">3</span> -->
+        <span>四、关于Gradle</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#1-gradle是什么">
+        <!-- <span class="has-mr-6">3.1</span> -->
+        <span>1.gradle是什么</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-Groovy">
+        <!-- <span class="has-mr-6">3.2</span> -->
+        <span>2.Groovy</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#3-关于gradle">
+        <!-- <span class="has-mr-6">4</span> -->
+        <span>3.关于gradle</span>
+        </a></li><li>
+        <a class="is-flex" href="#4-创建一个基于gradle的Android工程项目">
+        <!-- <span class="has-mr-6">5</span> -->
+        <span>4.创建一个基于gradle的Android工程项目</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#1-创建一个gradle项目">
+        <!-- <span class="has-mr-6">5.1</span> -->
+        <span>1.创建一个gradle项目</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-设置projects层次结构">
+        <!-- <span class="has-mr-6">5.2</span> -->
+        <span>2.设置projects层次结构</span>
+        </a></li><li>
+        <a class="is-flex" href="#3构建Android-subproject">
+        <!-- <span class="has-mr-6">5.3</span> -->
+        <span>3构建Android subproject</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#4-添加依赖-Dependencies">
+        <!-- <span class="has-mr-6">6</span> -->
+        <span>4.添加依赖(Dependencies)</span>
+        </a></li><li>
+        <a class="is-flex" href="#参考文献">
+        <!-- <span class="has-mr-6">7</span> -->
+        <span>参考文献</span>
+        </a></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="自动化构建工具与gradle" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

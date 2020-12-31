@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>Java内存自动管理机制 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="主要是看《深入了解Java虚拟机》中内存自动管理机制的总结。介绍了Java虚拟机内存各个区域的作用、垃圾收集的知识。">
+<meta name="keywords" content="Java,深入理解Java虚拟机">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java内存自动管理机制">
+<meta property="og:url" content="http://yoursite.com/2019/11/15/Java/深入理解Java虚拟机/Java内存自动管理机制/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="主要是看《深入了解Java虚拟机》中内存自动管理机制的总结。介绍了Java虚拟机内存各个区域的作用、垃圾收集的知识。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2019/11/15/Java/深入理解Java虚拟机/Java内存自动管理机制/1573869695707.png">
+<meta property="og:image" content="http://yoursite.com/2019/11/15/Java/深入理解Java虚拟机/Java内存自动管理机制/1573877294240.png">
+<meta property="og:image" content="http://yoursite.com/2019/11/15/Java/深入理解Java虚拟机/Java内存自动管理机制/1573877482469.png">
+<meta property="og:image" content="http://yoursite.com/2019/11/15/Java/深入理解Java虚拟机/Java内存自动管理机制/ccd773a5-ad38-4022-895c-7ac318f31437.png">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.277Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java内存自动管理机制">
+<meta name="twitter:description" content="主要是看《深入了解Java虚拟机》中内存自动管理机制的总结。介绍了Java虚拟机内存各个区域的作用、垃圾收集的知识。">
+<meta name="twitter:image" content="http://yoursite.com/2019/11/15/Java/深入理解Java虚拟机/Java内存自动管理机制/1573869695707.png">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="Java内存自动管理机制" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2019-11-15T16:00:00.000Z">2019-11-16</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.277Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/Java/">Java</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/深入理解Java虚拟机/">深入理解Java虚拟机</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    17 分钟 读完 (大约 2517 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Java内存自动管理机制
+            
+        </h1>
+        <div class="content">  
+            <p>主要是看《深入了解Java虚拟机》中内存自动管理机制的总结。介绍了Java虚拟机内存各个区域的作用、垃圾收集的知识。</p>
+<a id="more"></a>
+<h2 id="1-Java内存区域"><a href="#1-Java内存区域" class="headerlink" title="1  Java内存区域"></a>1  Java内存区域</h2><h3 id="1-1-运行时数据区域"><a href="#1-1-运行时数据区域" class="headerlink" title="1.1 运行时数据区域"></a>1.1 运行时数据区域</h3><p>运行时数据区域可大致分为<strong>线程隔离的数据区</strong>和<strong>线程共享的数据区</strong>。</p>
+<p><img src="/2019/11/15/Java/深入理解Java虚拟机/Java内存自动管理机制/1573869695707.png" alt="1573869695707"></p>
+<h4 id="1-1-1-线程隔离的数据区"><a href="#1-1-1-线程隔离的数据区" class="headerlink" title="1.1.1 线程隔离的数据区"></a>1.1.1 线程隔离的数据区</h4><ul>
+<li><p>程序计数器 Program Counter Register</p>
+<p>保存了正在执行的虚拟机字节码指令的地址，用来存取下一条需要执行的字节码指令。</p>
+<p>多线程中，需要保证线程切换后能够恢复到正确的执行位置，多线程之间的计数器互不影响，所以它应该是“线程私有”的。</p>
+</li>
+<li><p>Java虚拟机栈 VM Stack</p>
+<p>我们平时在Java中所说的“存在栈里”的“栈”就是虚拟机栈（中的局部变量表）；虚拟机栈描述的是Java方法执行的内存模型：每个方法创建一个栈帧来存储<strong>局部变量表</strong>、<strong>操作数栈</strong>、动态连接、方法出口等信息。</p>
+<p>局部变量表中存储了各种基本数据类型、对象引用和returnAddress类型（指向字节码指令的地址）。</p>
+<p>我们常见的异常：StackOverflowError（请求栈深度大于允许深度）和OutOfMemoryError（无法申请到足够的内存）就是来自于此。</p>
+</li>
+<li><p>本地方法栈 Native Method Stack</p>
+<p>和虚拟机栈类似，只不过前者向虚拟机提供本地方法服务（C、C++ 或汇编语言等编写， 被编译为基于本机硬件和操作系统的程序 ） ，后者提供Java方法服务。</p>
+</li>
+</ul>
+<h4 id="1-1-2-线程共享的数据区"><a href="#1-1-2-线程共享的数据区" class="headerlink" title="1.1.2 线程共享的数据区"></a>1.1.2 线程共享的数据区</h4><ul>
+<li><p>堆 Java Heap</p>
+<p>堆存在的唯一目的就是存放对象，但随着JIT（即时）编译器的发展，对象不一定存放在堆中（逃逸技术和标量替换）。我们可以认为堆来逻辑上是连续的，但在物理上不一定是连续的。这里是垃圾回收的主战场。</p>
+</li>
+<li><p>方法区 Method Area</p>
+<p>用来存放虚拟机加载的<strong>类信息</strong>、<strong>常量</strong>、<strong>静态变量</strong>、编译后的代码。通常不会在这个区域实现垃圾回收。</p>
+<p>常量、静态变量存储在方法区中的运行时常量池中，常量池具有动态性，常量在编译期和运行期间都可以放入池中。</p>
+</li>
+</ul>
+<h3 id="1-2-直接内存"><a href="#1-2-直接内存" class="headerlink" title="1.2 直接内存"></a>1.2 直接内存</h3><p>直接内存不属于运行时数据区域。在 JDK 1.4 中新引入了 NIO 类，它可以使用 Native 函数库直接分配堆外内存，然后通过 Java 堆里的 DirectByteBuffer 对象作为这块内存的引用进行操作。这样能在一些场景中显著提高性能，因为避免了在堆内存和堆外内存来回拷贝数据。</p>
+<h2 id="2-垃圾收集"><a href="#2-垃圾收集" class="headerlink" title="2 垃圾收集"></a>2 垃圾收集</h2><h3 id="2-1-4种引用类型"><a href="#2-1-4种引用类型" class="headerlink" title="2.1 4种引用类型"></a>2.1 4种引用类型</h3><p>在Java1.2之前只有一种引用类型，这样对象只有两种引用状态：被引用和没被引用。在Java1.2之后引用被分为4种：强引用、软引用、弱引用、虚引用，这四种引用强度依次减弱。</p>
+<ul>
+<li><p>强引用</p>
+<p>只要引用存在就不会被回收的对象。</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Object obj=<span class="hljs-keyword">new</span> Object();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>软引用</p>
+<p>软引用用来描述一些有用但非必需的对象；它们在要发生内存溢出异常（内存不足）前回收，如果回收后依然内存不足。则抛出异常。</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Object obj = <span class="hljs-keyword">new</span> Object();</span><br><span class="line">SoftReference&lt;Object&gt; sf = <span class="hljs-keyword">new</span> SoftReference&lt;Object&gt;(obj);</span><br><span class="line">obj = <span class="hljs-keyword">null</span>;  <span class="hljs-comment">// 使对象只被软引用关联</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>弱引用</p>
+<p>弱引用关联的对象在下一次垃圾回收时被回收。</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Object obj = <span class="hljs-keyword">new</span> Object();</span><br><span class="line">WeakReference&lt;Object&gt; wf = <span class="hljs-keyword">new</span> WeakReference&lt;Object&gt;(obj);</span><br><span class="line">obj = <span class="hljs-keyword">null</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>虚引用</p>
+<p>对象是否有虚引用，不会影响到它的市民周期，也无法通过虚引用来获得对象的实例；设置虚引用的目的是让这个对象在被回收时收到通知。</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Object obj = <span class="hljs-keyword">new</span> Object();</span><br><span class="line">PhantomReference&lt;Object&gt; pf = <span class="hljs-keyword">new</span> PhantomReference&lt;Object&gt;(obj, <span class="hljs-keyword">null</span>);</span><br><span class="line">obj = <span class="hljs-keyword">null</span>;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="2-2-两种判断对象是否需要回收算法"><a href="#2-2-两种判断对象是否需要回收算法" class="headerlink" title="2.2 两种判断对象是否需要回收算法"></a>2.2 两种判断对象是否需要回收算法</h3><h4 id="2-2-1-引用计数算法"><a href="#2-2-1-引用计数算法" class="headerlink" title="2.2.1 引用计数算法"></a>2.2.1 引用计数算法</h4><p>为对象添加一个引用计数器，当对象增加一个引用时计数器加 1，引用失效时计数器减 1。引用计数为 0 的对象可被回收。 </p>
+<p>在两个对象出现循环引用的情况下，此时引用计数器永远不为 0，导致无法对它们进行回收。正是因为循环引用的存在，因此 Java 虚拟机不使用引用计数算法。 </p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Test</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">public</span> Object instance = <span class="hljs-keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Test a = <span class="hljs-keyword">new</span> Test();</span><br><span class="line">        Test b = <span class="hljs-keyword">new</span> Test();</span><br><span class="line">        a.instance = b;</span><br><span class="line">        b.instance = a;</span><br><span class="line">        a = <span class="hljs-keyword">null</span>;</span><br><span class="line">        b = <span class="hljs-keyword">null</span>;</span><br><span class="line">        doSomething();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-2-可达性分析算法"><a href="#2-2-2-可达性分析算法" class="headerlink" title="2.2.2 可达性分析算法"></a>2.2.2 可达性分析算法</h4><p>以称为“GC Roots”的对象作为起始点向下搜索，不可达的对象就是需要被回收的。</p>
+<p>可作为 GC Roots 的对象一般包含以下几类：</p>
+<ul>
+<li>虚拟机栈中局部变量表中引用的对象</li>
+<li>方法区中类静态属性引用的对象</li>
+<li>方法区中的常量引用的对象</li>
+<li>本地方法栈中 JNI 中引用的对象</li>
+</ul>
+<p>事实上在可达性分析中不可达的对象也不是“非死不可”的，它可以通过下面的方法自我救赎，需要经过两次标记：</p>
+<ol>
+<li>第一次标记的筛选条件是判断不可达对象的<code>finalize()</code>方法是有必要执行的，没有必要执行的含义是“对象没有覆盖<code>finalize()</code>方法或者<code>finalize()</code>方法已经被虚拟机调用过”。</li>
+<li>有必要执行<code>finalize()</code>方法，对象会被放置在 F-Queue 的队列中，并由虚拟机的 Finalizer 线程去依次”执行“它们的<code>finalize()</code>方法（”执行“用引号的原因是只是触发，不会等待结束）。一段时间后 GC 会再次检查这些对象是否连上 GC Roots 的引用链，如果连上了，则不会被回收。</li>
+</ol>
+<blockquote>
+<p><code>finalize()</code>方法作为对象起死回生的仙丹只能被调用一次，之后虚拟机将不会调用。但是它是为了妥协C++程序员的产物，类似C++ 的析构函数，用于关闭外部资源。但是 try-finally 等方式可以做得更好，并且该方法运行代价很高，不确定性大，无法保证各个对象的调用顺序，因此最好不要使用。忘了它💀 </p>
+</blockquote>
+<h3 id="2-3-四种垃圾回收算法"><a href="#2-3-四种垃圾回收算法" class="headerlink" title="2.3 四种垃圾回收算法"></a>2.3 四种垃圾回收算法</h3><h4 id="2-3-1-标记-清除算法"><a href="#2-3-1-标记-清除算法" class="headerlink" title="2.3.1 标记-清除算法"></a>2.3.1 标记-清除算法</h4><p>“标记”即为之前提到的判断对象是否回收的过程，“标记”之后直接”清除“， 在清除阶段，会进行对象回收并取消标志位，另外，还会判断回收后的分块与前一个空闲分块是否连续，若连续，会合并这两个分块。回收对象就是把对象作为分块，连接到被称为 “空闲链表” 的单向链表，之后进行分配时只需要遍历这个空闲链表，就可以找到分块。 </p>
+<p>不足是：</p>
+<ul>
+<li>标记和清除过程效率都不高；</li>
+<li>会产生大量不连续的内存碎片，导致无法给大对象分配内存，会再次出发垃圾收集动作。</li>
+</ul>
+<p><img src="/2019/11/15/Java/深入理解Java虚拟机/Java内存自动管理机制/1573877294240.png" alt="1573877294240"></p>
+<h4 id="2-3-2-复制算法"><a href="#2-3-2-复制算法" class="headerlink" title="2.3.2 复制算法"></a>2.3.2 复制算法</h4><p><img src="/2019/11/15/Java/深入理解Java虚拟机/Java内存自动管理机制/1573877482469.png" alt="1573877482469"></p>
+<p>将内存划分为大小相等的两块，每次只使用其中一块，当这一块内存用完了就将还存活的对象复制到另一块上面，然后再把使用过的内存空间进行一次清理。</p>
+<p>主要不足是只使用了内存的一半。</p>
+<p>现在的商业虚拟机都采用这种收集算法回收新生代，但是并不是划分为大小相等的两块，而是一块较大的 Eden 空间和两块较小的 Survivor 空间，每次使用 Eden 和其中一块 Survivor。在回收时，将 Eden 和 Survivor 中还存活着的对象全部复制到另一块 Survivor 上，最后清理 Eden 和使用过的那一块 Survivor。</p>
+<p>HotSpot 虚拟机的 Eden 和 Survivor 大小比例默认为 8:1，保证了内存的利用率达到 90%。如果每次回收有多于 10% 的对象存活，那么一块 Survivor 就不够用了，此时需要依赖于老年代进行空间分配担保，也就是借用老年代的空间存储放不下的对象。</p>
+<h4 id="2-3-3-标记-整理算法"><a href="#2-3-3-标记-整理算法" class="headerlink" title="2.3.3 标记-整理算法"></a>2.3.3 标记-整理算法</h4><p><img src="/2019/11/15/Java/深入理解Java虚拟机/Java内存自动管理机制/ccd773a5-ad38-4022-895c-7ac318f31437.png" alt="img"></p>
+<p>让所有存活的对象都向一端移动，然后直接清理掉端边界以外的内存。</p>
+<p>优点是不会产生内存碎片；不足是需要移动大量对象，处理效率比较低。</p>
+<h4 id="2-3-4-分代收集算法"><a href="#2-3-4-分代收集算法" class="headerlink" title="2.3.4 分代收集算法"></a>2.3.4 分代收集算法</h4><p>现在的商业虚拟机采用分代收集算法，它根据对象存活周期将内存划分为几块，不同块采用适当的收集算法。</p>
+<p>一般将堆分为新生代和老年代。</p>
+<ul>
+<li>新生代使用：复制算法（因为有大量对象死去，少数对象存活）</li>
+<li>老年代使用：标记 - 清除 或者 标记 - 整理 算法</li>
+</ul>
+<h2 id="3-垃圾收集器"><a href="#3-垃圾收集器" class="headerlink" title="3 垃圾收集器"></a>3 垃圾收集器</h2><h2 id="4-内存分配和回收策略"><a href="#4-内存分配和回收策略" class="headerlink" title="4 内存分配和回收策略"></a>4 内存分配和回收策略</h2><blockquote>
+<p>参考文档：</p>
+<ul>
+<li><p>《深入了解Java虚拟机》周志明 </p>
+</li>
+<li><p><a href="https://cyc2018.github.io/CS-Notes/#/notes/Java 虚拟机" target="_blank" rel="noopener">CS-Notes Java虚拟机</a></p>
+</li>
+</ul>
+</blockquote>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Java/">Java</a>, <a class="has-link-grey -link" href="/tags/深入理解Java虚拟机/">深入理解Java虚拟机</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/11/30/Interview/面经/从零开始的Android实习面试之旅/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">从零开始的Android实习面试之旅</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/08/21/Interview/剑指Offer/剑指offer题解目录/">
+                <span class="level-item">剑指offer题解目录</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc" style="position: sticky; top: 10px;">
+    <div class="card-content" style="padding: 1rem;">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#1-Java内存区域">
+        <!-- <span class="has-mr-6">1</span> -->
+        <span>1  Java内存区域</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#1-1-运行时数据区域">
+        <!-- <span class="has-mr-6">1.1</span> -->
+        <span>1.1 运行时数据区域</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#1-1-1-线程隔离的数据区">
+        <!-- <span class="has-mr-6">1.1.1</span> -->
+        <span>1.1.1 线程隔离的数据区</span>
+        </a></li><li>
+        <a class="is-flex" href="#1-1-2-线程共享的数据区">
+        <!-- <span class="has-mr-6">1.1.2</span> -->
+        <span>1.1.2 线程共享的数据区</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#1-2-直接内存">
+        <!-- <span class="has-mr-6">1.2</span> -->
+        <span>1.2 直接内存</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#2-垃圾收集">
+        <!-- <span class="has-mr-6">2</span> -->
+        <span>2 垃圾收集</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#2-1-4种引用类型">
+        <!-- <span class="has-mr-6">2.1</span> -->
+        <span>2.1 4种引用类型</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-2-两种判断对象是否需要回收算法">
+        <!-- <span class="has-mr-6">2.2</span> -->
+        <span>2.2 两种判断对象是否需要回收算法</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#2-2-1-引用计数算法">
+        <!-- <span class="has-mr-6">2.2.1</span> -->
+        <span>2.2.1 引用计数算法</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-2-2-可达性分析算法">
+        <!-- <span class="has-mr-6">2.2.2</span> -->
+        <span>2.2.2 可达性分析算法</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#2-3-四种垃圾回收算法">
+        <!-- <span class="has-mr-6">2.3</span> -->
+        <span>2.3 四种垃圾回收算法</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#2-3-1-标记-清除算法">
+        <!-- <span class="has-mr-6">2.3.1</span> -->
+        <span>2.3.1 标记-清除算法</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-3-2-复制算法">
+        <!-- <span class="has-mr-6">2.3.2</span> -->
+        <span>2.3.2 复制算法</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-3-3-标记-整理算法">
+        <!-- <span class="has-mr-6">2.3.3</span> -->
+        <span>2.3.3 标记-整理算法</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-3-4-分代收集算法">
+        <!-- <span class="has-mr-6">2.3.4</span> -->
+        <span>2.3.4 分代收集算法</span>
+        </a></li></ul></li></ul></li><li>
+        <a class="is-flex" href="#3-垃圾收集器">
+        <!-- <span class="has-mr-6">3</span> -->
+        <span>3 垃圾收集器</span>
+        </a></li><li>
+        <a class="is-flex" href="#4-内存分配和回收策略">
+        <!-- <span class="has-mr-6">4</span> -->
+        <span>4 内存分配和回收策略</span>
+        </a></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="Java内存自动管理机制" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>栈—表达式求值 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="一、问题描述 表达式求值是编译的一个基本问题，他的实现是栈的实例，主要困难有两个 ①如何把字符串中的运算数和运算符分开 ②确定运算符之间的优先关系并化简">
+<meta name="keywords" content="数据结构,算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="栈—表达式求值">
+<meta property="og:url" content="http://yoursite.com/2017/09/27/Data-Structure/数据结构——栈—表达式求值/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="一、问题描述 表达式求值是编译的一个基本问题，他的实现是栈的实例，主要困难有两个 ①如何把字符串中的运算数和运算符分开 ②确定运算符之间的优先关系并化简">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.245Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="栈—表达式求值">
+<meta name="twitter:description" content="一、问题描述 表达式求值是编译的一个基本问题，他的实现是栈的实例，主要困难有两个 ①如何把字符串中的运算数和运算符分开 ②确定运算符之间的优先关系并化简">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="栈—表达式求值" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2017-09-27T16:00:00.000Z">2017-09-28</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.245Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/数据结构/">数据结构</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/算法/">算法</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    12 分钟 读完 (大约 1823 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                栈—表达式求值
+            
+        </h1>
+        <div class="content">  
+            <p>一、问题描述</p>
+<p>表达式求值是编译的一个基本问题，他的实现是栈的实例，主要困难有两个</p>
+<p>①如何把字符串中的运算数和运算符分开</p>
+<p>②确定运算符之间的优先关系并化简</p>
+<a id="more"></a>
+<p>二、代码实现<br>[cpp]<br>/* </p>
+<ul>
+<li>暂时运算数不支持小数输入，但支持输出小数 </li>
+<li><p>仅支持加+减-乘<em>除/及小括号 （） 
+</em>/<br>import java.util.Stack;<br>import java.util.Scanner;<br>public class EvaluateExpression {<br> Double number = 0.0;  </p>
+<p> public Double getAnswer() {  </p>
+<pre><code>int array[][] = new int[7][7];//用于存放算符间的优先关系  
+iniArray(array);  
+Stack&lt;Double&gt; stackNumber = new Stack&lt;Double&gt;();// 运算数栈  
+Stack&lt;Character&gt; stackSymbol = new Stack&lt;Character&gt;();// 运算符栈  
+Scanner scan = new Scanner(System.in);  
+String s = scan.nextLine();  
+char[] chars = s.toCharArray();//字符串转化为字符数组 便于单个入栈  
+stackSymbol.push(&apos;#&apos;);  
+for (int i = 0; i &lt; s.length(); i++) {  
+    if (!isNumber(chars[i])) {  
+        if (isNumber(chars[i - 1]))//防止两个运算符相连并没有储存运算数时 误把运算数压栈的情况  
+            stackNumber.push(number);// 如果已经储存了运算数，把运算数压栈  
+        number = 0.0;  
+        switch (priority(array, stackSymbol.peek(), chars[i]))// 判断符号优先级  
+        {  
+        case 0:// 栈顶优先级低，把当前字符入栈  
+        {  
+            stackSymbol.push(chars[i]);  
+            break;  
+        }  
+        case 1:// 栈顶优先级高，字符栈出栈，最近两个数字栈出栈计算之后入栈  
+        {  
+            Double a, b, c;  
+            char symbol;  
+            a = stackNumber.pop();  
+            b = stackNumber.pop();  
+            symbol = stackSymbol.pop();  
+            c = operate(a, b, symbol);  
+            stackNumber.push(c);  
+            if (chars[i] == &apos;)&apos;)//运算符()相连时都消去  
+                stackSymbol.pop();  
+            else if (chars[i] != &apos;#&apos;)//当读到结束字符时不压栈  
+                stackSymbol.push(chars[i]);  
+            break;  
+        }  
+        case -1: {  
+            stackSymbol.pop();// 优先级相同，去括号  
+
+        }  
+        }  
+    } else  
+        number = number * 10 + (int) ((int) chars[i] - 48);// 原运算数乘10  
+}  
+if (stackSymbol.peek() != &apos;#&apos;) {//遇到结束字符 但栈中仍还有一个计算没有计算完  
+    Double a, b, c;  
+    char symbol;  
+    a = stackNumber.pop();  
+    b = stackNumber.pop();  
+    symbol = stackSymbol.pop();  
+    c = operate(a, b, symbol);  
+    stackNumber.push(c);  
+    stackSymbol.pop();  
+}  
+return stackNumber.peek();  
+</code></pre><p> }  </p>
+<p> boolean isNumber(char a) // 判断字符是否为数字<br> {  </p>
+<pre><code>if ((a &gt;= 48) &amp;&amp; (a &lt;= 57))  
+    return true;  
+else  
+    return false;  
+</code></pre><p> }  </p>
+<p> void iniArray(int a[][]) {//初始化算符的优先关系数组  </p>
+<pre><code>for (int i = 0; i &lt;= 3; i++)  
+    for (int j = 0; j &lt;= 1; j++)  
+        a[i][j] = 1;  
+for (int j = 0; j &lt;= 4; j++)  
+    a[4][j] = 0;  
+a[4][5] = -1;  
+for (int j = 0; j &lt;= 5; j++)  
+    a[5][j] = 0;  
+for (int i = 0; i &lt;= 1; i++)  
+    for (int j = 2; j &lt;= 3; j++)  
+        a[i][j] = 0;  
+for (int i = 2; i &lt;= 3; i++)  
+    for (int j = 2; j &lt;= 3; j++)  
+        a[i][j] = 1;  
+for (int i = 0; i &lt;= 3; i++)  
+    a[i][4] = 0;  
+for (int i = 0; i &lt;= 3; i++)  
+    a[i][5] = 1;  
+for (int i = 0; i &lt;= 5; i++)  
+    a[i][6] = 1;  
+for (int j = 0; j &lt;= 5; j++)  
+    a[6][j] = 0;  
+a[6][6] = -1;  
+</code></pre><p> }  </p>
+<p> int priority(int a[][], Character p, Character q) {// 判断运算符并查表  </p>
+<pre><code>// +0 -1 *2 /3 (4 )5  
+// &gt;1 &lt;0 =1  
+int pp = 0, qq = 0;  
+switch (p) {  
+case &apos;+&apos;:  
+    pp = 0;  
+    break;  
+case &apos;-&apos;:  
+    pp = 1;  
+    break;  
+case &apos;*&apos;:  
+    pp = 2;  
+    break;  
+case &apos;/&apos;:  
+    pp = 3;  
+    break;  
+case &apos;(&apos;:  
+    pp = 4;  
+    break;  
+case &apos;)&apos;:  
+    pp = 5;  
+    break;  
+case &apos;#&apos;:  
+    pp = 6;  
+    break;  
+}  
+switch (q) {  
+case &apos;+&apos;:  
+    qq = 0;  
+    break;  
+case &apos;-&apos;:  
+    qq = 1;  
+    break;  
+case &apos;*&apos;:  
+    qq = 2;  
+    break;  
+case &apos;/&apos;:  
+    qq = 3;  
+    break;  
+case &apos;(&apos;:  
+    qq = 4;  
+    break;  
+case &apos;)&apos;:  
+    qq = 5;  
+    break;  
+case &apos;#&apos;:  
+    qq = 6;  
+    break;  
+}  
+return a[pp][qq];  
+</code></pre><p> }  </p>
+<p> Double operate(Double a, Double b, char c) {//计算操作  </p>
+<pre><code>if (c == &apos;+&apos;)  
+    return a + b;  
+else if (c == &apos;-&apos;)  
+    return b - a;  
+else if (c == &apos;*&apos;)  
+    return a * b;  
+else  
+    return new Double(b.doubleValue() / a.doubleValue());// 小数的除法  
+</code></pre><p> }  </p>
+<p> public static void main(String[] args) {  </p>
+<pre><code>System.out.println(&quot;请输入表达式,并在结尾加上#表示结束输入&quot;);  
+Double ans;  
+EvaluateExpression toGet = new EvaluateExpression();  
+ans = toGet.getAnswer();  
+System.out.println(&quot;答案是&quot; + ans);  
+</code></pre><p> }<br>}<br>[\cpp]<br>更新：2017年10月15日15:22:55</p>
+</li>
+</ul>
+<p>后来上实验课又改成了c++版本，几乎没有什么区别，增加了出入栈过程的输出。<br>[cpp]</p>
+<p>#include<iostream>  </iostream></p>
+<p>#include<string>  </string></p>
+<p>#include<stack><br>using namespace std;<br>double number=0;<br>bool isNumber(char a) // 判断字符是否为数字<br>{<br>    if (((int)a &gt;= 48) &amp;&amp; ((int)a &lt;= 57))<br>        return true;<br>    else<br>        return false;<br>}<br>void iniArray(int a[7][7]) {//初始化算符的优先关系数组  </stack></p>
+<pre><code>for (int i = 0; i &lt;= 3; i++)  
+    for (int j = 0; j &lt;= 1; j++)  
+        a[i][j] = 1;  
+for (int j = 0; j &lt;= 4; j++)  
+    a[4][j] = 0;  
+a[4][5] = -1;  
+for (int j = 0; j &lt;= 5; j++)  
+    a[5][j] = 0;  
+for (int i = 0; i &lt;= 1; i++)  
+    for (int j = 2; j &lt;= 3; j++)  
+        a[i][j] = 0;  
+for (int i = 2; i &lt;= 3; i++)  
+    for (int j = 2; j &lt;= 3; j++)  
+        a[i][j] = 1;  
+for (int i = 0; i &lt;= 3; i++)  
+    a[i][4] = 0;  
+for (int i = 0; i &lt;= 3; i++)  
+    a[i][5] = 1;  
+for (int i = 0; i &lt;= 5; i++)  
+    a[i][6] = 1;  
+for (int j = 0; j &lt;= 5; j++)  
+    a[6][j] = 0;  
+a[6][6] = -1;  
+</code></pre><p>}  </p>
+<p>double operate(double a, double b, char c) {//计算操作<br>    if (c == ‘+’)<br>        return a + b;<br>    else if (c == ‘-‘)<br>        return b - a;<br>    else if (c == ‘<em>‘)<br>        return a </em> b;<br>    else<br>        return b/a;// 小数的除法<br>}  </p>
+<p>int priority(int a[7][7], char p, char q) {// 判断运算符并查表<br>        // +0 -1 <em>2 /3 (4 )5<br>        // &gt;1 &lt;0 =1<br>        int pp = 0, qq = 0;<br>        switch (p) {<br>        case ‘+’:<br>            pp = 0;<br>            break;<br>        case ‘-‘:<br>            pp = 1;<br>            break;<br>        case ‘</em>‘:<br>            pp = 2;<br>            break;<br>        case ‘/‘:<br>            pp = 3;<br>            break;<br>        case ‘(‘:<br>            pp = 4;<br>            break;<br>        case ‘)’:<br>            pp = 5;<br>            break;<br>        case ‘#’:<br>            pp = 6;<br>            break;<br>        }<br>        switch (q) {<br>        case ‘+’:<br>            qq = 0;<br>            break;<br>        case ‘-‘:<br>            qq = 1;<br>            break;<br>        case ‘*’:<br>            qq = 2;<br>            break;<br>        case ‘/‘:<br>            qq = 3;<br>            break;<br>        case ‘(‘:<br>            qq = 4;<br>            break;<br>        case ‘)’:<br>            qq = 5;<br>            break;<br>        case ‘#’:<br>            qq = 6;<br>            break;<br>        }<br>        return a[pp][qq];<br>    }  </p>
+<p>double getAnswer() {<br>    int array[7][7];//用于存放算符间的优先关系<br>    iniArray(array);<br>    stack<double> stackNumber ;// 运算数栈<br>    stack<char> stackSymbol ;// 运算符栈<br>    string s;<br>    cin&gt;&gt;s;<br>    stackSymbol.push(‘#’);<br>    cout&lt;&lt;”运算符#入栈”&lt;&lt;endl;<br>    for (int i = 0; i &lt; s.length(); i++) {<br>        if (!isNumber(s[i])) {<br>            if (isNumber(s[i - 1]))//防止两个运算符相连并没有储存运算数时 误把运算数压栈的情况<br>                cout&lt;&lt;”运算数”&lt;&lt;number&lt;&lt;”入栈”&lt;&lt;endl;<br>                stackNumber.push(number);// 如果已经储存了运算数，把运算数压栈<br>            number = 0.0;<br>            switch (priority(array, stackSymbol.top(), s[i]))// 判断符号优先级<br>            {<br>            case 0:// 栈顶优先级低，把当前字符入栈<br>                {<br>                    cout&lt;&lt;”运算符”&lt;&lt;s[i]&lt;&lt;”入栈”&lt;&lt;endl;<br>                    stackSymbol.push(s[i]);<br>                    break;<br>                }<br>            case 1:// 栈顶优先级高，字符栈出栈，最近两个数字栈出栈计算之后入栈<br>                {<br>                    double a, b, c;<br>                    char symbol;<br>                    a = stackNumber.top();<br>                    cout&lt;&lt;”运算数”&lt;&lt;a&lt;&lt;”出栈”&lt;&lt;endl;<br>                    stackNumber.pop();<br>                    b = stackNumber.top();<br>                    cout&lt;&lt;”运算数”&lt;&lt;b&lt;&lt;”出栈”&lt;&lt;endl;<br>                    stackNumber.pop();<br>                    symbol = stackSymbol.top();<br>                    cout&lt;&lt;”运算符”&lt;&lt;symbol&lt;&lt;”出栈”&lt;&lt;endl;<br>                    stackSymbol.pop();<br>                    c = operate(a, b, symbol);<br>                    cout&lt;&lt;”运算数”&lt;&lt;c&lt;&lt;”入栈”&lt;&lt;endl;<br>                    stackNumber.push(c);<br>                    if (s[i] == ‘)’)//运算符()相连时都消去<br>                        {<br>                            cout&lt;&lt;”运算符)出栈”&lt;&lt;endl;<br>                            stackSymbol.pop();<br>                    }<br>                    else<br>                        if (s[i] != ‘#’)//当读到结束字符时不压栈<br>                        {<br>                            cout&lt;&lt;”运算符”&lt;&lt;s[i]&lt;&lt;”入栈”&lt;&lt;endl;<br>                            stackSymbol.push(s[i]);  </char></double></p>
+<pre><code>                    }  
+                    break;  
+            }  
+        case -1: {  
+
+            char k=stackSymbol.top();  
+            cout&lt;&lt;&quot;运算符&quot;&lt;&lt;k&lt;&lt;&quot;入栈&quot;&lt;&lt;endl;  
+            stackSymbol.pop();// 优先级相同，去括号  
+
+                }  
+        }  
+    } else  
+        number = number * 10 + (int) ((int) s[i] - 48);// 原运算数乘10  
+}  
+if (stackSymbol.top() != &apos;#&apos;) {//遇到结束字符 但栈中仍还有一个计算没有计算完  
+    double a, b, c;  
+    char symbol;  
+    a = stackNumber.top();  
+    cout&lt;&lt;&quot;运算数&quot;&lt;&lt;a&lt;&lt;&quot;出栈&quot;&lt;&lt;endl;  
+    stackNumber.pop();  
+    b = stackNumber.top();  
+        cout&lt;&lt;&quot;运算数&quot;&lt;&lt;b&lt;&lt;&quot;出栈&quot;&lt;&lt;endl;  
+    stackNumber.pop();  
+    symbol = stackSymbol.top();  
+        cout&lt;&lt;&quot;运算符&quot;&lt;&lt;symbol&lt;&lt;&quot;出栈&quot;&lt;&lt;endl;  
+    stackSymbol.pop();  
+    c = operate(a, b, symbol);  
+    stackNumber.push(c);  
+    cout&lt;&lt;&quot;运算数&quot;&lt;&lt;c&lt;&lt;&quot;入栈&quot;&lt;&lt;endl;  
+    char kk=stackSymbol.top();  
+    cout&lt;&lt;&quot;运算符&quot;&lt;&lt;kk&lt;&lt;&quot;出栈&quot;&lt;&lt;endl;  
+    stackSymbol.pop();  
+
+}  
+return stackNumber.top();  
+</code></pre><p>}  </p>
+<p>int main()<br>{<br>    cout&lt;&lt;”请输入表达式,并在结尾加上#表示结束输入”&lt;&lt;endl;<br>    double ans;<br>    ans = getAnswer();<br>    cout&lt;&lt;”答案是” &lt;&lt; ans&lt;&lt;endl;;<br>}<br>[/cpp]</p>
+<p>2017年11月2月更新</p>
+<p>变换为计算器<br>[java]<br>/* 2017.9.28 </p>
+<ul>
+<li>暂时运算数不支持小数输入，但支持输出小数  </li>
+<li>仅支持加+减-乘*除/及小括号 （）  </li>
+<li></li>
+<li>2017.11.2 </li>
+<li>解决结束符相遇时的bug </li>
+<li>抽象运算操作类 </li>
+<li><p>增加支持小数输入<br>*/  public class Calculalor {<br> public static void main(String[] args) {  </p>
+<pre><code>System.out.println(&quot;请输入表达式,并在结尾加上#表示结束输入&quot;);  
+Double ans;  
+EvaluateExpression toGet = new EvaluateExpression();  
+ans = toGet.getAnswer();  
+System.out.println(&quot;答案是&quot; + ans);  
+</code></pre><p> }<br>}<br>[java] view plain copy<br>import java.util.Stack;<br>import java.util.Scanner;<br>class EvaluateExpression {<br> Double number = 0.0;<br> int index=0;<br> public Double getAnswer() {    </p>
+<pre><code>int array[][] = new int[7][7];//用于存放算符间的优先关系    
+iniArray(array);    
+Stack&lt;Double&gt; stackNumber = new Stack&lt;Double&gt;();// 运算数栈    
+Stack&lt;Character&gt; stackSymbol = new Stack&lt;Character&gt;();// 运算符栈    
+Scanner scan = new Scanner(System.in);    
+String s = scan.nextLine();    
+char[] chars = s.toCharArray();//字符串转化为字符数组 便于单个入栈    
+stackSymbol.push(&apos;#&apos;);    
+for (int i = 0; i &lt; s.length(); i++) {    
+    if (!isNumber(chars[i])) {  
+        if(chars[i]==&apos;.&apos;)  
+        {  
+            index++;  
+            continue;  
+        }  
+        if (isNumber(chars[i - 1]))//防止两个运算符相连并没有储存运算数时 误把运算数压栈的情况    
+            stackNumber.push(number);// 如果已经储存了运算数，把运算数压栈    
+        number = 0.0;    
+        index=0;  
+        switch (priority(array, stackSymbol.peek(), chars[i]))// 判断符号优先级    
+        {    
+        case 0:// 栈顶优先级低，把当前字符入栈    
+        {    
+            stackSymbol.push(chars[i]);    
+            break;    
+        }    
+        case 1:// 栈顶优先级高，字符栈出栈，最近两个数字栈出栈计算之后入栈    
+        {    
+            Double a, b, c;    
+            char symbol;    
+            a = stackNumber.pop();    
+            b = stackNumber.pop();    
+            symbol = stackSymbol.pop();    
+            c = operate(a, b, symbol);    
+            stackNumber.push(c);  
+            while(stackSymbol.peek()!=&apos;(&apos;)  
+            {  
+                if (chars[i] == &apos;#&apos;)//当读到结束字符时不压栈  
+                {  
+                    break;  
+                }  
+                Double a1, b1, c1;  
+                char symbol1;  
+                a1 = stackNumber.pop();  
+                b1 = stackNumber.pop();  
+                symbol1 = stackSymbol.pop();  
+                c1 = operate(a1, b1, symbol1);  
+                stackNumber.push(c1);  
+            }  
+            if (chars[i] == &apos;)&apos;)//运算符()相连时都消去    
+                stackSymbol.pop();    
+            else if (chars[i] != &apos;#&apos;)//当读到结束字符时不压栈    
+                stackSymbol.push(chars[i]);    
+            break;    
+        }    
+        case -1: {    
+            if(chars[i] == &apos;#&apos;)  
+                break;  
+            stackSymbol.pop();// 优先级相同，去括号    
+
+        }    
+        }    
+    } else    
+        {  
+        if(index==0)  
+            number = number * 10 + (int) ((int) chars[i] - 48);// 原运算数乘10    
+        else  
+            number=number+ (double) ((int) chars[i] - 48)*Math.pow(0.1,index++);  
+        }  
+}    
+while (stackSymbol.peek() != &apos;#&apos;) {//遇到结束字符 但栈中仍还有一个计算没有计算完    
+    Double a, b, c;    
+    char symbol;    
+    a = stackNumber.pop();    
+    b = stackNumber.pop();    
+    symbol = stackSymbol.pop();    
+    c = operate(a, b, symbol);    
+    stackNumber.push(c);    
+
+}    
+return stackNumber.peek();    
+</code></pre><p> }    </p>
+<p>// 判断字符是否为数字<br> boolean isNumber(char a)<br> {    </p>
+<pre><code>if ((a &gt;= 48) &amp;&amp; (a &lt;= 57))    
+    return true;    
+else    
+    return false;    
+</code></pre><p> }    </p>
+<p>//初始化算符的优先关系表<br> void iniArray(int a[][]) {  </p>
+<pre><code>for (int i = 0; i &lt;= 3; i++)    
+    for (int j = 0; j &lt;= 1; j++)    
+        a[i][j] = 1;    
+for (int j = 0; j &lt;= 4; j++)    
+    a[4][j] = 0;    
+a[4][5] = -1;    
+for (int j = 0; j &lt;= 5; j++)    
+    a[5][j] = 0;    
+for (int i = 0; i &lt;= 1; i++)    
+    for (int j = 2; j &lt;= 3; j++)    
+        a[i][j] = 0;    
+for (int i = 2; i &lt;= 3; i++)    
+    for (int j = 2; j &lt;= 3; j++)    
+        a[i][j] = 1;    
+for (int i = 0; i &lt;= 3; i++)    
+    a[i][4] = 0;    
+for (int i = 0; i &lt;= 3; i++)    
+    a[i][5] = 1;    
+for (int i = 0; i &lt;= 5; i++)    
+    a[i][6] = 1;    
+for (int j = 0; j &lt;= 5; j++)    
+    a[6][j] = 0;    
+a[6][6] = -1;    
+</code></pre><p> }    </p>
+<p>// 判断运算符并查表<br> int priority(int a[][], Character p, Character q) {  </p>
+<pre><code>// +0 -1 *2 /3 (4 )5    
+// &gt;1 &lt;0 =1    
+int pp = 0, qq = 0;    
+switch (p) {    
+case &apos;+&apos;:    
+    pp = 0;    
+    break;    
+case &apos;-&apos;:    
+    pp = 1;    
+    break;    
+case &apos;*&apos;:    
+    pp = 2;    
+    break;    
+case &apos;/&apos;:    
+    pp = 3;    
+    break;    
+case &apos;(&apos;:    
+    pp = 4;    
+    break;    
+case &apos;)&apos;:    
+    pp = 5;    
+    break;    
+case &apos;#&apos;:    
+    pp = 6;    
+    break;    
+}    
+switch (q) {    
+case &apos;+&apos;:    
+    qq = 0;    
+    break;    
+case &apos;-&apos;:    
+    qq = 1;    
+    break;    
+case &apos;*&apos;:    
+    qq = 2;    
+    break;    
+case &apos;/&apos;:    
+    qq = 3;    
+    break;    
+case &apos;(&apos;:    
+    qq = 4;    
+    break;    
+case &apos;)&apos;:    
+    qq = 5;    
+    break;    
+case &apos;#&apos;:    
+    qq = 6;    
+    break;    
+}    
+return a[pp][qq];    
+</code></pre><p> }    </p>
+<p>//计算操作<br> Double operate(Double a, Double b, char c) {   </p>
+<pre><code>if (c == &apos;+&apos;)    
+{  
+    Add add=new Add();  
+    return add.ope(a, b);  
+}  
+else if (c == &apos;-&apos;)    
+{  
+    Subtraction subtraction=new Subtraction();  
+    return subtraction.ope(a, b);  
+}  
+else if (c == &apos;*&apos;)    
+
+{  
+    Multiplic multiplic=new Multiplic();  
+    return multiplic.ope(a, b);  
+}  
+else    
+{  
+    Division division=new Division();  
+    return division.ope(a, b);  
+}  
+</code></pre><p> }    </p>
+</li>
+</ul>
+<p>}<br>[java] view plain copy<br>import java.math.*;<br>interface Operation<br>{<br>    double ope(double a,double b);<br>}  </p>
+<p>//加法<br>class Add implements Operation<br>{<br>    public double ope(double a,double b)<br>    {<br>        BigDecimal a1 = new BigDecimal(Double.toString(a));<br>        BigDecimal b1 = new BigDecimal(Double.toString(b));<br>    return b1.add(a1).doubleValue();<br>    }<br>}  </p>
+<p>//减法<br>class Subtraction implements Operation<br>{<br>    public double ope(double a,double b)<br>    {<br>        BigDecimal a1 = new BigDecimal(Double.toString(a));<br>        BigDecimal b1 = new BigDecimal(Double.toString(b));<br>    return b1.subtract(a1).doubleValue();<br>    }<br>}  </p>
+<p>//乘法<br>class  Multiplic implements Operation<br>{<br>    public double ope(double a,double b)<br>    {<br>        BigDecimal a1 = new BigDecimal(Double.toString(a));<br>        BigDecimal b1 = new BigDecimal(Double.toString(b));<br>    return b1.multiply(a1).doubleValue();<br>    }<br>}  </p>
+<p>//除法<br>class Division implements Operation<br>{<br>    public double ope(double a,double b)<br>    {<br>        BigDecimal a1 = new BigDecimal(Double.toString(a));<br>        BigDecimal b1 = new BigDecimal(Double.toString(b));<br>        return b1.divide(a1,3, BigDecimal.ROUND_HALF_UP).doubleValue();  //四舍五入并保留3位小数<br>    }<br>}<br>[/java]</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/数据结构/">数据结构</a>, <a class="has-link-grey -link" href="/tags/算法/">算法</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/09/28/Data-Structure/数据结构——栈—出栈顺序的可能情况/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">栈—出栈顺序的可能情况</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/09/24/Data-Structure/数据结构—线性表—八进制数加法/">
+                <span class="level-item">线性表—八进制数加法</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc" style="position: sticky; top: 10px;">
+    <div class="card-content" style="padding: 1rem;">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            
+        </div>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="栈—表达式求值" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

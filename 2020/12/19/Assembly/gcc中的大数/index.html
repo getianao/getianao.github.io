@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>GAS中大数存取的源码解析 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="面试题中有一道很常见的题，叫做大数相加，通常的做法就是将数存在字符串变量中，按位进行运算，同时考虑进位的问题。GNU as中关于大数的部分给了一种更完善的实现，本文的内容主要通过读源码了解汇编器中是如何存取大数的。">
+<meta name="keywords" content="汇编">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GAS中大数存取的源码解析">
+<meta property="og:url" content="http://yoursite.com/2020/12/19/Assembly/gcc中的大数/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="面试题中有一道很常见的题，叫做大数相加，通常的做法就是将数存在字符串变量中，按位进行运算，同时考虑进位的问题。GNU as中关于大数的部分给了一种更完善的实现，本文的内容主要通过读源码了解汇编器中是如何存取大数的。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/endlessbuffer/ImageHosting/master/img/20201219101219.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/endlessbuffer/ImageHosting/master/img/20201219194354.png">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.181Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GAS中大数存取的源码解析">
+<meta name="twitter:description" content="面试题中有一道很常见的题，叫做大数相加，通常的做法就是将数存在字符串变量中，按位进行运算，同时考虑进位的问题。GNU as中关于大数的部分给了一种更完善的实现，本文的内容主要通过读源码了解汇编器中是如何存取大数的。">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/endlessbuffer/ImageHosting/master/img/20201219101219.png">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="GAS中大数存取的源码解析" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2020-12-19T16:00:00.000Z">2020-12-20</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.181Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/汇编/">汇编</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    7 分钟 读完 (大约 1124 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                GAS中大数存取的源码解析
+            
+        </h1>
+        <div class="content">  
+            <p>面试题中有一道很常见的题，叫做大数相加，通常的做法就是将数存在字符串变量中，按位进行运算，同时考虑进位的问题。GNU as中关于大数的部分给了一种更完善的实现，本文的内容主要通过读源码了解汇编器中是如何存取大数的。</p>
+<a id="more"></a>
+<p>下面的代码片段来自<code>binutils/gas/expr.c</code>中的<code>integer_constant(int radix,expressionS)</code>函数中的一部分，这个函数在gas汇编器中用于解析整数。下面我们假设要读取字符串所代表的整数是一个十六进制的数，即<code>radix</code>参数是16。</p>
+<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">/* We saw a lot of digits. manufacture a bignum the hard way.  */</span></span><br><span class="line">LITTLENUM_TYPE *leader;   <span class="hljs-comment">/* -&gt; high order littlenum of the bignum.  */</span></span><br><span class="line">LITTLENUM_TYPE *pointer;  <span class="hljs-comment">/* -&gt; littlenum we are frobbing now.  */</span></span><br><span class="line"><span class="hljs-keyword">long</span> carry;</span><br><span class="line"></span><br><span class="line">leader = generic_bignum;</span><br><span class="line">generic_bignum[<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>;</span><br><span class="line">generic_bignum[<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;</span><br><span class="line">generic_bignum[<span class="hljs-number">2</span>] = <span class="hljs-number">0</span>;</span><br><span class="line">generic_bignum[<span class="hljs-number">3</span>] = <span class="hljs-number">0</span>;</span><br><span class="line">input_line_pointer = start;   <span class="hljs-comment">/* -&gt; 1st digit.  */</span></span><br><span class="line">c = *input_line_pointer++;</span><br><span class="line"><span class="hljs-keyword">for</span> (; (carry = hex_value (c)) &lt; maxdig; c = *input_line_pointer++)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="hljs-keyword">for</span> (pointer = generic_bignum; pointer &lt;= leader; pointer++)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="hljs-keyword">long</span> work;</span><br><span class="line"></span><br><span class="line">      work = carry + radix * *pointer;</span><br><span class="line">      *pointer = work &amp; LITTLENUM_MASK;</span><br><span class="line">      carry = work &gt;&gt; LITTLENUM_NUMBER_OF_BITS;</span><br><span class="line">    &#125;</span><br><span class="line">  <span class="hljs-keyword">if</span> (carry)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (leader &lt; generic_bignum + SIZE_OF_LARGE_NUMBER - <span class="hljs-number">1</span>)</span><br><span class="line">   		&#123;</span><br><span class="line">       <span class="hljs-comment">/* Room to grow a longer bignum.  */</span></span><br><span class="line">       *++leader = carry;</span><br><span class="line">   		&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先<code>generic_bignum</code>这个变量是用来存储大数的，定义为<code>LITTLENUM_TYPE generic_bignum[SIZE_OF_LARGE_NUMBER + 6];</code>，数据类型<code>LITTLENUM_TYPE</code>实际上就是无符号整型，定义为<code>typedef unsigned short LITTLENUM_TYPE;</code>，可见<code>generic_bignum</code>就是一个无符号整型的数组，这里<code>SIZE_OF_LARGE_NUMBER</code>为20，可见这个数组最大长度是26。注意<code>generic_bignum</code>表示的数字高位存在大端，低位存在数组的小端，这样的存储方式也就是<strong>小端字节序</strong>模式（Little-Endian），这样的可能违反了人类的读写习惯，但是对于计算机处理很方便。例如对于数0x12345678abcd在<code>generic_bignum</code>中内存分布是这样的：</p>
+<p><img src="https://raw.githubusercontent.com/endlessbuffer/ImageHosting/master/img/20201219101219.png" alt="image-20201219101219939" style="zoom:50%;"></p>
+<p>接着从上述代码的第6行开始看，变量<code>leader</code>指向<code>generic_bignum</code>的最高位，用于确定<code>generic_bignum</code>数组的边界，所以刚开始的时候指向数组的第0位。接下来是一个两层循环，进入第一层循环，<code>input_line_pointer</code>指向的字符变量c是当前要读的字符串的某一位，从左到右递增<code>input_line_pointer</code>来读字符串，也就是从字符串表示数字的高位读到低位；进入第二层循环，将c转换成十进制存放在<code>carry</code>中（通过<code>hex_value</code>数组转换），现在我们要做的是将c表示的较低位加上已经读了的较高位得到的数来更新<code>generic_bignum</code>数组，所以从左到右遍历<code>generic_bignum</code>，将每个<code>generic_bignum</code>元素乘以16，并在<code>generic_bignum</code>的最低位（即<code>generic_bignum[0]</code>）加上<code>carry</code>。要注意的是，我们在整体左移<code>generic_bignum</code>的过程中，可能会产生<code>generic_bignum</code>数组间的进位（相加之和大于2^16）。向上进位的过程是这样的：我们知道<code>generic_bignum</code>元素是无符号整型，也就是16位，所以我们在更新<code>generic_bignum[0]</code>时，将<code>carry</code>和<code>generic_bignum[0]</code>左移16位相加的结果存到<code>work</code>中（<code>work</code>是一个long类型的变量，即32位，确保不会溢出），将<code>work</code>的低16位保存为<code>generic_bignum[0]</code>，<code>work</code>的高16位（即产生的进位）保存在carry中，在下一次循环中继续和<code>generic_bignum[1]</code>左移16位的结果相加，重复这个过程直到更新完整个<code>generic_bignum</code>数组，此时还没有结束，因为虽然到达了<code>generic_bignum</code>数组的边界，但是可能还有进位没有保存；如果还有进位，则需要移动<code>leader</code>变量来增大<code>generic_bignum</code>数组的边界，并将<code>carry</code>存到这个新划出的数组元素中。重复以上过程直到读完整个字符串。下图以读取0x12345678abcd指针指到a时更新过程。</p>
+<p><img src="https://raw.githubusercontent.com/endlessbuffer/ImageHosting/master/img/20201219194354.png" alt="image-20201219194353983" style="zoom:50%;"></p>
+<p>如何将<code>generic_bignum</code>还原成字符串呢？下面提供一个c++的实现。</p>
+<figure class="highlight c++ hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> bignumStr=<span class="hljs-string">""</span>;</span><br><span class="line"><span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>; i &lt; expr-&gt;X_add_number;i++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">stringstream</span> ioss;                       <span class="hljs-comment">//定义字符串流</span></span><br><span class="line">    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> s_temp;                           <span class="hljs-comment">//存放转化后字符</span></span><br><span class="line">    ioss &lt;&lt; <span class="hljs-built_in">std</span>::hex &lt;&lt;  generic_bignum[i];       <span class="hljs-comment">//以十六制形式输出</span></span><br><span class="line">    ioss &gt;&gt; s_temp;</span><br><span class="line">    <span class="hljs-keyword">if</span>(s_temp.size()&lt;<span class="hljs-number">4</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="hljs-built_in">std</span>::<span class="hljs-function"><span class="hljs-built_in">string</span> <span class="hljs-title">s_0</span><span class="hljs-params">(<span class="hljs-number">4</span> - s_temp.size(), <span class="hljs-string">'0'</span>)</span></span>;      <span class="hljs-comment">//位数不够则补0</span></span><br><span class="line">        s_temp = s_0+s_temp;</span><br><span class="line">    &#125;</span><br><span class="line">    bignumStr = s_temp + bignumStr;</span><br><span class="line">&#125;</span><br><span class="line">bignumStr=<span class="hljs-string">"0x"</span> + bignumStr;</span><br></pre></td></tr></table></figure>
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/汇编/">汇编</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/12/30/Other/2020年终总结/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">我的年终总结：2020，不那么顺利的一年</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/12/06/Assembly/aarch64-helloworld/">
+                <span class="level-item">理解第一段ARM64汇编代码-HelloWorld</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc" style="position: sticky; top: 10px;">
+    <div class="card-content" style="padding: 1rem;">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            
+        </div>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="GAS中大数存取的源码解析" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

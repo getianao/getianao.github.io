@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>数据结构 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="本文介绍了软考中有关数据结构的知识点，包括：十字链表、图、堆。">
+<meta name="keywords" content="数据结构,软考">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构">
+<meta property="og:url" content="http://yoursite.com/2019/04/28/软考/数据结构/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="本文介绍了软考中有关数据结构的知识点，包括：十字链表、图、堆。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2019/04/28/软考/数据结构/1556507752114.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/28/软考/数据结构/1556507583636.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/28/软考/数据结构/1556508149844.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/28/软考/数据结构/1556508594388.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/28/软考/数据结构/1557048874049.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/28/软考/数据结构/1557049237275.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/28/软考/数据结构/1557103372084.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/28/软考/数据结构/1557456788808.png">
+<meta property="og:image" content="http://yoursite.com/OneDrive%20-%20whut.edu.cn/getianao.github.io/source/_posts/%E8%BD%AF%E8%80%83/%E7%AE%97%E6%B3%95/1024555-20161217182750011-675658660.png">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.345Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据结构">
+<meta name="twitter:description" content="本文介绍了软考中有关数据结构的知识点，包括：十字链表、图、堆。">
+<meta name="twitter:image" content="http://yoursite.com/2019/04/28/软考/数据结构/1556507752114.png">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="数据结构" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2019-04-28T16:00:00.000Z">2019-04-29</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.345Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/数据结构/">数据结构</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/软考/">软考</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    13 分钟 读完 (大约 1928 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                数据结构
+            
+        </h1>
+        <div class="content">  
+            <p>本文介绍了软考中有关数据结构的知识点，包括：十字链表、图、堆。</p>
+<a id="more"></a>
+<h2 id="1-十字链表"><a href="#1-十字链表" class="headerlink" title="1. 十字链表"></a>1. 十字链表</h2><p>当有向图是稀疏的时候，用十字链表来存储有向图可以达到高效的存储效果。</p>
+<ul>
+<li><p>数据结构：</p>
+<ul>
+<li><p>弧：<img src="/2019/04/28/软考/数据结构/1556507752114.png" alt="1556507752114"></p>
+<!--more-->
+<p>tailVex 存储<code>该弧的弧尾对应的顶点</code>。</p>
+<p>headVex 存储<code>该弧的弧头对应的顶点</code>。</p>
+<p>hHink 存储<code>指向该弧的弧头的另一条弧</code>。</p>
+<p>tLink 存储<code>指向该弧的弧尾的另一条弧</code>。</p>
+</li>
+<li><p>顶点：<img src="/2019/04/28/软考/数据结构/1556507583636.png" alt="1556507583636"></p>
+<p>data 存储定点数据。</p>
+<p>firstIn 存储有向图中<code>一条以该节点为弧头的弧</code>。</p>
+<p>firstOut 存储有向图中<code>一条以该节点为弧尾的弧</code>。</p>
+</li>
+</ul>
+</li>
+<li><p>一个有向图维护以下一个顶点的链表，称之为十字链表</p>
+<p><img src="/2019/04/28/软考/数据结构/1556508149844.png" alt="1556508149844"></p>
+<p>顶点列表 xList 的每一个节点为有向图中的一个结点，每条有相同弧头或弧尾的弧组成一个链表，链表的头节点存放在对应结点的xList节点中。如下例：</p>
+<p><img src="/2019/04/28/软考/数据结构/1556508594388.png" alt="1556508594388"></p>
+</li>
+</ul>
+<blockquote>
+<p>参考文献：</p>
+<p><a href="https://blog.csdn.net/bible_reader/article/details/71214096" target="_blank" rel="noopener">【数据结构】十字链表</a></p>
+</blockquote>
+<h2 id="2-图"><a href="#2-图" class="headerlink" title="2.图"></a>2.图</h2><h3 id="2-1-最小生成树算法"><a href="#2-1-最小生成树算法" class="headerlink" title="2.1 最小生成树算法"></a>2.1 最小生成树算法</h3><p>最小生成树问题：构造连通图的最小代价生成树。</p>
+<ul>
+<li><p><strong>Prim（普里姆）算法</strong>：时间复杂度是O(n^2^)，与边数无关，适合求边稠密的网中的最小生成树。</p>
+<p>$N=(V,\left{E\right})$是连通网，$TE$是对应最小生成树上的边的集合，$U​$是一个结点的集合。</p>
+<p>初始状态下TE=Ø，U={u~0~}；</p>
+<p>依次重复以下步骤直到U=V（或者TE中有n-1条边）时，$T=(V,\left{TE\right})$为N的最小生成树：寻找这样一条代价最小的边(u,v)，满足u∈U，v∈V-U，然后将这条边添加到TE中，将v添加到U中。</p>
+<blockquote>
+<p>用自己的话说就是：寻找一端是已选结点、另一端不是且代价最小的边。</p>
+</blockquote>
+<p><img src="/2019/04/28/软考/数据结构/1557048874049.png" alt="1557048874049"></p>
+</li>
+<li><p><strong>Kruskal（克鲁斯卡尔）算法</strong>：时间复杂度是O(elog~2~e)（e为边的数目），与顶点数无关，适合求边稀疏的网的最小生成树。</p>
+<p>$N=(V,\left{E\right})$是连通网，$TE$是对应最小生成树上的边的集合。</p>
+<p>初始状态下TE=Ø，树$T=(V,\left{TE\right})​$；</p>
+<p>依次重复以下步骤直到TE中有n-1条边时，$T=(V,\left{TE\right})​$为N的最小生成树：寻找这样一条代价最小的边(u,v)，满足这条边落在树T中的不同连通分量上（若不满足舍去这条边，继续寻找），然后将这条边添加到TE中。</p>
+<blockquote>
+<p>用自己的话说就是：寻找不会构成回路的代价最小的边。</p>
+</blockquote>
+<p><img src="/2019/04/28/软考/数据结构/1557049237275.png" alt="1557049237275"></p>
+</li>
+</ul>
+<h3 id="2-2-拓扑排序算法"><a href="#2-2-拓扑排序算法" class="headerlink" title="2.2 拓扑排序算法"></a>2.2 拓扑排序算法</h3><p>拓扑排序是由一个集合上的偏序得到一个集合上的全序。偏序是集合仅有部分成员可比较，全序时集合内所有的成员均可比较。</p>
+<ul>
+<li><p>算法过程：</p>
+<ol>
+<li>在AOV中选择一个没有前驱的节点（即入度为0），输出他。</li>
+<li>在图中删除这个节点以及和这个节点有关的弧</li>
+<li>重复以上步骤直至没有入度为0的节点。</li>
+</ol>
+<p><img src="/2019/04/28/软考/数据结构/1557103372084.png" alt="1557103372084"></p>
+</li>
+</ul>
+<h3 id="2-3-关键路径"><a href="#2-3-关键路径" class="headerlink" title="2.3 关键路径"></a>2.3 关键路径</h3><p>完成工程<strong>最短的时间</strong>是从开始点到完成点的最长路径的长度，这条路径被称为关键路径。（根据这条性质，在AOE网不太复杂时，可以直接把最长路径看出来）</p>
+<p>如果$e(i)==l(i)​$，那么活动a(i)为关键活动；关键路径上的活动均为关键活动；</p>
+<p>提前完成非关键活动并不能加快完成时间。</p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>含义</th>
+<th>计算方法</th>
+<th>计算解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>e(i)</td>
+<td>活动a(i)的最早开始时间</td>
+<td>$e(i)=ve(j)$</td>
+<td>活动i由顶点j出发，活动i的最早开始时间为顶点j的最早发生时间</td>
+</tr>
+<tr>
+<td>l(i)</td>
+<td>活动a(i)的最迟开始时间（指的是在不推迟整个工程完成的情况下）</td>
+<td>$l(i)=vl(k)-dut(&lt;j,k&gt;)$</td>
+<td>活动i由状态j指向状态k，活动i的最迟开始时间为顶点k的最迟发生时间减活动i的时间</td>
+</tr>
+<tr>
+<td>l(i)-e(i)</td>
+<td>完成活动a(i)的活动余量</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>ve(j)</td>
+<td>v(j)<strong>顶点</strong>的最早发生时间</td>
+<td>从ve(0)=0向后递推：$ve(j)=Max\left{ve(i)+dut(&lt;i,j&gt;))\right}$</td>
+<td></td>
+</tr>
+<tr>
+<td>vl(j)</td>
+<td>v(j)顶点的最迟发生时间</td>
+<td>从vl(n-1)=ve(n-1)向后递推：$vl(i)=Min\left{vl(j)-dut(&lt;i,j&gt;))\right}$</td>
+<td></td>
+</tr>
+<tr>
+<td>dut(&lt;j,k&gt;)</td>
+<td>活动a(i)的持续时间</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>求解关键路径的算法：</p>
+<ol>
+<li>输入e条弧&lt;j，k&gt;，建立AOE-网的存储结构；</li>
+<li>从源点e出发，令ve[0]=0，按拓扑有序求其余各顶点的最早发生时间ve[i]（1≤i≤n-1）。如果得到的拓扑有序序列中顶点个数小于网中顶点数n，则说明网中存在环，不能求关键路径，算法终止；否则执行步骤3；</li>
+<li>从汇点vn出发，令vn[n-1]=ve[n-1]，按逆拓扑有序求其余各顶点的最迟发生时间vl[i]（n-2≥i≥2）；</li>
+<li>根据各顶点的ve和vl值，求每条弧s的最早开始时间e(s)和最迟开始时间l(s)；若某条弧满足条件e(s)=l(s)，则为关键活动。</li>
+</ol>
+<blockquote>
+<p>例子：</p>
+<p><img src="/2019/04/28/软考/数据结构/1557456788808.png" alt="1557456788808"></p>
+<p>| 顶点 | ve（第一步，从上到下） | vl（第二步，从下到上） | 活动 | e（第三步） | l（第四步） | l-e（第五步） |<br>| —- | ———————- | ———————- | —- | ———– | ———– | ————- |<br>| v1   | 0                      |                        | a1   | 0           | 1           | 1             |<br>| v2   | 3                      | 4                      | a2   | 0           | 0           | 0             |<br>| v3   | 2                      | 2                      | a3   | 3           | 4           | 1             |<br>| v4   | 6                      | 6                      | a4   | 3           | 4           | 1             |<br>| v5   | 6                      | 7                      | a5   | 2           | 2           | 0             |<br>| v6   | 8                      | 8                      | a6   | 2           | 5           | 3             |<br>|      |                        |                        | a7   | 6           | 6           | 0             |<br>|      |                        |                        | a8   | 6           | 7           | 1             |</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="3-堆排序"><a href="#3-堆排序" class="headerlink" title="3 堆排序"></a>3 堆排序</h2><h3 id="3-1-堆的定义"><a href="#3-1-堆的定义" class="headerlink" title="3.1 堆的定义"></a>3.1 堆的定义</h3><p>堆是具有以下性质的完全二叉树：每个结点的值都大于或等于其左右孩子结点的值，称为大顶堆；或者每个结点的值都小于或等于其左右孩子结点的值，称为小顶堆；并按顺序进行编号，如下图：</p>
+<p><img src="/2019/04/28/软考/数据结构/../../../../../OneDrive%20-%20whut.edu.cn/getianao.github.io/source/_posts/%E8%BD%AF%E8%80%83/%E7%AE%97%E6%B3%95/1024555-20161217182750011-675658660.png" alt="img"></p>
+<p>该数组从逻辑上讲就是一个堆结构，我们用简单的公式来描述一下堆的定义就是：</p>
+<p>大顶堆：arr[i] &gt;= arr[2i+1] &amp;&amp; arr[i] &gt;= arr[2i+2]  </p>
+<p>小顶堆：arr[i] &lt;= arr[2i+1] &amp;&amp; arr[i] &lt;= arr[2i+2]  </p>
+<h3 id="3-2-堆排序的基本思想"><a href="#3-2-堆排序的基本思想" class="headerlink" title="3.2 堆排序的基本思想"></a>3.2 堆排序的基本思想</h3><ol>
+<li>步骤一 构造初始堆。将给定无序序列构造成一个大顶堆（一般升序采用大顶堆，降序采用小顶堆)。<ul>
+<li>按照给出的无序序列构造初始堆；</li>
+<li>从最后一个非叶子结点开始，从左至右，从下至上进行调整：如果父节点小于子节点，则将父节点和子节点交换。</li>
+</ul>
+</li>
+<li>将堆顶元素与末尾元素进行交换，使末尾元素最大。然后继续调整堆，再将堆顶元素与末尾元素交换，得到第二大元素。如此反复进行交换、重建、交换。</li>
+</ol>
+<p>综上所述：堆排序的思想其实就是通过不断的构造大顶堆来找到当前最大的元素。</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/数据结构/">数据结构</a>, <a class="has-link-grey -link" href="/tags/软考/">软考</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/05/07/软考/操作系统/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">操作系统</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/04/24/软考/软件工程/">
+                <span class="level-item">软件工程</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc" style="position: sticky; top: 10px;">
+    <div class="card-content" style="padding: 1rem;">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#1-十字链表">
+        <!-- <span class="has-mr-6">1</span> -->
+        <span>1. 十字链表</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-图">
+        <!-- <span class="has-mr-6">2</span> -->
+        <span>2.图</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#2-1-最小生成树算法">
+        <!-- <span class="has-mr-6">2.1</span> -->
+        <span>2.1 最小生成树算法</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-2-拓扑排序算法">
+        <!-- <span class="has-mr-6">2.2</span> -->
+        <span>2.2 拓扑排序算法</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-3-关键路径">
+        <!-- <span class="has-mr-6">2.3</span> -->
+        <span>2.3 关键路径</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#3-堆排序">
+        <!-- <span class="has-mr-6">3</span> -->
+        <span>3 堆排序</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#3-1-堆的定义">
+        <!-- <span class="has-mr-6">3.1</span> -->
+        <span>3.1 堆的定义</span>
+        </a></li><li>
+        <a class="is-flex" href="#3-2-堆排序的基本思想">
+        <!-- <span class="has-mr-6">3.2</span> -->
+        <span>3.2 堆排序的基本思想</span>
+        </a></li></ul></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="数据结构" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

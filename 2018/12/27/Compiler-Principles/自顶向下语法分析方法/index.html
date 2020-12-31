@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>自顶向下语法分析方法 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="什么叫确定： 两个确定：①确定对最左的非终结符进行替换（最左推导）②对于同一个非终结符，确定一个产生式进行推导（SELECT集，无回溯）。  LL（1）的含义: 第一个“L” , 代表从左（Left）向右扫描单词 第二个“L” ,代表产生的是最左（Leftmost）推导 “1” 代表向前查看（lookahead）一个单词">
+<meta name="keywords" content="编译原理,语法分析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自顶向下语法分析方法">
+<meta property="og:url" content="http://yoursite.com/2018/12/27/Compiler-Principles/自顶向下语法分析方法/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="什么叫确定： 两个确定：①确定对最左的非终结符进行替换（最左推导）②对于同一个非终结符，确定一个产生式进行推导（SELECT集，无回溯）。  LL（1）的含义: 第一个“L” , 代表从左（Left）向右扫描单词 第二个“L” ,代表产生的是最左（Leftmost）推导 “1” 代表向前查看（lookahead）一个单词">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/自顶向下语法分析方法/1545642871356.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/自顶向下语法分析方法/1545643893965.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/自顶向下语法分析方法/1545643869242.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/自顶向下语法分析方法/1545643923258.png">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.205Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="自顶向下语法分析方法">
+<meta name="twitter:description" content="什么叫确定： 两个确定：①确定对最左的非终结符进行替换（最左推导）②对于同一个非终结符，确定一个产生式进行推导（SELECT集，无回溯）。  LL（1）的含义: 第一个“L” , 代表从左（Left）向右扫描单词 第二个“L” ,代表产生的是最左（Leftmost）推导 “1” 代表向前查看（lookahead）一个单词">
+<meta name="twitter:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/自顶向下语法分析方法/1545642871356.png">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="自顶向下语法分析方法" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2018-12-27T16:00:00.000Z">2018-12-28</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.205Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/编译原理/">编译原理</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/语法分析/">语法分析</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    13 分钟 读完 (大约 1912 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                自顶向下语法分析方法
+            
+        </h1>
+        <div class="content">  
+            <ul>
+<li><p><strong>什么叫确定</strong>：</p>
+<p>两个确定：①确定对最左的非终结符进行替换（最左推导）②对于同一个非终结符，确定一个产生式进行推导（SELECT集，无回溯）。</p>
+</li>
+<li><p><strong>LL（1）的含义</strong>:</p>
+<p>第一个“L” , 代表从左（Left）向右扫描单词</p>
+<p>第二个“L” ,代表产生的是最左（Leftmost）推导</p>
+<p>“1” 代表向前查看（lookahead）一个单词 </p>
+<a id="more"></a>
+</li>
+<li><p><strong>一个上下文无关文法是LL(1)文法的充分必要条件</strong>：</p>
+<p>关于一个非终结符的各个产生式的可选集互不相交。</p>
+</li>
+<li><p><strong>LL(1)文法的判定过程</strong>：</p>
+<ol>
+<li><p>检查产生式中是否有含有左递归或左公因子：</p>
+<p> <strong>含有左递归或左公因子的文法一定不是LL(1)文法；</strong></p>
+<p> <strong>不含有左递归或左公因子的文法也不能确定是否为LL(1)文法；</strong></p>
+<p> （<strong>进行语法分析时不一定要求文法中不含左递归</strong>，自顶向下要求，但自底向上不要求）</p>
+</li>
+<li><p>标记能推导出ε的非终结符：</p>
+<p>先找出能直接推出ε的非终结符，然后再查看其他产生式的右部，通过这些非终结符检查还有没有其他非终结符也可推出ε，直到没有发现为止。</p>
+</li>
+<li><p>计算每个<strong>产生式</strong>的FIRST集：</p>
+<p>①如果这个产生式右部第一个字符是终结符，那么这个终结符就属于它的FIRST集。</p>
+<p>②如果这个产生式右部第一个字符是非终结符，那么这个非终结符的FIRST集就属于它的FIRST集。</p>
+<p><strong>如果这个非终结符的FIRST集中含ε，那么后面的字符如果是终结符</strong>……</p>
+<p>③<strong>如果这个产生式右部可以推出ε，那么ε也属于它的FIRST集。</strong></p>
+</li>
+<li><p>计算每个<strong>非终结符</strong>的FOLLOW集：</p>
+<p>首先<strong>向开始符号的FOLLOW集中添加</strong><code>#</code>，然后对于所有非终结符，不断的找含有它的产生式右部：</p>
+<p>①该非终结符后面的字符若是终结符，那么这个终结符就属于它的FOLLOW集；</p>
+<p>②该非终结符后面的字符若是非终结符，那么这个非终结符的FIRST()集中的所有元素就属于它的FOLLOW集；</p>
+<p>如果这个非终结符的FIRST()集中含ε，将ε删去，同时将这个产生式左部FOLLOW集中的所有元素添加至它的FOLLOW集中；注意：不需要考虑后面的字符了，因为已经包含在FIRST()集中了。</p>
+<p>③如果非终结符<strong>没有字符或者后面所有的字符可以为ε</strong>，则所在产生式左部非终结符的FOLLOW()集中的所有元素就属于它的FOLLOW集；</p>
+</li>
+<li><p>计算每个<strong>产生式</strong>的SELECT集：</p>
+<p>①如果这个产生式可以推出ε，那么它的SELECT集是<code>{FIRST(该产生式右部)-ε}∪FOLLOW(该产生式左部的非终结符)</code>。</p>
+<p>②如果这个产生式不能推出ε，那么它的SELECT集是<code>{FIRST(该产生式右部)}</code>。</p>
+</li>
+<li><p>检查相同左部产生式的SELECT集的交集：</p>
+<p>检查相同左部产生式的SELECT集的交集，如果全为空集说明该文法是LL(1)文法，反之则不是。</p>
+</li>
+</ol>
+</li>
+<li><p><strong>消除左公因式</strong>：</p>
+<p>有显式的左公因式和隐式的左公因式，对于隐式的左公因式要先化成显式；</p>
+<blockquote>
+<p>例：</p>
+<p>显式：</p>
+<p>A→aB|aC</p>
+<p>隐式：</p>
+<p>A→ad|Bc</p>
+<p>B→ae</p>
+</blockquote>
+<p>解决方法：类似合并同类项，将左公因式提出，不同的部分用或连接，并用一个新的非终结符指向它。</p>
+<p>注意：某些特殊的含左公因式的文法可能会出现循环替换的情况，此时无法解决左公因式问题。</p>
+</li>
+<li><p><strong>消除左递归</strong>：</p>
+<p>有直接左递归和间接左递归和一般左递归，对于间接左递归要先化成直接；</p>
+<blockquote>
+<p>例子：</p>
+<p>Ⅰ直接（模板）：</p>
+<p>P → P α | β<br>可改写为：<br>P → βQ（因为P一定是β开头）<br>Q → αQ | ε（Q就是α^+^）<br>其中Q为新增的非终结符</p>
+<p>Ⅱ间接：</p>
+<p>S → PQ | a<br>P → QS | b </p>
+<p>Ⅲ一般：<br>S → PQ | a<br>P → QS | b<br>Q → SP | c<br>做以下变换：<br>①S → PQ | a<br>P → SPS|cS|b </p>
+<p>②S → SPSQ|cSQ|bQ|a </p>
+<p>③按照直接左递归方法消除后：<br>S → cSQR|bQR|aR<br>R → PSQR | ε</p>
+<p>④结果：<br> S → cSQR|bQR|aR<br>P → SPS|cS|b<br>Q → SP | c<br>R → PSQR | ε </p>
+</blockquote>
+</li>
+<li><p><strong>递归下降分析法：</strong></p>
+<p>通过计算的SELECT集判断编写子程序：</p>
+<blockquote>
+<p>例子：</p>
+<p><img src="/2018/12/27/Compiler-Principles/自顶向下语法分析方法/1545642871356.png" alt="1545642871356"></p>
+<p>ParseE’函数表示进入E’的产生式，通过switch函数分离相同左部的产生式，然后依次检查产生式右部字符，如果是终结符，则通过MatchToken函数判断符合，不符合则出错；如果是非终结符，则继续递归跳转至它所对应的Parse函数。</p>
+</blockquote>
+<p>递归下降分析法对应的是最左推导过程<br>优点：程序结构和层次清晰明了，易于手工实现；<br>对于语义加工，这种方法十分灵活；<br>缺点：递归调用可能带来效率问题。 </p>
+</li>
+<li><p>表驱动LL(1)分析方法（预测分析法 ）</p>
+<blockquote>
+<p>例子：</p>
+<p><img src="/2018/12/27/Compiler-Principles/自顶向下语法分析方法/1545643893965.png" alt="1545643893965"></p>
+<p>首先根据计算出的SELECT集绘制出预测分析表</p>
+<p><img src="/2018/12/27/Compiler-Principles/自顶向下语法分析方法/1545643869242.png" alt="1545643869242"></p>
+<p>然后新建一个分析栈，向空栈中依次压入<code>#</code>和文法的开始符号<code>E</code>，然后比较剩余输入串的首字符和分析栈顶元素，如果不同，则先将分析栈顶元素出栈，然后将对应预测分析表中的产生式右部<u>从后向前</u>依次入栈；如果相同，则先将分析栈顶元素出栈，并将剩余输入串的首字符删去；然后重复以上过程直到栈为<code>#</code>，剩余输入串也为<code>#</code>，则表示语法匹配成功。</p>
+<p><img src="/2018/12/27/Compiler-Principles/自顶向下语法分析方法/1545643923258.png" alt="1545643923258"></p>
+</blockquote>
+</li>
+<li><p><strong>LL(1)分析中的一种错误处理办法</strong> ：</p>
+<p>发现错误的情况：<br>(1) 栈顶的终结符与当前输入符不匹配;<br>(2) 非终结符A于栈顶，面临的输入符为a，但分析表M的M[A,a]为空 （FIRST(A)中没有a）;</p>
+<p>应急”恢复策略:<br>对于错误(1) 跳过输入串中的一些符号直至遇到和栈顶的终结符相同的字符为止。</p>
+<p>对于错误((2) 跳过输入串中的一些符号直至遇到“同步符号”为止 。</p>
+<p>同步符号的选择<br>(1) 把FOLLOW(A)中的所有符号作为A的同步符号。跳过输入串中的一些符号直至遇到这些“同步符号”，把A从栈中弹出，可使分析继续。（跳过A）<br>(2) 把FIRST(A)中的符号加到A的同步符号集，当FIRST(A)中的符号在输入中出现时，可根据A恢复分析。 （不跳过A）</p>
+</li>
+</ul>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/编译原理/">编译原理</a>, <a class="has-link-grey -link" href="/tags/语法分析/">语法分析</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/12/27/Compiler-Principles/文法和语言/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">文法和语言</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/12/27/Compiler-Principles/简单优先分析法/">
+                <span class="level-item">简单优先分析法</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="自顶向下语法分析方法" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

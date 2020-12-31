@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>操作系统－生产者消费者问题 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="1.问题描述生产者-消费者问题(Producer-consumer problem)，也称为有界缓冲区问题(Bounded-buffer problem)，作为一个经典的同步问题，常用来说明同步原语的能力。该问题描述的是生产者产生一些数据放入缓冲区中，消费者从缓冲区中消耗数据。">
+<meta name="keywords" content="操作系统,linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统－生产者消费者问题">
+<meta property="og:url" content="http://yoursite.com/2018/04/16/Operating-System/操作系统－生产者消费者问题/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="1.问题描述生产者-消费者问题(Producer-consumer problem)，也称为有界缓冲区问题(Bounded-buffer problem)，作为一个经典的同步问题，常用来说明同步原语的能力。该问题描述的是生产者产生一些数据放入缓冲区中，消费者从缓冲区中消耗数据。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://47.106.122.82/wp-content/uploads/2018/04/2018-04-17-20-52-07%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png">
+<meta property="og:image" content="http://47.106.122.82/wp-content/uploads/2018/04/2018-04-17-21-11-10%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png">
+<meta property="og:image" content="http://47.106.122.82/wp-content/uploads/2018/04/2018-04-17-21-23-42%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png">
+<meta property="og:image" content="http://47.106.122.82/wp-content/uploads/2018/04/2018-04-17-20-49-25%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.281Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="操作系统－生产者消费者问题">
+<meta name="twitter:description" content="1.问题描述生产者-消费者问题(Producer-consumer problem)，也称为有界缓冲区问题(Bounded-buffer problem)，作为一个经典的同步问题，常用来说明同步原语的能力。该问题描述的是生产者产生一些数据放入缓冲区中，消费者从缓冲区中消耗数据。">
+<meta name="twitter:image" content="http://47.106.122.82/wp-content/uploads/2018/04/2018-04-17-20-52-07%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="操作系统－生产者消费者问题" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2018-04-16T16:00:00.000Z">2018-04-17</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.281Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/linux/">linux</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/操作系统/">操作系统</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    12 分钟 读完 (大约 1794 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                操作系统－生产者消费者问题
+            
+        </h1>
+        <div class="content">  
+            <h3 id="1-问题描述"><a href="#1-问题描述" class="headerlink" title="1.问题描述"></a>1.问题描述</h3><p>生产者-消费者问题(Producer-consumer problem)，也称为有界缓冲区问题(Bounded-buffer problem)，作为一个经典的同步问题，常用来说明同步<a href="https://baike.baidu.com/item/%E5%8E%9F%E8%AF%AD/3794081" title="原语" target="_blank" rel="noopener">原语</a>的能力。该问题描述的是生产者产生一些数据放入缓冲区中，消费者从缓冲区中消耗数据。</p>
+<a id="more"></a>
+<h3 id="2-重点问题"><a href="#2-重点问题" class="headerlink" title="2.重点问题"></a>2.重点问题</h3><p>①当缓冲区满了的时候，生产者应该休眠，等待消费者消耗数据。<br>②当缓冲区空的时候，消费者应该休眠，等待生产者产生数据。<br>③当某个线程的生产者/消费者正在产生/消耗数据时，其他的任何生产者和消费者应该等待。</p>
+<h3 id="3-结构模型"><a href="#3-结构模型" class="headerlink" title="3.结构模型"></a>3.结构模型</h3><p>生产者结构模型：</p>
+<pre><code>do{
+        ...
+        //produce an item in nextp
+        ...
+    wait(empty)
+    wait(mutex)
+        ...
+    //add nexttp to butter
+        ...
+    signal(mutex)
+    signal(full)
+}while(true)
+</code></pre><p>消费者结构模型：</p>
+<pre><code>do{
+    wait(full)
+    wait(muxet)
+        ...
+    //remove item from buffer to nextp
+        ...
+    signal(mutex)
+    signal(empty)
+        ...
+    //consume the item in nextp
+        ...
+}while(true)
+</code></pre><h3 id="4-实验中的问题"><a href="#4-实验中的问题" class="headerlink" title="4.实验中的问题"></a>4.实验中的问题</h3><p>①在编译时找不掉有关线程的函数<br><a href="2018-04-17-20-52-07%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png"><img src="http://47.106.122.82/wp-content/uploads/2018/04/2018-04-17-20-52-07%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt></a><br>原因是gcc在编译时缺少相关库导致的。<br>解决：在编译时链接上相关库即可</p>
+<pre><code>gcc proandcon.c -o proandcon.out -lpthread
+</code></pre><p>②编译时报错” 段错误（核心已转储） “</p>
+<blockquote>
+<p>FROM WIKI:<br>  In computing, a segmentation fault (often shortened to segfault) or access violation is a fault, or failure condition, raised by hardware with memory protection, notifying an operating system (OS) the software has attempted to access a restricted area of memory (a memory access violation)</p>
+</blockquote>
+<p>其实就是内存访问出错，很有可能是指针的问题。<br>最后发现是没有将malloch函数的返回值转化成指定指针类型。</p>
+<pre><code>prod=(struct product*)malloc(sizeof(struct product));
+</code></pre><p>③第二个程序编译成功后运行没有输出<br>最后发现果然是互斥锁的问题<br><a href="2018-04-17-21-11-10%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png"><img src="http://47.106.122.82/wp-content/uploads/2018/04/2018-04-17-21-11-10%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt></a><br>这里错误的的原因是与第一个商品用链表储存的程序比较第二个程序互斥锁的位置应该有所不同。</p>
+<p>以消费者为例，第一个程序由于用了条件变量并且不需要判断缓冲区满，首先获得互斥锁，再运用条件变量函数判断，它可以在条件变量不满足的情况下释放互斥锁并挂起线程，等待其他线程是条件变量满足之后在恢复线程并重新获得互斥锁。</p>
+<p>而第二个程序没有用条件变量，所以首先应该判断利用信号量判断缓冲器是否为空，不为空在挂锁，而不是一开始就挂锁。<br>调整顺序后程序正常。</p>
+<h3 id="运行结果与代码"><a href="#运行结果与代码" class="headerlink" title="运行结果与代码"></a>运行结果与代码</h3><p>①程序一：</p>
+<p>这个程序是我模仿一站式编程网站<a href="http://http://akaedu.github.io/book/ch35s03.html#id2896462" title="3. 线程间同步" target="_blank" rel="noopener">[1]</a>上写的，没有考虑缓冲区满的问题，缓冲区中的数据采用链表的方式储存。运用了一个条件变量和一个互斥锁。<br><a href="2018-04-17-21-23-42%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png"><img src="http://47.106.122.82/wp-content/uploads/2018/04/2018-04-17-21-23-42%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt></a></p>
+<pre><code>#include&lt;stdio.h&gt;
+#include&lt;pthread.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+//结构体列表用于储存生产者生产的商品
+struct product
+{
+    struct product *next;
+    int num;//商品序号
+};
+
+//商品链表的指针
+struct product *head=NULL;
+//商品序号
+static int indexNum=1;
+//条件变量，１表示还有剩余商品，０表示没有商品
+pthread_cond_t has_product = PTHREAD_COND_INITIALIZER;
+//互斥锁作用于消费者和生产者的消费和生产过程，以及消费者没有商品时的等待
+pthread_mutex_t lock=PTHREAD_MUTEX_INITIALIZER;
+
+void *consumer(void* p)
+{
+    struct product *prod;
+    while(1)
+    {
+        pthread_mutex_lock(&amp;lock);//为了防止条件变量判断时的竞争
+        while(head==NULL)
+           /*
+        利用判断条件变量，当没有商品时阻塞该进程，并将lock置１，
+        使生产者可以进行，等待条件变量符合时，将lock置０，再唤醒这个进程
+        */
+            pthread_cond_wait(&amp;has_product,&amp;lock);
+
+        //消费开始
+        prod=head;
+        head=head-&gt;next;
+        printf(&quot;Consume %d\n&quot;, prod-&gt;num);
+        pthread_mutex_unlock(&amp;lock);
+        //消费结束
+        free(prod);
+        sleep(rand()%3);
+    }
+}
+
+void *producer(void *p)
+{
+    struct product *prod;
+    while(1)
+    {
+        //生产开始
+        pthread_mutex_lock(&amp;lock);
+        prod=(struct product*)malloc(sizeof(struct product));
+        prod-&gt;num=indexNum++;
+        printf(&quot;producer %d\n&quot;,prod-&gt;num);
+        prod-&gt;next=head;//头插法插入链表
+        head=prod;
+        pthread_mutex_unlock(&amp;lock);
+        //生产结束
+        //条件变量置１
+        pthread_cond_signal(&amp;has_product);
+        sleep(rand()%3);
+    }
+}
+
+int main(int argc,char *argv[])
+{
+    pthread_t pid,cid;
+    //设定随机数种子
+    srand(time(NULL));
+    //启动生产者和消费者进程
+    pthread_create(&amp;pid,NULL,producer,NULL);
+    pthread_create(&amp;cid,NULL,consumer,NULL);
+    //等待进程结束
+    pthread_join(pid,NULL);
+    pthread_join(cid,NULL);
+    return 0;
+}
+</code></pre><p>②程序二<br>这个程序考虑了缓冲区满的问题，不再去储存生产者产生的数据，只记录现有数据的数量。运用了一个互斥锁和两个信号量。</p>
+<p><a href="2018-04-17-20-49-25%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png"><img src="http://47.106.122.82/wp-content/uploads/2018/04/2018-04-17-20-49-25%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt></a></p>
+<pre><code>#include&lt;stdio.h&gt;
+#include&lt;pthread.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;semaphore.h&gt;
+#define MAX_NUM 10
+
+//信号量，表示数据个数，为０时表示缓冲区为空
+sem_t empty ;
+//信号量，表示剩余空间,为０时表示缓冲区已满
+sem_t full ;
+//互斥锁作用于消费者和生产者的消费和生产过程，以及消费者没有商品时的等待
+pthread_mutex_t lock=PTHREAD_MUTEX_INITIALIZER;
+
+//打印线程进程信息
+void printids()
+{
+    pid_t      pid;
+    pthread_t  tid;
+
+    pid = getpid();
+    tid = pthread_self();
+    printf(&quot;%u号进程的%u号线程(0x%x)：&quot;, (unsigned int)pid,
+           (unsigned int)tid, (unsigned int)tid);
+}
+
+void *consumer(void* p)
+{
+    int value;
+    while(1)
+    {
+            sem_getvalue(&amp;empty,&amp;value);//得到信号量的值
+            if(value==0)
+            {
+                printids();
+                printf(&quot;...缓冲区内没有商品，消费者休眠，等待生产者生产...\n&quot;);
+            }
+            sem_wait(&amp;empty);
+
+            pthread_mutex_lock(&amp;lock);
+            //消费开始s
+            sem_post(&amp;full);//空位加１
+            sem_getvalue(&amp;empty,&amp;value);
+            printids();
+            printf(&quot;消费者消费了一个商品,现在缓冲区内还有 %d 个商品\n&quot;,value);
+            //消费结束
+
+        pthread_mutex_unlock(&amp;lock);
+        sleep(rand()%3);
+    }
+}
+
+void *producer(void *p)
+{
+    int value;
+    while(1)
+    {
+            sem_getvalue(&amp;full,&amp;value);
+            if(value==0)
+            {
+                printids();
+                printf(&quot;...缓冲区已满，生产者休眠，等待消费者消费...\n&quot;);
+            }
+
+            sem_wait(&amp;full);
+
+            pthread_mutex_lock(&amp;lock);    
+            //生产开始 
+            sem_post(&amp;empty);//数据个数加１
+            sem_getvalue(&amp;empty,&amp;value);
+            printids();
+            printf(&quot;生产者生产了一个商品,现在缓冲区内还有 %d 个商品\n&quot;,value);
+            //生产结束
+
+        pthread_mutex_unlock(&amp;lock);
+        sleep(rand()%3);
+    }
+}
+
+int main(int argc,char *argv[])
+{
+    pthread_t pid,cid;
+    //设定随机数种子
+    srand(time(NULL));
+    sem_init(&amp;empty,0,0);
+    sem_init(&amp;full,0,MAX_NUM);
+    //启动生产者和消费者进程
+    pthread_create(&amp;pid,NULL,producer,NULL);
+    pthread_create(&amp;cid,NULL,consumer,NULL);
+    //等待进程结束
+    pthread_join(pid,NULL);
+    pthread_join(cid,NULL);
+    return 0;
+}
+</code></pre><p>参考文献：<br>【１】：<a href="http://akaedu.github.io/book/ch35s03.html#id2896462" title="3. 线程间同步" target="_blank" rel="noopener">3. 线程间同步</a><br>【２】：<a href="https://blog.csdn.net/yezhen910328/article/details/20989385" title="对pthread_create未定义的引用" target="_blank" rel="noopener">对pthread_create未定义的引用</a><br>【３】：<a href="https://baike.baidu.com/item/sem_t/6876569?fr=aladdin" title="sem_t_百度百科" target="_blank" rel="noopener">sem_t_百度百科</a></p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/linux/">linux</a>, <a class="has-link-grey -link" href="/tags/操作系统/">操作系统</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/04/16/Git/git冲突/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">git冲突</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/04/15/Git/git分支/">
+                <span class="level-item">git分支</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="操作系统－生产者消费者问题" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

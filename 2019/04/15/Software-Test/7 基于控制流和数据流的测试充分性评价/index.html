@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>基于控制流和数据流的测试充分性评价 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="1.测试充分性基础 什么是测试充分性：“充分性”用来度量一个给定的测试集T是否能验证软件P满足其需求R。这种度量总是相对于某个具体的准则C的。当一个测试集满足准则C时，即认为其相对于C是充分的。准测C可以有很多种。">
+<meta name="keywords" content="软件测试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于控制流和数据流的测试充分性评价">
+<meta property="og:url" content="http://yoursite.com/2019/04/15/Software-Test/7 基于控制流和数据流的测试充分性评价/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="1.测试充分性基础 什么是测试充分性：“充分性”用来度量一个给定的测试集T是否能验证软件P满足其需求R。这种度量总是相对于某个具体的准则C的。当一个测试集满足准则C时，即认为其相对于C是充分的。准测C可以有很多种。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2019/04/15/Software-Test/7%20基于控制流和数据流的测试充分性评价/1555375584790.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/15/Software-Test/7%20基于控制流和数据流的测试充分性评价/未命名文件.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/15/Software-Test/7%20基于控制流和数据流的测试充分性评价/1555378863308.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/15/Software-Test/7%20基于控制流和数据流的测试充分性评价/1555380263098.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/15/Software-Test/7%20基于控制流和数据流的测试充分性评价/1555398647467.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/15/Software-Test/7%20基于控制流和数据流的测试充分性评价/1555399118250.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/15/Software-Test/7%20基于控制流和数据流的测试充分性评价/1555401058184.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/15/Software-Test/7%20基于控制流和数据流的测试充分性评价/1555400840025.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/15/Software-Test/7%20基于控制流和数据流的测试充分性评价/1555401140693.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/15/Software-Test/7%20基于控制流和数据流的测试充分性评价/1555402976706.png">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.329Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于控制流和数据流的测试充分性评价">
+<meta name="twitter:description" content="1.测试充分性基础 什么是测试充分性：“充分性”用来度量一个给定的测试集T是否能验证软件P满足其需求R。这种度量总是相对于某个具体的准则C的。当一个测试集满足准则C时，即认为其相对于C是充分的。准测C可以有很多种。">
+<meta name="twitter:image" content="http://yoursite.com/2019/04/15/Software-Test/7%20基于控制流和数据流的测试充分性评价/1555375584790.png">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="基于控制流和数据流的测试充分性评价" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2019-04-15T16:00:00.000Z">2019-04-16</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.329Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/软件测试/">软件测试</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    22 分钟 读完 (大约 3342 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                基于控制流和数据流的测试充分性评价
+            
+        </h1>
+        <div class="content">  
+            <h2 id="1-测试充分性基础"><a href="#1-测试充分性基础" class="headerlink" title="1.测试充分性基础"></a>1.测试充分性基础</h2><ol>
+<li><p>什么是<strong>测试充分性</strong>：“充分性”用来度量一个给定的测试集T是否能验证软件P满足其需求R。这种度量总是相对于某个具体的准则C的。当一个测试集满足准则C时，即认为其相对于C是充分的。准测C可以有很多种。</p>
+<a id="more"></a>
+</li>
+<li><p>测试充分性的<strong>度量</strong>：一个测试集的充分性由一个<u>有限集</u>来度量。根据所采用的充分性准则，有限集中的元素由软件的需求或者软件的代码导出。对每一个测试准则C，我们都导出一个有限集，称之为覆盖域，记为C。</p>
+</li>
+<li><p>如果相应的覆盖域C仅依赖于<u>被测软件的代码</u>，则称准则C是一个<u>白盒测试充分性准则</u>。如果相应的覆盖域C仅依赖于<u>被测软件的需求</u>，则称准则C是一个<u>黑盒测试充分性准则</u>。所有其他的测试充分性准则都是二者的混合。</p>
+<blockquote>
+<p>例子：考虑编写程序sumProduct，其需求如下：</p>
+<p>R：从标准输入设备上输入两个整数x和y。</p>
+<p>R2.1：当x&lt;y时，求x与y之和，并在标准输出设备上输出x与y之和。</p>
+<p>R22：如果x≥y，求x与y之积，并在标准输出设备上输出x与y之积。</p>
+<p>现在假设，测试充分性准则如下：C：如果针对R中的每一个需求r，测试集T中至少有一个用例测试证明了P满足r，则认为T针对（P，R）是充分的。</p>
+<p>解：T=lt：&lt;x=2，y=3&gt;}相对准则C来讲是不充分的。有限集C就是{R，R2.1，R2.2}。T覆盖了R和R2.1，但没覆盖R2.2。因此，T相对于C是不充分的。T对C，P，R的覆盖率是0.66（2/3）。元素R2.2没有被T测试，而C中的其他元素都被T测试了。</p>
+</blockquote>
+</li>
+<li><p>基于度量充分性的<strong>测试增强</strong>：</p>
+<p>测试增强的目的在于确定<u>用来测试软件未测部分</u>的测试用例。增强过程就是不断设计新的测试用例并用来测试软件。</p>
+<p>下图是测试集的构造到增强的循环过程。</p>
+<p><img src="/2019/04/15/Software-Test/7 基于控制流和数据流的测试充分性评价/1555375584790.png" alt="1555375584790"></p>
+<p>增强的过程可以继续详细：</p>
+<p><img src="/2019/04/15/Software-Test/7 基于控制流和数据流的测试充分性评价/未命名文件.png" alt="未命名文件"></p>
+</li>
+<li><p><strong>单次和多次执行</strong>：T中有三个测试用例，你可以把它当作三个测试用例分靠输入到程序中，也可以当作一个测试用例一次性的输入到程序中，测试集可以重写为<br>$$<br>T=\left{t1:&lt;&lt;request=1,x=2,y=3&gt;→&lt;request=2,x=4&gt;→&lt;request=3&gt;&gt;\right}<br>$$</p>
+</li>
+</ol>
+<h2 id="2-基于控制流的测试充分性准则"><a href="#2-基于控制流的测试充分性准则" class="headerlink" title="2.基于控制流的测试充分性准则"></a>2.基于控制流的测试充分性准则</h2><ol>
+<li><p>相对于<strong>语句覆盖</strong>的测试充分性准则：</p>
+<p>测试集T针对（P，R）的语句覆盖率计算如下：<br>$$<br>\frac{|S_c|}{|S_e|-|S_i|}<br>$$<br>其中，S~c~是所有被覆盖的语句的集合，S~i~是所有不可达语句的集合，S~e~是软件中所有语句的集合，即语句覆盖域。如果T针对（P，R）的语句覆盖率为1，则称T相对于语句覆盖准则是充分的。</p>
+</li>
+<li><p>相对于<strong>语句覆盖</strong>的测试充分性准则：</p>
+<p>测试集T针对（P，R）的块覆盖率计算如下：<br>$$<br>\frac{|B_c|}{|B_e|-|B_i|}<br>$$<br>其中，B~c~是所有被覆盖的基本块的集合，B~i~是所有不可达块的集合，B~e~是软件中所有块的集合，即块覆盖域。如果T针对（P，R）的块覆盖率为1，则称T相对于块覆盖准则是充分的。</p>
+</li>
+<li><p>条件和判定：</p>
+<ul>
+<li>任何计算结果为真/假的表达式都是<strong>条件</strong>。</li>
+<li>在程序中，任何一个条件都可在适当的上下文环境下当作一个<strong>判定</strong>，比如<code>if</code>，<code>while</code>，<code>switch</code>；一个判定有三种可能的输出：<u>真、假和未定义</u>。当条件为真或假时，判定选择其中的一个路径执行；但是，在某些情况下，条件的取值确定不下来，因此判定的输出结果就无法定义。</li>
+</ul>
+</li>
+<li><p><strong>判定覆盖</strong>：判定覆盖也称为分支判定覆盖。对某个判定来讲，如果控制流已经遍历完<u>判定所有可能的取值</u>（即判定的所有输出结果都被覆盖），则认为该判定被覆盖了。</p>
+<p>测试集T针对（P，R）的判定覆盖率计算如下：<br>$$<br>\frac{|D_c|}{|D_e|-|D_i|}<br>$$<br>其中，D~c~是所有被覆盖的判定的集合，D~i~是所有无效判定的集合，D~e~是软件中所有判定的集合，即判定覆盖域。如果T对（P，R）的判定覆盖率为1，则称T相对于判定覆盖准则是充分的。</p>
+</li>
+<li><p><strong>条件覆盖</strong>：</p>
+<p>测试集T针对（P，R）的条件覆盖率计算如下：<br>$$<br>\frac{|C_c|}{|C_e|-|C_i|}<br>$$<br>其中，C~c~是所有被覆盖的简单条件的集合，C~i~是所有无效简单条件的集合，C~e~是软件中所有简单条件的集合，即条件覆盖域。如果T对（P，R）的条件覆盖率为1，则称T相对于条件覆盖准则是充分的。</p>
+<blockquote>
+<p>例子：</p>
+<p><img src="/2019/04/15/Software-Test/7 基于控制流和数据流的测试充分性评价/1555378863308.png" alt="1555378863308"></p>
+<p>为了计算T的条件覆盖率，记C~e~={x&lt;0，y&lt;0}。T仅覆盖了C~e~中的第二个简单条件。由于C中的两个简单条件都是有效的，因此IC~i~l=0。将这些值带入公式，得到T的条件覆盖率为0.45</p>
+</blockquote>
+</li>
+<li><p><strong>条件/判定覆盖</strong>：<br>测试集T针对（P，R）的条件/判定覆盖率计算如下：<br>$$<br>\frac{|C_c|+|D_c|}{(|C_e|-|C_i|)+(|D_e|-|D_i|)}<br>$$<br>其中，C~c~、D~c~分别是所有被覆盖的简单条件的集合、所有被覆盖的判定的集合，C~i~、D~i~，分别是所有无效简单条件的集合、所有无效判定的集合，C~e~、D~e~分别是软件中所有简单条件的集合、所有判定的集合。如果了对（P，R）的条件覆盖率为1，则称T相对于条件/判定覆盖准则是充分的。</p>
+</li>
+<li><p>多重条件覆盖：</p>
+</li>
+<li><p><strong>线性代码序列和跳转</strong>（LCSAJ）覆盖</p>
+<p>线性代码序列和跳转（Linear Code Sequence And Jump，LCSAJ）是一个程序单元，它由一段有序的代码序列组成，该序列结束时会跳转到另一个代码序列的开始。一个LCSAL包含一条或多条语句，表示成三元组（X，Y，Z），其中，X、Y分别表示代码序列的第一条语句和最后一条语句的位置，Z是语句Y要跳转到的位置。由于LCSAJ中最后一条语句是一个跳转，因此Z可能是程序的结束。</p>
+<blockquote>
+<p>例子：</p>
+<p><img src="/2019/04/15/Software-Test/7 基于控制流和数据流的测试充分性评价/1555380263098.png" alt="1555380263098"></p>
+<p>| LCSAJ | 开始行号 | 结束行号 | 跳转到 |<br>| —– | ——– | ——– | —— |<br>| 1     | 1        | 6        | exit   |<br>| 2     | 1        | 4        | 7      |<br>| 3     | 7        | 8        | exit   |</p>
+<p>下面由两个用例组成的测试集遍历了上表所列的每一个LCSAJ：t={ t1:&lt;x=-5,y=0&gt; , t2:&lt;x=5,y=2&gt;}，分别是（1，6，exit）和（1，4，7）-&gt;（7，8，exit）</p>
+<p>所以该测试是充分的。<br>测试集T针对（P，R）的LCSAJ覆盖率计算如下：</p>
+</blockquote>
+<p>$$<br>\frac{已执行的LCSAJ个数}{所有有效LCSAJ的总数}<br>$$</p>
+<p>如果T对（P，R）的LCSAJ覆盖率为1，则称T相对于LCSAJ覆盖准则是充分的。</p>
+<p>如果T对（P，R）的LCSAJ覆盖率为1，则称T相对于LCSAJ覆盖准则是充分的。</p>
+</li>
+<li><p>改进的条件/判定（MC/DC）覆盖</p>
+<p>满足需求R的软件P的测试集T针对MC/DC覆盖准则是充分的，如果对P执行T中的测试用例，满足如下要求：</p>
+<p>1）P中的每一个<u>基本块</u>都被覆盖了。</p>
+<p>2）P中的每一个<u>简单条件</u>都取过真值true和false。</p>
+<p>3）P中的每一个<u>判定</u>都得出过所有可能的输出结果。</p>
+<p>4）P中复合条件C中的每一个简单条件对C的输出结果的影响是<u>独立</u>的。</p>
+<blockquote>
+<p>例子：产生以下程序的MC/DC充分测试集</p>
+<p><img src="/2019/04/15/Software-Test/7 基于控制流和数据流的测试充分性评价/1555398647467.png" alt="1555398647467"></p>
+<ol>
+<li><p>产生满足指定需求的测试集</p>
+<p>| 测试用例 | 需求 | done  | d     | x    | y    | z    |<br>| ——– | —- | —– | —– | —- | —- | —- |<br>| t~1~     | R1.2 | false | East  | 10   | 15   | 3    |<br>| t~2~     | R1.1 | false | South | 10   | 15   | 4    |<br>| t~3~     | R1.3 | false | North | 10   | 15   | 5    |<br>| t~4~     | R2   | true  | -     | -    | -    | -    |</p>
+</li>
+<li><p>根据这些测试用例，分析判定的覆盖情况</p>
+<p><img src="/2019/04/15/Software-Test/7 基于控制流和数据流的测试充分性评价/1555399118250.png" alt="1555399118250"></p>
+<p>由上可得测试集T的语句覆盖、判定覆盖、基本块覆盖都是充分的，但是由于C~2~中的x&lt;y，C~3~中的x&lt;y和current=”South“，不满足条件覆盖。所以增加一条测试使之满足条件覆盖。</p>
+</li>
+<li><p>对比发现产生的新测试集T，在C~2~中，只说明了”prev=east“是独立的，剩下两个简单条件没有说明；对C~3~同理，所以需要继续增加测试用例。</p>
+</li>
+</ol>
+</blockquote>
+</li>
+</ol>
+<h2 id="3-基于数据流的测试充分性测试"><a href="#3-基于数据流的测试充分性测试" class="headerlink" title="3.基于数据流的测试充分性测试"></a>3.基于数据流的测试充分性测试</h2><ol>
+<li><p><strong>c-use</strong>：如果一个变量被用在<strong>赋值语句</strong>的表达式、输出语句中，或者被当作<strong>参数</strong>传递给调用函数，或者被用在<strong>下标</strong>表达式中，都称为该变量的c-use，其中c表示“计算”。</p>
+<p><strong>p-use</strong>：如果一个变量被用在<strong>分支语句</strong>的条件表达式中（比如if和while语句）则称为变量的p-use，其中p表示“谓词”。</p>
+<p>在某些情况下，很难确定变量是c-use还是p-use，例如：<code>if（A[x+1]&gt;0）{output（x）；</code></p>
+</li>
+<li><p><strong>数据流图的构造</strong></p>
+<blockquote>
+<p>例子：</p>
+<p><img src="/2019/04/15/Software-Test/7 基于控制流和数据流的测试充分性评价/1555401058184.png" alt="1555401058184"></p>
+<p>步骤1：计算P中每个基本块i的def、c-use，和p-use。</p>
+<p><img src="/2019/04/15/Software-Test/7 基于控制流和数据流的测试充分性评价/1555400840025.png" alt="1555400840025"></p>
+<p>步骤2：将结点集N中的每个结点i与def、c-use；和p-use，关联起来。深色表示不可达。</p>
+<p>步骤3：针对每个具有<strong>非空p-use集</strong>并且在条件C处结束的结点i，如果条件C为真时执行的是边（i，j），C为假时执行的是边（i，k），分别将边（i，j），（i，k）与C，!C关联起来。</p>
+<p><img src="/2019/04/15/Software-Test/7 基于控制流和数据流的测试充分性评价/1555401140693.png" alt="1555401140693"></p>
+</blockquote>
+</li>
+<li><p><strong>def-clear路径</strong>：</p>
+<p>假设变量x在<strong>结点i中定义</strong>，在<strong>结点j中使用</strong>，考虑路径p=（i，n1，n2，…，nk，j），k=0，路径p从结点i开始，结束于结点j，并且<strong>结点i、j</strong>在子路径n，，n2，…，中<strong>未出现过</strong>，如果变量x没有在子路径n1，n2，…，nk中被<strong>重定义</strong>，称p是变量x的def-clear路径。在这种情况下，也称x在结点i处的定义，即di（x）在结点j处是活跃的。</p>
+</li>
+<li><p><strong>def-use对</strong></p>
+<p>我们关心两种类型的def-use对：一种是定义及其<strong>c-use</strong>构成的def-use对，另一种是定义及其<strong>p-use</strong>构成的def-use对。分别用集合<strong>dcu</strong>和<strong>dpu</strong>来描述这两类def-use对。对一个变量定义而言，总有一个dcu集合和一个dpu集合。<br>对di（x）来说，dcu（di（x））是所有结点j的集合，结点j满足：存在uj（x），并且存在一条从结点i到结点j的针对x的def-clear路径。dcu（di（x））也可表示成dcu（x，i）。<br>当u（x）出现在谓词条件中时，dpu（d，（x））是边（k，1）的集合，边（k，l）满足：存在一条从结点i到边（k，l）的针对x的def-clear路径。注意，在一个dpu集合中，元素的个数总是偶数。dpu（di（x））也可表示成dpu（x，i）。</p>
+</li>
+<li><p>c-use覆盖</p>
+<p><img src="/2019/04/15/Software-Test/7 基于控制流和数据流的测试充分性评价/1555402976706.png" alt="1555402976706"></p>
+</li>
+<li><p>p-use覆盖</p>
+</li>
+</ol>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/软件测试/">软件测试</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/04/15/Software-Test/5 基于有穷状态模型的测试生成/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">基于有穷状态模型的的测试生成</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/04/15/Computer-Network/计算机网络期末复习/">
+                <span class="level-item">计算机网络期末复习</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="基于控制流和数据流的测试充分性评价" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

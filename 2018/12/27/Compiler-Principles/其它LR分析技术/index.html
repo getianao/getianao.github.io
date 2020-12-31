@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>其它LR分析技术 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="一、LR（1）分析1. SLR（1）分析的问题 无效归约问题： 在SLR(1)分析中，我们考虑了所归约非终结符的 Follow 符号，这可以分析出怎么选择归约或移进，但是在选择归约的情况中里，我们只是确认了移进符号是属于非终结符的Follow集的，而没有确认移进后是否是表达式文法规范句型的活前缀，也就是未考虑非终结符 Follow 集中的符号是否也是句柄的 Follow 符号；这样虽然不会影响判断">
+<meta name="keywords" content="编译原理,语法分析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="其它LR分析技术">
+<meta property="og:url" content="http://yoursite.com/2018/12/27/Compiler-Principles/其它LR分析技术/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="一、LR（1）分析1. SLR（1）分析的问题 无效归约问题： 在SLR(1)分析中，我们考虑了所归约非终结符的 Follow 符号，这可以分析出怎么选择归约或移进，但是在选择归约的情况中里，我们只是确认了移进符号是属于非终结符的Follow集的，而没有确认移进后是否是表达式文法规范句型的活前缀，也就是未考虑非终结符 Follow 集中的符号是否也是句柄的 Follow 符号；这样虽然不会影响判断">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/其它LR分析技术/1544255592104.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/其它LR分析技术/1544257863340.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/其它LR分析技术/1544257876108.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/其它LR分析技术/1544257885490.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/其它LR分析技术/1544259319169.png">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.193Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="其它LR分析技术">
+<meta name="twitter:description" content="一、LR（1）分析1. SLR（1）分析的问题 无效归约问题： 在SLR(1)分析中，我们考虑了所归约非终结符的 Follow 符号，这可以分析出怎么选择归约或移进，但是在选择归约的情况中里，我们只是确认了移进符号是属于非终结符的Follow集的，而没有确认移进后是否是表达式文法规范句型的活前缀，也就是未考虑非终结符 Follow 集中的符号是否也是句柄的 Follow 符号；这样虽然不会影响判断">
+<meta name="twitter:image" content="http://yoursite.com/2018/12/27/Compiler-Principles/其它LR分析技术/1544255592104.png">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="其它LR分析技术" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2018-12-27T16:00:00.000Z">2018-12-28</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.193Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/编译原理/">编译原理</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/语法分析/">语法分析</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    9 分钟 读完 (大约 1403 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                其它LR分析技术
+            
+        </h1>
+        <div class="content">  
+            <h2 id="一、LR（1）分析"><a href="#一、LR（1）分析" class="headerlink" title="一、LR（1）分析"></a>一、LR（1）分析</h2><h3 id="1-SLR（1）分析的问题"><a href="#1-SLR（1）分析的问题" class="headerlink" title="1. SLR（1）分析的问题"></a>1. SLR（1）分析的问题</h3><ul>
+<li><p><strong>无效归约问题：</strong></p>
+<p>在SLR(1)分析中，我们考虑了所归约非终结符的 Follow 符号，这可以分析出怎么选择归约或移进，但是在选择归约的情况中里，我们只是确认了移进符号是属于非终结符的Follow集的，而没有确认移进后是否是表达式文法规范句型的活前缀，也就是<strong>未考虑非终结符 Follow 集中的符号是否也是句柄的 Follow 符号</strong>；这样虽然不会影响判断结果，但产生了无效归约，减低了效率。</p>
+<a id="more"></a>
+<blockquote>
+<p>例：现在符号栈中的元素是<code>βα</code>，移进符号是<code>a</code>，已知有归约项目<code>A-&gt;α</code>，并且<code>a</code>属于<code>follow(A)</code>而<code>a</code>不属于<code>follow(βα)</code>；此时我们的做法是归约然后移进，之后的符号栈中的元素是<code>βAa</code>，而<code>βAa</code>不是文法规范句型的活前缀。</p>
+<p>如果我们能判断出<code>a!∈follow(βA)</code>，就可以判断出出错了。</p>
+</blockquote>
+</li>
+<li><p><strong>局限性问题：</strong></p>
+<p>SLR（1）分析的要求是：<code>Ii ＝{A1-&gt;α1•b1γ1 ，…  ， Am-&gt;m•bm γm， B1-&gt;β 1 • ，…， Bn-&gt; β n • }</code>，若集合<code>{b1 ，b2，… ，bm }</code>、<code>FOLLOW(B1)</code> 、 <code>FOLLOW(B2)</code> ，…，<code>FOLLOW(Bn)</code>均两两不相交。和上面的道理相似，没有考虑非终结符 Follow 集中的符号是否也是句柄的 Follow 符号，导致虽然follow集出现了相交，但是事实上正确的符号串是不会出现某些 follow集中的符号的，从而不能判断。</p>
+<blockquote>
+<p>已知：增广文法 G’ [ S ]:<br>(0) S -&gt; E<br>(1) E -&gt; (L , E )<br>(2) E -&gt; F<br>(3) L -&gt; L , E<br>(4) L -&gt; E<br>(5) F -&gt; ( F )<br>(6) F -&gt; d</p>
+<p>有G’ [S] 的 LR（0）FSM：</p>
+<p><img src="/2018/12/27/Compiler-Principles/其它LR分析技术/1544255592104.png" alt="1544255592104"></p>
+<p>在I~7~中出现了<code>{)}∩follow(E)={)}</code>的情况，所以不能进行SLR（1）分析；但是I7中的情况是<code>(·F,E)</code>，此时的<code>follow(E)</code>中没有<code>）</code>而应该是<code>,</code>。</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="2-LR（1）分析法原理"><a href="#2-LR（1）分析法原理" class="headerlink" title="2.LR（1）分析法原理"></a>2.LR（1）分析法原理</h3><p>我们在求项目集的时候，每个项目的末尾添加一个非终结符并以<code>,</code>分隔开来，来表示<strong>在当前情况下</strong>用该产生式进行规约时所期望的下一个字符，称之为<strong>向前搜索符</strong>，来替代follew集。</p>
+<p>在检查是否可用.LR（1）分析法的时候，要求是<code>Ii</code>＝<code>{A1-&gt;α1•b1 γ1,a1</code>，…  ， <code>Am-&gt;m•bm γm,am</code> ， <code>B1-&gt;β 1 •,c1</code>，…，<code>Bn-&gt; β n •,cn</code>  }，若集合<code>{b1}</code> ，<code>{b2}</code>，… ，<code>{bm}</code>、<code>{c1}</code> ，<code>{c2}</code>，… ，<code>{cm}</code>均两两不相交。满足这样要求的文法称之为<strong>LR（1）文法</strong>：。</p>
+<p>通过比较<code></code>{b1}<code>，</code>{b2}<code>，… ，</code>{bm}<code>、</code>{c1}<code>，</code>{c2}<code>，… ，</code>{cm}`和待移进字符就能分析出当前应该进行的操作。</p>
+<blockquote>
+<p>例：增广文法 G’ [ S ]:<br>(0) S -&gt; E<br>(1) E -&gt; (L , E )<br>(2) E -&gt; F<br>(3) L -&gt; L , E<br>(4) L -&gt; E<br>(5) F -&gt; ( F )<br>(6) F -&gt; d</p>
+<p>构造增广文法G’ [S] 的 LR（1）FSM：</p>
+<p><img src="/2018/12/27/Compiler-Principles/其它LR分析技术/1544257863340.png" alt="1544257863340"></p>
+<p><img src="/2018/12/27/Compiler-Principles/其它LR分析技术/1544257876108.png" alt="1544257876108"></p>
+<p><img src="/2018/12/27/Compiler-Principles/其它LR分析技术/1544257885490.png" alt="1544257885490"></p>
+</blockquote>
+<h3 id="3-LR（k）分析"><a href="#3-LR（k）分析" class="headerlink" title="3. LR（k）分析"></a>3. LR（k）分析</h3><p>同理可推广到LR（k）分析：</p>
+<p>形如： <code>[A -&gt;α . β ,  a1a2…ak ]</code>，其中a1a2…ak 为向前搜索符号串。</p>
+<p>移进项目形如：<code>[ A  -&gt;α . aβ， a1 a2 … ak]</code> ；待约项目形如：<code>[A  -&gt;α . Bβ， a1 a2 … ak]</code>； 归约项目形如：<code>[A  -&gt;α .  ，a1 a2 … ak]</code> 。</p>
+<p>但LR（k）分析只有理论意义，因为LR（1）FSM 的状态数已经很大，k&gt;1 的情形难以想象。 </p>
+<h2 id="二、LALR（1）分析"><a href="#二、LALR（1）分析" class="headerlink" title="二、LALR（1）分析"></a>二、LALR（1）分析</h2><h3 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1.基本概念"></a>1.基本概念</h3><ul>
+<li><p>LR（1）项目的“心”（core）：</p>
+<p>LR（1）项目 <code>[A -&gt; α . β ,  a]</code> 中的<code>A -&gt; α . β</code>  部分称为该项目的“心“  。</p>
+</li>
+<li><p>同心集：</p>
+</li>
+<li><p>对于LR（1）FSM 的两个状态，如果只考虑每个项目的 “心”，它们是完全相同的项目集合，那么这两个状态互为同心集。</p>
+</li>
+</ul>
+<h3 id="2-LALR（1）分析法原理"><a href="#2-LALR（1）分析法原理" class="headerlink" title="2.LALR（1）分析法原理"></a>2.LALR（1）分析法原理</h3><p>我们可以发现LR（1）分析的有限状态机中，项目集的数量十分的多。这是因为许多在LR（0）分析中循环的项目集在LR（1）分析中由于<code>·</code>的位置变化导致向前搜索集也产生了变化，从而产生了许多同心集。而LALR（1）分析法正是对这些同心集进行了合并。</p>
+<p>暴风(<em>Brute</em> <em>Force</em>)算法：</p>
+<ol>
+<li>构造增广文法的 LR（1）FSM 状态 。</li>
+<li>合并“同心”的状态（同心项目的搜索符集合相并） 得到LALR(1) FSM 的状态 。</li>
+<li>LALR(1) FSM 状态由 GO 函数得到的后继状态是所有被合并的“同心”状态的后继状态之并 。</li>
+</ol>
+<p>注意：</p>
+<blockquote>
+<ul>
+<li><p>合并同心状态后，不会产生新的移进-归约冲突，但可能产生新的归约-归约冲突。</p>
+</li>
+<li><p>一个LR（1）文法，如果将其LR（1）FSM的 同心状态合并后所得到的新状态无归约-归约 冲突，则该文法是一个 LALR（1）文法 。</p>
+<p>例：增广文法 G’ [ S ]:<br>(0) S -&gt; E<br>(1) E -&gt; (L , E )<br>(2) E -&gt; F<br>(3) L -&gt; L , E<br>(4) L -&gt; E<br>(5) F -&gt; ( F )<br>(6) F -&gt; d</p>
+<p>构造增广文法G’ [S] 的 LALR(1) FSM</p>
+</li>
+</ul>
+<p><img src="/2018/12/27/Compiler-Principles/其它LR分析技术/1544259319169.png" alt="1544259319169"></p>
+</blockquote>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/编译原理/">编译原理</a>, <a class="has-link-grey -link" href="/tags/语法分析/">语法分析</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/12/28/Compiler-Principles/SLR(1)分析/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">SLR(1)分析</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/12/27/Compiler-Principles/算符优先分析法/">
+                <span class="level-item">算符优先分析法</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="其它LR分析技术" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

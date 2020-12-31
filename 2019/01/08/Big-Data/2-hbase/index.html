@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>汇编开发环境个使用 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="HBase定义Hbase 是 Hadoop Database 的简称 ，Hbase 项目是由 Powerset 公司的 Chad Walters 和 Jim Kelleman 在2006年末发起，根据 Google 的 Chang 等人发表的论文“Bigtable：A Distributed Storage System for Strctured Data“来设计的。">
+<meta name="keywords" content="大数据,hbase">
+<meta property="og:type" content="article">
+<meta property="og:title" content="汇编开发环境个使用">
+<meta property="og:url" content="http://yoursite.com/2019/01/08/Big-Data/2-hbase/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="HBase定义Hbase 是 Hadoop Database 的简称 ，Hbase 项目是由 Powerset 公司的 Chad Walters 和 Jim Kelleman 在2006年末发起，根据 Google 的 Chang 等人发表的论文“Bigtable：A Distributed Storage System for Strctured Data“来设计的。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2019/01/08/Big-Data/2-hbase/5847011-e69a8a40bc3c4781.png">
+<meta property="og:image" content="http://yoursite.com/2019/01/08/Big-Data/2-hbase/1546931623505.png">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.181Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="汇编开发环境个使用">
+<meta name="twitter:description" content="HBase定义Hbase 是 Hadoop Database 的简称 ，Hbase 项目是由 Powerset 公司的 Chad Walters 和 Jim Kelleman 在2006年末发起，根据 Google 的 Chang 等人发表的论文“Bigtable：A Distributed Storage System for Strctured Data“来设计的。">
+<meta name="twitter:image" content="http://yoursite.com/2019/01/08/Big-Data/2-hbase/5847011-e69a8a40bc3c4781.png">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="汇编开发环境个使用" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2019-01-08T16:00:00.000Z">2019-01-09</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.181Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/hbase/">hbase</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/大数据/">大数据</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    13 分钟 读完 (大约 1991 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                汇编开发环境个使用
+            
+        </h1>
+        <div class="content">  
+            <h2 id="HBase定义"><a href="#HBase定义" class="headerlink" title="HBase定义"></a>HBase定义</h2><p>Hbase 是 Hadoop Database 的简称 ，Hbase 项目是由 Powerset 公司的 Chad Walters 和 Jim Kelleman 在2006年末发起，根据 Google 的 Chang 等人发表的论文“Bigtable：A Distributed Storage System for Strctured Data“来设计的。</p>
+<a id="more"></a>
+<p>HBase是一个高可靠性、高性能、面向列（更准确的说是面对列族）、可伸缩的分布式存储系统。</p>
+<ul>
+<li>高可靠性：利用 Hadoop HDFS 作为其文件存储系统，提供实时读写的分布式数据库系统；Zookeeper为Hbase提供稳定服务和Failover机制 。</li>
+<li>高性能：MapReduce 为 Hbase 提供高性能的计算能力 。</li>
+</ul>
+<h2 id="HBase特点"><a href="#HBase特点" class="headerlink" title="HBase特点"></a>HBase特点</h2><ul>
+<li>海量数据：Hbase适合存储PB级别的海量数据，是因为HBase容易利用廉价的硬盘进行扩展，并且在PB级别的数据下可以在几十到百毫秒内返回数据 。</li>
+<li>列式存储：这里说的列实际上是列族，HBase通过列族来存储数据。</li>
+<li>易于扩展：扩展性主要体现在两个方面：一是基于上层处理能力的扩展，即通过横向添加RegionSever的机器，进行水平扩展，提升Hbase上层的处理能力，提升Hbsae服务更多Region的能力。；二是基于存储的扩展，即通过横向添加Datanode的机器，进行存储层扩容，提升Hbase的数据存储能力和提升后端存储的读写能力。 </li>
+</ul>
+<h2 id="与关系数据库的不同"><a href="#与关系数据库的不同" class="headerlink" title="与关系数据库的不同"></a>与关系数据库的不同</h2><p><img src="/2019/01/08/Big-Data/2-hbase/5847011-e69a8a40bc3c4781.png" alt="img"> </p>
+<h2 id="HBase架构"><a href="#HBase架构" class="headerlink" title="HBase架构"></a>HBase架构</h2><p><img src="/2019/01/08/Big-Data/2-hbase/1546931623505.png" alt="1546931623505"></p>
+<p>Hbase是由Client、Zookeeper、HMaster、HRegionServer、HDFS等几个组建组成 </p>
+<ul>
+<li><p>Client：Client包含了访问Hbase的接口，另外Client还维护了对应的cache来加速Hbase的访问，比如cache的.META.元数据的信息。 </p>
+</li>
+<li><p>HMaster：在HA模式下，包含主用Master和备用Master。</p>
+<ul>
+<li>主用Master：负责HBase中RegionServer的管理（<strong>调度</strong>），包括表的增删改查；RegionServer的<strong>负载均衡</strong>，分配调整Region；Region分裂以及分裂后的Region分配；RegionServer失效后的Region<strong>迁移</strong>等。 </li>
+<li>备用Master：当主用Master故障时，备用Master将取代主用Master对外提供服务。故障恢复后，原主用Master降为备用。</li>
+</ul>
+</li>
+<li><p>ZooKeeper：ZooKeeper为HBase集群中各进程提供分布式协作服务。各RegionServer将自己的信息注册到Zookeeper中，主用Master据此感知各个RegionServer的健康状态。</p>
+</li>
+<li><p>RegionServer: RegionServer 负责提供表数据(实时)<strong>读写</strong>等服务，是HBase的数据处理和计算单元。RegionServer一般与HDFS集群的DataNode部署在一起，实现数据的存储功能。</p>
+<p>Region被交由RegionServer管理。实际上，所有用户数据的读写请求，都是和RegionServer上的Region进行交互。 </p>
+</li>
+<li><p>HRegion：Hbase基于Rowkey的不同范围将一个大表的数据分配到不通的Region中，每个Region负责一定范围的数据访问和存储。这样即使是一张巨大的表，由于被切割到不通的region，划分为一个个的子表，实现分布式存储 ，访问起来的时延也很低。</p>
+<p>每一个Region都关联一个Key值范围，即一个使用StartKey和EndKey描述的区间。一个Region的EndKey就是下一个Region的StartKey。 </p>
+<p>Region是HBase分布式存储的最基本单元。 </p>
+<p>Region分为 Meta Region 以及 User Region 两类：Meta Region记录了每一个User Region的路由信息。读写Region数据的路由，包括如下几步：①找寻Meta Region地址。②再由Meta Region找寻User Region地址。所以region的路由信息保存在meta表中，而meta表的region信息保存在zookeeper上 。</p>
+</li>
+<li><p>Store：一个Region由一个或多个Store组成。</p>
+</li>
+<li><p>MemStore：一个Store包含一个MemStore，MemStore缓存客户端向Region插入的数据，当RegionServer中的MemStore大小达到配置的容量上限时，RegionServer会将MemStore中的数据“flush”到HDFS中。</p>
+</li>
+<li><p>StoreFile：MemStore的数据flush到HDFS后成为StoreFile，随着数据的插入，一个Store会产生多个StoreFile，当StoreFile的个数达到配置的最大值时，RegionServer会将多个StoreFile合并为一个大的StoreFile。</p>
+</li>
+<li><p>HFile：HFile定义了StoreFile在文件系统中的存储格式，它是当前HBase系统中StoreFile的具体实现。</p>
+</li>
+<li><p>HLog：HLog日志保证了当RegionServer故障时，用户写入的数据不丢失，RegionServer的多个Region共享一个相同的HLog。</p>
+</li>
+<li><p>HDFS：HDFS为Hbase提供最终的底层数据存储服务，同时为Hbase提供高可用（Hlog存储在HDFS）的支持。</p>
+</li>
+</ul>
+<h2 id="HBase数据模型"><a href="#HBase数据模型" class="headerlink" title="HBase数据模型"></a>HBase数据模型</h2><ul>
+<li><p>Rowkey ：类似与 MySQL 中的主键，HBase 利用 Rowkey 来区分行。</p>
+</li>
+<li><p>ColumnFamily：列族，一个表在水平方向上由一个或多个Column Family组成。一个CF（Column Family）可以由任意多个Column组成。Column是CF下的一个标签，可以在写入数据时任意添加，因此CF支持动态扩展，无需预先定义Column的数量和类型。HBase中表的列非常稀疏，不同行的列的个数和类型都可以不同。 </p>
+<p>ColumnFamily 是Region的一个物理存储单元。同一个Region下面的多个ColumnFamily，位于不同的路径下面。</p>
+<p>ColumnFamily 信息是表级别的配置。也就是说，同一个表的多个 Region，都拥有相同的 ColumnFamily 信息。</p>
+<p>Hbase的列族不是越多越好，官方推荐的是列族最好小于或者等于3。我们使用的场景一般是1个列族。 </p>
+</li>
+<li><p>KeyValue ：即键值对。</p>
+<p>KeyValue具有特定的结构。Key部分被用来快速的检索一条数据记录，Value部分用来存储实际的用户数据信息 。</p>
+<p>KeyValue作为承载用户数据的基本单元，需要保存一些对自身的描述信息，例如，时间戳，类型等等。那么，势必会有一定的结构化空间开销。 </p>
+<p>HBase的底层数据都是以KeyValue的形式存在的。KeyValue具有特定的格式。</p>
+<p>KeyValue中拥有时间戳、类型等关键信息。</p>
+<p>同一个Key值可以关联多个KeyValue，每一个KeyValue都拥有一个Qualifier标识。即使是Key值相同、Qualifier也相同的多个KeyValue，可以使用时间戳来区分，这就是同一条数据记录的多版本。</p>
+</li>
+</ul>
+<h2 id="读流程"><a href="#读流程" class="headerlink" title="读流程"></a>读流程</h2><ol>
+<li>客户端发起请求 。</li>
+<li>通过ZooKeeper获取-ROOT-的位置，然后访问-ROOT-表获得.META表的位置，meta表中记载着各个User Region信息（rowkey范围，所在RegionServer）</li>
+<li>最后根据.META表中的信息和要查找的 rowkey 确定需要读取的Region所在RegionServer </li>
+<li>请求发送到该RegionServer，Regionserver的内存分为MemStore和BlockCache 两部分，MemStore 主要用于写数据， BlockCache 主要用于读数据。读请求先到 MemStore 中查数据，查不到就到 BlockCache 中查，再查不到就会到 StoreFile 上读，并把读的结果放入 BlockCache。</li>
+<li>数据读取返回到客户端 </li>
+</ol>
+<h2 id="写流程"><a href="#写流程" class="headerlink" title="写流程"></a>写流程</h2><ol>
+<li>客户端发起请求 </li>
+<li>通过ZooKeeper获取-ROOT-的位置，然后访问-ROOT-表获得.META表的位置，meta表中记载着各个User Region信息（rowkey范围，所在RegionServer）</li>
+<li>最后根据.META表中的信息和要查找的 rowkey 确定需要读取的Region所在RegionServer </li>
+<li>请求按RegionServer和Region打包发送到Region所在RegionServer，由该RegionServer具体处理数据写入。 </li>
+</ol>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/hbase/">hbase</a>, <a class="has-link-grey -link" href="/tags/大数据/">大数据</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/03/01/Software-Test/1/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">google的测试</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/01/06/Database-Principles/chapter3-Database Design/">
+                <span class="level-item">chapter3-Database Design</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="汇编开发环境个使用" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

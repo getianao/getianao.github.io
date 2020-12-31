@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>中间件复习 - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="试列举常用的中间件类型。  答：1、远程过程调用中间件，即RPC。 2、面向对象中间件，例如：RMI. RMI/IIOP, CORBA, EJB, DCOM 等。 3、面向消息中间件，例如：Java Message Service, IBM MQSeries, Web Services 等。 4、基于事件中间件。">
+<meta name="keywords" content="中间件,复习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="中间件复习">
+<meta property="og:url" content="http://yoursite.com/2019/03/08/Middleware/中间件复习/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="试列举常用的中间件类型。  答：1、远程过程调用中间件，即RPC。 2、面向对象中间件，例如：RMI. RMI/IIOP, CORBA, EJB, DCOM 等。 3、面向消息中间件，例如：Java Message Service, IBM MQSeries, Web Services 等。 4、基于事件中间件。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.281Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="中间件复习">
+<meta name="twitter:description" content="试列举常用的中间件类型。  答：1、远程过程调用中间件，即RPC。 2、面向对象中间件，例如：RMI. RMI/IIOP, CORBA, EJB, DCOM 等。 3、面向消息中间件，例如：Java Message Service, IBM MQSeries, Web Services 等。 4、基于事件中间件。">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="中间件复习" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2019-03-08T16:00:00.000Z">2019-03-09</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.281Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/中间件/">中间件</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/tags/复习/">复习</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    13 分钟 读完 (大约 1901 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                中间件复习
+            
+        </h1>
+        <div class="content">  
+            <ol>
+<li><p>试列举常用的中间件类型。</p>
+<blockquote>
+<p>答：1、远程过程调用中间件，即RPC。</p>
+<p>2、面向对象中间件，例如：RMI. RMI/IIOP, CORBA, EJB, DCOM 等。</p>
+<p>3、面向消息中间件，例如：Java Message Service, IBM MQSeries, Web Services 等。</p>
+<p>4、基于事件中间件。</p>
+</blockquote>
+<a id="more"></a>
+</li>
+<li><p>基于RMI/IIOP 的分布式应用开发步骤及请注意事项是什么？</p>
+<blockquote>
+<p>答：1）用 JAVA 定义远程接口。注意，远程接口要继承 java.rmi.Remote, 远程方法要抛出</p>
+<p>java.rmi.RemoteException。     </p>
+<p>2）实现远程接口。注意，实现远程接口的类必须继承可移植远程对象，即 javax.rmi.PortableRemoteObject。</p>
+<p>3）开发服务器程序。</p>
+<p>4）开发客户端程序。</p>
+<p>5） 编译所有 JAVA 源代码。</p>
+<p>6）使用 rmic 编译远程对象实现的字节码文件，产生客户端的码根和服务器端的框架。例如：rmic –iiop RMIIIOPApp.RemoteObjectImpl。注意，rmic 要使用 –iiop 选项。</p>
+</blockquote>
+</li>
+<li><p>什么是无状态会话 Bean？什么是有状态会话 Bean？什么是实体 Bean？它们的区别是什么？ </p>
+<blockquote>
+<p>答：一个用户连接到服务器，从连接起到断开止，称为一个会话，英语术语 session。</p>
+<p><strong>有状态会话组件</strong>，记录会话期间一个客户和服务器端数据交流的痕迹。当一个客户申请一个有状态会话组件时，<u>组件服务器</u>就为这个用户创建一个唯一的<u>有状态会话组件对象</u>，其生命周期即为会话时间。</p>
+<p>而<strong>无状态会话组件</strong>，不保存客户会话的痕迹；所以一个<u>驻存在内存中的无状态会话组件对象</u>可以服务多个客户，当一个客户请求一个无状态会话组件对象时，如果在<u>组件容器连接池</u>中存在，  那么就分配给该用户，否则，就创建一个新的对象。 </p>
+<p><strong>实体组件</strong>严格地对应后台数据库中的每一个表单。你可以把它视为一个内存数据库表单。一个存活的实体组件对象与对应数据库表单数据的一致性，由组件容器维护。</p>
+</blockquote>
+</li>
+<li><p>试说明以下 EJB Java 标注的意义：@Remote, @Stateless, @Stateful, @Entity, @EJB, @Id, @Column, @PersistenceContext, @Table, @NamedQuery。</p>
+<blockquote>
+<p>答：</p>
+<p>1) @Remote 标注远程</p>
+<p>2) @Stateless 标注无状态会话组件</p>
+<p>3) @Stateful 标注有状态会话组件</p>
+<p>4) @Entity 标注实体组件</p>
+<p>5) @EJB <strong>实体组件注入机制</strong>标注</p>
+<p>6) @PersitenceContext 利用JAVAPersistence 机制导入实体组件标注</p>
+<p>7) @Id 标注实体组件所对应的<u>数据库表单的主键</u></p>
+<p>8) @Column 标注实体组件<u>某成员变量</u>为对应<u>表单的字段</u></p>
+<p>9) @Table 标注实体组件对应的<u>表单</u></p>
+<p>10) @NamedQuery 标注命名 SQL 查询语句</p>
+</blockquote>
+</li>
+<li><p>什么是 EJB 的注入机制？</p>
+<blockquote>
+<p>答：EJB3.0 采用JAVA 标注<strong>实体组件对象注入机制</strong>，大大地简化了基于 J2EE 数据库存编程。</p>
+<p>所谓注入机制，即当容器在一个<u>会话组件对象</u>内遇到导入一个实体对象的标注时，即时创建该实体组件的一个对象。旧版本的J2EE，程序员必须显式地创建一个实体组件对象。</p>
+</blockquote>
+</li>
+<li><p>试说明 CORBA 非同步方法的特点</p>
+<blockquote>
+<p>答：<strong>CORBA IDL 非同步方法</strong>是一个<u>非阻塞</u>，<u>无返回</u>，<u>无异常抛出</u>，以及<u>无 out 和 inout形式参数</u>的<u>远程方法</u>。</p>
+</blockquote>
+</li>
+<li><p>什么是 WEB 服务的定义语言？什么是 WEB 服务的网络协议？什么是 WEB 服务的命名目录服务器？</p>
+<blockquote>
+<p>答：WEB 服务的定义语言是 WSDL，即 Web Service Description Language，XML 大纲的命名空间为 <a href="http://www.w3.org/TR/wsdl" target="_blank" rel="noopener">http://www.w3.org/TR/wsdl</a>。</p>
+<p>WEB 服务的网络协议是 SOAP，即 Simple Object Access Protocol，SOAP 命名空间为xmlns:s=<a href="http://www.w3.org/2001/06/soap-envelope" target="_blank" rel="noopener">http://www.w3.org/2001/06/soap-envelope</a>。</p>
+<p>WEB 服务的命名目录服务器是 UDDI，即 Universal Description, Discovery and Integration。</p>
+</blockquote>
+</li>
+<li><p>什么是 big Web Service？</p>
+<blockquote>
+<p>答：基于 SOAP、WSDL、UDDI 等 XML 技术的中间件体系结构所构建的 WEB 服务称为大 WEB 服务 。</p>
+</blockquote>
+</li>
+<li><p>什么是 POA？它的作用是什么？</p>
+<blockquote>
+<p>答：POA, Portable Object  Adapter。即<strong>可移植对象适配器对象</strong>。主要的作用有：<u>管理远程对象</u>，<u>远程方法参数的打包和解包</u>。</p>
+</blockquote>
+</li>
+<li><p>什么是 J2EE 容器？与 EJB 容器的关系是什么？试列举至少二种 J2EE 容器。</p>
+<blockquote>
+<p>答：所谓 J2EE 容器，是一种提供通讯、安全、对象生命周期、数据瞬时的一致性、软件构件的布署等服务的<strong>支撑软件</strong>，包括 WEB 容器和 EJB 容器。J2EE 容器又叫 J2EE 应用服务器， 例如 JBOSS，GlassFish 等都可用作 J2EE 容器。</p>
+</blockquote>
+</li>
+<li><p>在基于CORBA 的中间件分布式应用开发中，一般先使用IDL 定义接口。试说明in, out, inout 三种远程方法的形式参数的差别。</p>
+<blockquote>
+<p>答：in 的实际参数从客户端传递到服务器端，而 out 的实际参数在执行完远程方法后能把数据从服务器端带回客户端，最后，inout 实际参数把数据从客户端带给远程方法，又能把远程方法执行的结果带回客户端。使用 out 形式参数，IDL 接口中定义的操作中完全无需返回计算结果。</p>
+</blockquote>
+</li>
+<li><p>客户端的码根和服务器端的框架作用是什么？</p>
+<blockquote>
+<p>答：<strong>客户端的码根</strong>是远程对象的本地镜像，也就是远程对象的本地代理，主要负责<u>远程方法参数打包和远程方法调用返回结果的解包</u>。</p>
+<p>服务器端的框架是服务器的码根。</p>
+</blockquote>
+</li>
+<li><p>使用 idlj -fall 编译以下 CORBA idl 文件，并回答有关问题：</p>
+<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">module</span> org </span><br><span class="line">&#123;</span><br><span class="line">    <span class="hljs-keyword">module</span> jcorba</span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Person</span></span></span><br><span class="line"><span class="hljs-class">        &#123;</span></span><br><span class="line">            <span class="hljs-built_in">string</span> name; <span class="hljs-built_in">string</span> qq;</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="hljs-keyword">typedef</span> sequence&lt;Person&gt; NPerson; </span><br><span class="line">        interface TCom </span><br><span class="line">        &#123;</span><br><span class="line">            <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">display</span><span class="hljs-params">(out NPerson persons)</span></span>;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>1)  module org, jcorba 映射成 Java 什么？</p>
+<p>2)结构体映射成 Java 什么类型？</p>
+<p>3) <code>NPerson</code> 映射成 Java 什么类?作用是什么？</p>
+<p>4)接口操作 <code>void display(out NPerson persons)</code>;被映射成 Java 什么方法？如何实现这个远程方法？</p>
+<blockquote>
+<p>答：1) <code>package org.jcorba</code>;</p>
+<p>2)终极类<code>Person</code>。</p>
+<p>3)共生成两个类: <code>NPersonHelper</code> 和<code>NPersonHolder</code>。笼统地将，<code>NPersonHelper</code> 类用于 Corba 的<u>类型转换</u>，而 <code>NPersonHolder</code> 用于生成 Corba 的<u>网络输入</u>、<u>输出流</u>。</p>
+<p>4) <code>public void display(NPersonHolder persons)</code>;构建一个 <code>Person</code> 对象数组， 并赋予形式参数 <code>persons</code> 的公共成员变量 value。</p>
+</blockquote>
+</li>
+<li><p>如何在一个 CORBA 文件中定义一个一维某特定类型的动态数组？CORBA idl 可变类型是什么？类似于 VB 中的什么类型？</p>
+<blockquote>
+<p>答：使用关键字 sequence。例如，<code>typedef sequence&lt;Person&gt; NPerson</code>; NPerson 就是 Person</p>
+<blockquote>
+<p>对象的一维可变长的动态数组。CORBA idl 可变类型是 <code>any</code>，类似于 VB 中的 <code>Variant</code> 类型。</p>
+</blockquote>
+</blockquote>
+</li>
+<li><p>下面是一个 Corba IDL 文件：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">module org</span><br><span class="line">&#123;</span><br><span class="line">	module jcorba</span><br><span class="line">	&#123;</span><br><span class="line"></span><br><span class="line">		typedef  sequence&lt;octet&gt;  Data; </span><br><span class="line">		exception UnknownException &#123;&#125;;</span><br><span class="line">		interface TFile</span><br><span class="line">		&#123;</span><br><span class="line">			void download(in string fileName,out Data bytes) raises (UnknownException);</span><br><span class="line">		&#125;;</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>Data 被映射成 Java 什么对象？</p>
+<blockquote>
+<p>答：<code>sequence&lt;octet&gt;</code>被映射成 Java 字节数组，而 Data 被映射成 <code>DataHelper</code> 和<code>DataHolder</code>两                                                                                                                                                                                      个类。DataHolder 类的公共成员变量为一个变长的字节数组。</p>
+</blockquote>
+</li>
+</ol>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/中间件/">中间件</a>, <a class="has-link-grey -link" href="/tags/复习/">复习</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/03/09/TypeScript/泛型/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">泛型</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/03/08/Middleware/rmi-iiop/">
+                <span class="level-item">rmi-iiop</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="中间件复习" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

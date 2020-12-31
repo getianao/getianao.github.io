@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>chapter1-Introduction to database - getianao&#39;s blog | 葛天傲的博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="1.The Characteristics of Databases 数据库的目的： The purpose of a database is to help people track of things.  最常用的数据库： The most commonly used type of database is the relational database.  数据库包含数据和数据之间的关系">
+<meta name="keywords" content="数据库原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="chapter1-Introduction to database">
+<meta property="og:url" content="http://yoursite.com/2019/01/04/Database-Principles/chapter1-Introduction to database/index.html">
+<meta property="og:site_name" content="getianao&#39;s blog | 葛天傲的博客">
+<meta property="og:description" content="1.The Characteristics of Databases 数据库的目的： The purpose of a database is to help people track of things.  最常用的数据库： The most commonly used type of database is the relational database.  数据库包含数据和数据之间的关系">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2019/01/04/Database-Principles/chapter1-Introduction%20to%20database/1546147263086.png">
+<meta property="og:image" content="http://yoursite.com/2019/01/04/Database-Principles/chapter1-Introduction%20to%20database/1546150444286.png">
+<meta property="og:image" content="http://yoursite.com/2019/01/04/Database-Principles/chapter1-Introduction%20to%20database/1546150932334.png">
+<meta property="og:updated_time" content="2020-12-31T13:18:15.245Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="chapter1-Introduction to database">
+<meta name="twitter:description" content="1.The Characteristics of Databases 数据库的目的： The purpose of a database is to help people track of things.  最常用的数据库： The most commonly used type of database is the relational database.  数据库包含数据和数据之间的关系">
+<meta name="twitter:image" content="http://yoursite.com/2019/01/04/Database-Principles/chapter1-Introduction%20to%20database/1546147263086.png">
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.13.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?18f72ff981074eb1eb0b3c3bc7aaa23e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<!-- <body class="is-2-column"> -->
+
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="chapter1-Introduction to database" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/getianao">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+            <i class="far fa-calendar"></i>
+                <p>&nbsp;发布于&nbsp; </p> 
+                <time class="level-item has-text-grey" datetime="2019-01-04T16:00:00.000Z">2019-01-05</time>
+                <!-- 
+    <i class="fas fa-calendar-check">&nbsp</i>
+    <p> &nbsp;更新于&nbsp; </p> 
+    <time class="level-item has-text-grey" datetime="2020-12-31T13:18:15.245Z">2020-12-31</time>
+ -->
+                <!-- 这里删除了 categories 改为 tags -->
+                <p>tags:&nbsp</p> 
+                
+                    <div class="level-item">
+                    <a class="has-link-grey -link" href="/tags/数据库原理/">数据库原理</a>
+                    </div>
+                
+
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    10 分钟 读完 (大约 1566 个字)
+                </span>
+                
+                
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span>次访问
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                chapter1-Introduction to database
+            
+        </h1>
+        <div class="content">  
+            <h2 id="1-The-Characteristics-of-Databases"><a href="#1-The-Characteristics-of-Databases" class="headerlink" title="1.The Characteristics of Databases"></a>1.The Characteristics of Databases</h2><ul>
+<li><p>数据库的<strong>目的</strong>：</p>
+<p>The purpose of a database is to help people track of things.</p>
+</li>
+<li><p>最常用的数据库：</p>
+<p>The most commonly used type of database is the relational database.</p>
+</li>
+<li><p>数据库包含数据和数据之间的关系</p>
+<a id="more"></a>
+<p>A database contains both data and the relationships among the data.</p>
+</li>
+<li><p>外键将多张表联系起来，外键都构成了数据库中的关系。</p>
+<p>A foreign key provides the link between two tables. By adding a foreign key, we can create a relationship between tables.</p>
+</li>
+<li><p>表中的每一个记录通过主键来区别，所以主键用来在表之间建立关系。</p>
+<p>Each row in a table is uniquely indentified by a primary key, and the values of these keys are used to create the relationships between the tables.</p>
+</li>
+<li><p>信息的定义：①从数据中推导出的知识。②出现在上下文中的数据。③进行过求和、排序、平均、分组、比较等操作的数据。</p>
+<p>Since we have already defined data as recorded facts and numbers, we can now define information as:</p>
+<ul>
+<li><p>Knowledge derived from data.</p>
+</li>
+<li><p>Data presented in a meaningful context.</p>
+</li>
+<li><p>Data processed by summing, ordering, averaging, grouping, comparing or other similar operations.</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-Database-Example"><a href="#2-Database-Example" class="headerlink" title="2.Database Example"></a>2.Database Example</h2><h2 id="3-The-Components-of-a-Database-System"><a href="#3-The-Components-of-a-Database-System" class="headerlink" title="3.The Components of a Database System"></a>3.The Components of a Database System</h2><ul>
+<li><p>数据库系统的四大组件：用户，数据库应用，数据库管理系统，数据库</p>
+<p>As shown in Figure 1-6, a database system is typically defined to consist of four components: users, the database application, the database management system (DBMS), and the database.</p>
+<p><img src="/2019/01/04/Database-Principles/chapter1-Introduction to database/1546147263086.png" alt="1546147263086"></p>
+</li>
+<li><p>什么是数据库：数据库是有关联关系的表和其他结构的集合。</p>
+<p>The database is a collection of related tables and other structures.</p>
+</li>
+<li><p>为什么数据库是自我描述的：因为数据库包含了它自己的描述。数据库不光有用户的数据表，还有描述用户数据的数据表。</p>
+<p> A database is self-describing because it contains a description of itself.</p>
+<p>Databases contain not only tables of user data, but also tables of data that describe that user data. </p>
+</li>
+<li><p>什么叫做元数据：描述数据的数据叫做元数据。</p>
+<p>The descriptive data which is about data is called metadata. The form and format of metadata varies from DBMS to DBMS.</p>
+</li>
+<li><p>什么是DBMS：DBMS是用来创建、运行、管理数据库的程序。DBMS接受用SQL编码的请求，然后将它们翻译成数据库的执行操作。DBMS通常是用软件提供商授权的一个大型、复杂的软件，大部分公司都不会自行去设计总结的DBMS。</p>
+<p>The database management system (DBMS) is a computer program used to create, process, and administer the database. The DBMS receives requests encoded in SQL and translates those requests into actions on the database. The DBMS is a large, complicated program that is licensed from a software vendor; companies almost never write their own DBMS programs. </p>
+</li>
+<li><p>DBMS的基本功能：①创建数据库。②创建表。③创建支持的结构（例如索引）。④读取数据库数据。⑤编辑（增，删，改）数据库数据。⑥执行规则。⑦并发性控制。⑧权限控制。⑨备份与恢复</p>
+<ol>
+<li>Create database</li>
+<li>Create tables</li>
+<li>Create supporting structures (e.g., indexes)</li>
+<li>Read database data</li>
+<li>Modify (insert, update, or delete) database data</li>
+<li>Maintain database structures</li>
+<li>Enforce rules</li>
+<li>Control concurrency</li>
+<li>Provide security</li>
+<li>Perform backup and recovery </li>
+</ol>
+</li>
+<li><p>什么是数据库软件：数据库软件是一系列电脑软件，它们作为了用户和DBMS之间的中间者。数据库应用通过发送SQL命令读取或者编辑数据库中的数据。数据库应用也通过表单或者记录向用户展示数据。数据库应用即可从软件提供商中获取，也可以内部自行编写。</p>
+<p>A database application is a set of one or more computer programs that serves as an intermediary between the user and the DBMS. Application programs read or modify database data by sending SQL statements to the DBMS. Application programs also present data to users in the format of forms and reports. Application programs can be acquired from software vendors, and they are also frequently written in-house. </p>
+</li>
+<li><p>数据库应用的基本功能：①创建和处理表单。②处理用户的查询。③创建和处理报告。④执行应用逻辑。⑤控制应用。</p>
+<ol>
+<li>Create and process forms</li>
+<li>Process user queries</li>
+<li>Create and process reports</li>
+<li>Execute application logic</li>
+<li>Control application </li>
+</ol>
+</li>
+<li><p>什么是用户：用户通过一个数据库应用去追踪数据。他们通过表单来读取、插入或查询数据，他们也生产报告来传递数据。</p>
+<p>Users employ a database application to keep track of things. They use forms to read, enter, and query data, and they produce reports to convey information. </p>
+</li>
+</ul>
+<h2 id="4-Personal-Versus-Enterprise-Class-Database-Systems"><a href="#4-Personal-Versus-Enterprise-Class-Database-Systems" class="headerlink" title="4.Personal Versus Enterprise-Class Database Systems"></a>4.Personal Versus Enterprise-Class Database Systems</h2><ul>
+<li><p>Microsoft Access 的误解：Microsoft Access 不仅仅是一个DBMS，它是一个个人的数据库系统：一个DBMS加一个应用产生器。</p>
+<p>Microsoft Access is not just a DBMS. Rather, it is a personal database system: a DBMS plus an application generator.</p>
+<p><img src="/2019/01/04/Database-Principles/chapter1-Introduction to database/1546150444286.png" alt="1546150444286"></p>
+</li>
+<li><p>企业级数据库系统中的数据库应用分类：①客户-服务器。②网页服务器上的电子贸易应用。③公司门户上的信息发布应用。④XML网页服务应用。</p>
+<ol>
+<li>Applications running over corperate network(Client-Server)</li>
+<li>E-Commerce applications on web server</li>
+<li>web portal with reporting applications</li>
+<li>XML web services applications</li>
+</ol>
+<p><img src="/2019/01/04/Database-Principles/chapter1-Introduction to database/1546150932334.png" alt="1546150932334"></p>
+</li>
+</ul>
+<h2 id="5-Database-Design"><a href="#5-Database-Design" class="headerlink" title="5.Database Design"></a>5.Database Design</h2><h3 id="Ⅰ-Database-Design-from-Existing-Data"><a href="#Ⅰ-Database-Design-from-Existing-Data" class="headerlink" title="Ⅰ.Database Design from Existing Data"></a>Ⅰ.Database Design from Existing Data</h3><ul>
+<li><p>什么叫数据仓库：数据仓库保存了以研究或报告为目的的数据，这些数据是提供给其他分析工具的。</p>
+<p>The data warehouse and data mart databases store data specifically organized for research and reporting purposes, and these data often are exported to other analytical tools, such as SAS’s Enterprise Miner, IBM’s SPSS Data Modeler, or TIBCO’s Spotfire Metrics.  </p>
+</li>
+<li><p>相关联表的新建是分开为多张表还是合并为一张表：遵循规范化/范式的原则。</p>
+<p>Decisions such as this are not arbitrary. Database professionals use a set of principles, collectively called normalization, or normal forms, to guide and assess database designs. </p>
+</li>
+</ul>
+<h3 id="Ⅱ-Database-Design-for-New-Systems-Development"><a href="#Ⅱ-Database-Design-for-New-Systems-Development" class="headerlink" title="Ⅱ.Database Design for New Systems Development"></a>Ⅱ.Database Design for New Systems Development</h3><ul>
+<li><p>从用户需求转换成数据库设计的步骤：首先根据用户需求设计出数据模型，然后将它们转换数据库模型。</p>
+<p>First, the team creates a data model from the requirements.  statements and then transforms that data model into a database design. </p>
+</li>
+</ul>
+<h3 id="Ⅲ-Database-Redesign"><a href="#Ⅲ-Database-Redesign" class="headerlink" title="Ⅲ.Database Redesign"></a>Ⅲ.Database Redesign</h3><ul>
+<li>重新设计数据库的两种类型：①改编为新的/改变的数据库（数据库迁移）。②合并多个数据库<ol>
+<li>a database is adapted to new or changing requirements. This<br>process sometimes is called database migration.</li>
+<li>the integration of two or more databases.</li>
+</ol>
+</li>
+</ul>
+<h2 id="6-What-You-Need-to-Learn"><a href="#6-What-You-Need-to-Learn" class="headerlink" title="6.What You Need to Learn"></a>6.What You Need to Learn</h2><h2 id="7-A-Brief-History-of-Database-Processing"><a href="#7-A-Brief-History-of-Database-Processing" class="headerlink" title="7.A Brief History of Database Processing"></a>7.A Brief History of Database Processing</h2>
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/数据库原理/">数据库原理</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+    <!-- 隐藏打赏板块 -->
+<!-- <div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div> -->
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/01/04/Database-Principles/chapter2-Introduction to SQL/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">chapter2-Introduction to SQL</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/12/30/Other/2018我的年终总结/">
+                <span class="level-item">2018我的年终总结</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="valine-thread" class="content"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#valine-thread' ,
+        notify: true,
+        verify: true,
+        app_id: 'KsOImXJ998KjY8NlsN8gf0zq-gzGzoHsz',
+        app_key: 'WjM8A5bArYjzBcsuTa0FXxt5',
+        placeholder: '想说点啥😀'
+    });
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.jpg" alt="getianao">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        getianao
+                    </p>
+                    
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan,China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        110
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        23
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        74
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/getianao">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/getianao">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                    
+                    <img src="/images/logo.png" alt="chapter1-Introduction to database" height="28">
+                    
+                </a>
+                <p class="is-size-7">
+                    &copy; 2020 getianao &nbsp;
+                    <br>
+                    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                    <br>
+                    鄂ICP备18008466号
+                    <div class="is-size-7">
+                        
+                           <p id="busuanzi_container_site_uv">
+                            共<span id="busuanzi_value_site_uv">0</span>个访客
+                        </p>
+                        
+                        | 
+                        <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+                        <script>
+                            var now = new Date();
+                            function createtime() {
+                                var grt = new Date("08/13/2017 00:00:00");
+                                now.setTime(now.getTime() + 250);
+                                days = (now - grt) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+                                hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+                                if (String(hnum).length == 1) { hnum = "0" + hnum; } minutes = (now - grt) / 1000 / 60 - (24 * 60 * dnum) - (60 * hnum);
+                                mnum = Math.floor(minutes); if (String(mnum).length == 1) { mnum = "0" + mnum; }
+                                seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+                                snum = Math.round(seconds); if (String(snum).length == 1) { snum = "0" + snum; }
+                                document.getElementById("timeDate").innerHTML = "本站已安全运行 " + dnum + " 天 ";
+                                document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+                            }
+                            setInterval("createtime()", 250);
+                        </script>
+                    </div>
+                </p>
+            </div>
+            <div class="level-end">
+                
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                    
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                            
+                            <i class="fab fa-creative-commons"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                            
+                            <i class="fab fa-creative-commons-by"></i>
+                            
+                        </a>
+                    </p>
+                    
+                    <p class="control">
+                        <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                            
+                            <i class="fab fa-github"></i>
+                            
+                        </a>
+                    </p>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+
+</html>

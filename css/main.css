@@ -30,7 +30,7 @@ div#header {
 
 .link-body{ text-decoration: none; border-bottom:1px dotted; border-color:#555; color: #555;}
 .link-body:hover{ 
-  border-color:red; 
+  border-color:#555; 
 }
 .link-body:visited{
   /*color:#000000;*/

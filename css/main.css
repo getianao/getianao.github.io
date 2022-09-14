@@ -7,3 +7,36 @@
 .container-narrow > hr {
   margin: 30px 0;
 }
+
+div#header {
+  margin: auto;
+  text-align: left;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  /* background-color:#000;
+  color: #fff; */
+  font-size:28px;
+}
+
+
+.link-other {
+  text-decoration: none;
+  color: #09c;
+}
+
+.link-other:hover {
+  color: #036;
+}
+
+.link-body{ text-decoration: none; border-bottom:1px dotted; border-color:#555; color: #555;}
+.link-body:hover{ 
+  border-color:red; 
+}
+.link-body:visited{
+  /*color:#000000;*/
+}
+
+span.me {
+  font-weight: bold;
+  color: #808080;
+}

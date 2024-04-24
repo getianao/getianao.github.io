@@ -18,12 +18,19 @@ div#header {
   font-size:28px;
 }
 
+.link-file {
+  text-decoration: none;
+  color: #036;
+}
+.link-file:hover {
+  color: rgb(0, 0, 0);
+}
+
 
 .link-other {
   text-decoration: none;
   color: #09c;
 }
-
 .link-other:hover {
   color: #036;
 }

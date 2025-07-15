@@ -9,10 +9,8 @@
 }
 
 div#header {
-  margin: auto;
+  margin: 50px 0px 0px 260px;
   text-align: left;
-  padding-top: 20px;
-  padding-bottom: 20px;
   /* background-color:#000;
   color: #fff; */
   /* font-size:28px; */
@@ -87,7 +85,8 @@ div#header {
 
 span.me {
   font-weight: bold;
-  color: #585858;
+  /* color: #585858; */
+  color: #000000
 }
 
 
@@ -121,3 +120,96 @@ span.me {
   font-size: 16px;
   color: #555;
 }
+
+
+@media (max-width: 768px) {
+  .profile-container {
+    flex-direction: column; /* 垂直排列 */
+    align-items: center; /* 居中对齐 */
+  }
+
+  .profile-photo img {
+    margin-bottom: 20px; /* 照片与简介之间增加间距 */
+  }
+
+  .profile-info {
+    text-align: center; /* 简介居中对齐 */
+    margin-left: 0; /* 移除左侧间距 */
+  }
+
+  div#header {
+    margin: 20px auto; /* 调整为居中并减少上边距 */
+    text-align: center; /* 居中对齐标题 */
+  }
+}
+
+
+
+.publications {
+  margin-top: 10px;
+  margin-left: 40px;
+}
+
+.publication-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.publication-conference {
+  font-weight: bold;
+  color: #333;
+  width: 120px;
+  text-align: left;
+  flex-shrink: 0;
+}
+
+.publication-details {
+}
+
+.publication-title a {
+  font-size: 16px;
+  font-weight: bold;
+  color: #00749b;
+  text-decoration: none;
+}
+
+.publication-title a:hover {
+  text-decoration: underline;
+}
+
+.publication-authors {
+  font-size: 14px;
+  color: #555;
+  margin-top: 2px;
+}
+
+.publication-conference-name {
+  font-size: 12px;
+  color: #777;
+  margin-top: 2px;
+}
+
+.publication-resources a {
+  font-size: 14px; /* 与作者信息一致 */
+  color: #00749b; /* 保持链接颜色一致 */
+  text-decoration: none;
+  margin-right: 10px;
+}
+
+.publication-resources a:hover {
+  text-decoration: underline;
+  color: #005580; /* 悬停时颜色稍微加深 */
+}
+
+.publication-resources i {
+  margin-right: 5px; /* 图标与文字间距一致 */
+}
+
+
+
+
+
+
+
+
